@@ -46,3 +46,5 @@ vignettes/*.pdf
 # Data files
 *.parquet
 *.RData
+
+scripts/pat

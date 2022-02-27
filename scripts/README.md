@@ -54,3 +54,26 @@ reboot
 ```
 
 Read how to set up x2go client to connect to desktop over `ssh`: <https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-desktop-with-x2go-on-ubuntu-20-04>
+
+## System dependencies
+
+The following are required for spatial stuff:
+
+```bash
+apt-get update && apt-get install -y --no-install-recommends \
+    sudo \
+    pandoc \
+    pandoc-citeproc \
+    libcurl4-gnutls-dev \
+    libcairo2-dev \
+    libxt-dev \
+    libssl-dev \
+    libssh2-1-dev \
+    libudunits2-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    && rm -rf /var/lib/apt/lists/*
+```
+
+Now you can install these: sp leaflet raster gstat rgdal rgeos sf
