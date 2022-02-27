@@ -37,3 +37,12 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Image files
+*.tif*
+!scripts/templateRaster.tif
+*.png
+
+# Data files
+*.parquet
+*.RData
