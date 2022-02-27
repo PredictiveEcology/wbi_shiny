@@ -77,3 +77,18 @@ apt-get update && apt-get install -y --no-install-recommends \
 ```
 
 Now you can install these: sp leaflet raster gstat rgdal rgeos sf
+
+## Moving files around
+
+Using rsync
+
+```bash
+rsync --version
+
+export USER="root"
+export HOST="68.183.199.168"
+export DEST="/Volumes/WD 2020831 A/tmp/wbi/"
+export SRC="/home/rstudio/analythium/tiff_output/"
+
+rsync -a -P $USER@$HOST:$SRC $DEST
+```
