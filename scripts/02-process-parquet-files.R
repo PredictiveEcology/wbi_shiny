@@ -133,6 +133,140 @@ for (SPECIES in SPP) {
 
 ## Use 2 time periods: 2011, 2100 
 
+SPP <- c("ALFL", "AMCR", "AMRE", "AMRO", "ATSP", "BAWW", "BBWA", "BBWO", 
+"BCCH", "BHCO", "BHVI", "BLPW", "BOCH", "BRBL")
+
+# 250 m
+for (spp in SPP) {
+    message(spp)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2011/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2011/250m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landr-scfm-v4/2011/250m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2011/250m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2100/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2100/250m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landr-scfm-v4/2100/250m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2100/250m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2011/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2011/250m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landrcs-fs-v6a/2011/250m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2011/250m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/250m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landrcs-fs-v6a/2100/250m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/250m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+    
+}
+
+# 1 km
+for (spp in SPP) {
+    message(spp)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2011/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2011/1000m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landr-scfm-v4/2011/1000m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2011/1000m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2100/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2100/1000m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landr-scfm-v4/2100/1000m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landr-scfm-v4/2100/1000m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2011/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2011/1000m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landrcs-fs-v6a/2011/1000m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2011/1000m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/", tolower(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/1000m", tolower(spp)))
+    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landrcs-fs-v6a/2100/1000m/mean.tif", tolower(spp))
+    fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/1000m/mean.tif", tolower(spp))
+    file.copy(fin, fout)
+    
+}
+
+
+
+SPP <- c("Betu_Pap", "Lari_Lar", "Pice_Gla", "Pice_Mar", "Pinu_Ban", "Popu_Tre")
+f <- function(x) tolower(gsub("_", "-", x))
+for (spp in SPP) {
+    message(spp)
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/", f(spp)))
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/250m", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/250m", f(spp)))
+
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/250m", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/", f(spp)))
+    dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/250m", f(spp)))
+
+  fin <-  sprintf("/Volumes/WD 2020831 A/tmp/wbi/vegetationResults/averageBiomass_LandR.CS_fS_2011_%s.tif", spp)
+  fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/250m/mean.tif", f(spp))
+    file.copy(fin, fout)
+
+  fin <-  sprintf("/Volumes/WD 2020831 A/tmp/wbi/vegetationResults/averageBiomass_LandR.CS_fS_2100_%s.tif", spp)
+  fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/250m/mean.tif", f(spp))
+    file.copy(fin, fout)
+
+  fin <-  sprintf("/Volumes/WD 2020831 A/tmp/wbi/vegetationResults/averageBiomass_LandR_SCFM_2011_%s.tif", spp)
+  fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/250m/mean.tif", f(spp))
+    file.copy(fin, fout)
+
+  fin <-  sprintf("/Volumes/WD 2020831 A/tmp/wbi/vegetationResults/averageBiomass_LandR_SCFM_2100_%s.tif", spp)
+  fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/250m/mean.tif", f(spp))
+    file.copy(fin, fout)
+}
+
+for (spp in SPP) {
+    message(spp)
+
+  fr <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/250m/mean.tif", f(spp))
+  rMean <- raster(fr)
+  rMean2 <- aggregate(rMean, c(4, 4))
+  dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/1000m", f(spp)))
+  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/1000m/mean.tif", f(spp)), overwrite=TRUE)
+
+  fr <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/250m/mean.tif", f(spp))
+  rMean <- raster(fr)
+  rMean2 <- aggregate(rMean, c(4, 4))
+  dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/1000m", f(spp)))
+  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/1000m/mean.tif", f(spp)), overwrite=TRUE)
+
+  fr <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/250m/mean.tif", f(spp))
+  rMean <- raster(fr)
+  rMean2 <- aggregate(rMean, c(4, 4))
+  dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/1000m", f(spp)))
+  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/1000m/mean.tif", f(spp)), overwrite=TRUE)
+
+  fr <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/250m/mean.tif", f(spp))
+  rMean <- raster(fr)
+  rMean2 <- aggregate(rMean, c(4, 4))
+  dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/1000m", f(spp)))
+  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/1000m/mean.tif", f(spp)), overwrite=TRUE)
+
+}
 
 # Classes ‘data.table’ and 'data.frame':	381193620 obs. of  12 variables:
 #  $ LandR_fS_V4      : num  0.181 0.18 0.196 0.253 0.184 ...
