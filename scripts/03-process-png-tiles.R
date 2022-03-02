@@ -1,6 +1,10 @@
+
+
+
 ## focus on 14 species now
 SPP <- c("ALFL", "AMCR", "AMRE", "AMRO", "ATSP", "BAWW", "BBWA", "BBWO", 
 "BCCH", "BHCO", "BHVI", "BLPW", "BOCH", "BRBL")
+library(raster)
 
 ## move files into temp dir
 #spp <- "AMCR"
@@ -19,6 +23,17 @@ for (spp in SPP) {
     dev.off()
 }
 
+## color palettes: divergent for differences
+neg <- colorRampPalette(colors = c("darkred", "lightgoldenrod2"))(10)
+pos <- colorRampPalette(colors = c("lightgoldenrod2", "darkblue"))(10)
+pal <- c(neg, pos)
+
+## Color for sequential
+pal <- viridis::viridis_pal(option = "D")(25)
+plot(r, col=pal)
+
+
+
 ## some truncation as needed
 q <- quantile(values(r), 0.999, na.rm=TRUE)
 values(r)[!is.na(values(r)) & values(r) > q] <- q
@@ -34,12 +49,25 @@ library(tiler)
 ## https://cran.r-project.org/web/packages/tiler/vignettes/tiler-intro.html
 library(raster)
 
-spp <- "BOCH"
-tile_dir <- "_tmp/tiles"
-map <- sprintf("_tmp/%s-2011-mean.tif", tolower(spp))
-r <- raster(map)
+fl <- list.files("/Volumes/WD 2020831 A/tmp/wbi2", recursive=TRUE)
+fl <- fl[endsWith(fl, "tif")]
+fl <- fl[grepl("1000m", fl)]
+pal <- viridis::viridis_pal(option = "D")(25)
 
-pal <- colorRampPalette(c("darkblue", "lightblue"))(20)
+i <- 1
+for (i in 1:length(fl)) {
+    message(i)
+    fn <- paste0("/Volumes/WD 2020831 A/tmp/wbi2/", fl[i])
+    #tile_dir <- gsub("250m/mean\\.tif", "tiles", fn)
+    tile_dir <- paste0("_tmp/wbi-tiles/", gsub("1000m/mean\\.tif", "tiles", fl[i]))
+    tmp <- strsplit(tile_dir, "/")[[1]]
+    for (j in 3:5) {
+        #cat(paste0(tmp[1:j], collapse="/"), "\n")
+        dir.create(paste0(tmp[1:j], collapse="/"))
+    }
 
-tile(map, tile_dir, "0-10", col = pal)
-#unlink(tile_dir,recursive = TRUE)
+    #r <- raster(fn, col=pal)
+    unlink(tile_dir,recursive = TRUE)
+    tile(fn, tile_dir, "0-10", col = pal)
+    #unlink(tile_dir,recursive = TRUE)
+}
