@@ -102,11 +102,11 @@ library(leaflet)
 tiles <- "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/tree-betu-pap/landr-scfm-v4/2011/tiles/{z}/{x}/{y}.png"
 
 leaflet(
-  options = leafletOptions(minZoom = 2, maxZoom = 10), width = "100%") %>%
-  #addProviderTiles("Esri.WorldImagery") %>%
+  options = leafletOptions(minZoom = 0, maxZoom = 10, tms = TRUE), width = "100%") %>%
+  addProviderTiles("Esri.WorldImagery") %>%
   addTiles(
     urlTemplate = tiles,
-    options = tileOptions(opacity = 0.8)) %>% 
+    options = tileOptions(opacity = 0.8, minZoom = 0, maxZoom = 10, tms = TRUE)) %>% 
   setView(-100, 60, 0)
 
 ```
