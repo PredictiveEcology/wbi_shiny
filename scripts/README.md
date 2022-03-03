@@ -1,94 +1,146 @@
 # Scripts
+> Scripts related to deployment, hosting, data migration.
 
-Scripts related to deployment, hosting, data migration.
+- [Scripts](#scripts)
+  - [Server setup and file transfer](#server-setup-and-file-transfer)
+  - [Parking lot](#parking-lot)
 
-## Processing large files for bird species
+## Server setup and file transfer
 
-Set up 64 GB RAM VM with Ubuntu 20.04 LTS x64. Log in via `ssh` as `root` and install necessary software (`ssh root@IP_ADDRESS`):
+Create folder structure:
 
-```bash
-## Install R
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
-add-apt-repository "deb https://cloud.r-project.org/bin/linux/ubuntu focal-cran40/"
-apt update
-apt-get install -y r-base
-
-## Install RStudio Server Open Source
-add-apt-repository -y ppa:opencpu/opencpu-2.2
-apt update
-apt-get install -y rstudio-server
-
-## Set up firewall rules
-ufw allow ssh
-ufw allow http
-ufw allow https
-ufw allow 8787
-ufw enable
-
-
-# remove:
-# sudo deluser --remove-home $USER
-
-useradd peter
-passwd peter
-sudo mkdir /home/peter
-sudo chown -R peter /home/peter
-
-useradd pacha
-passwd pacha
-sudo mkdir /home/pacha
-sudo chown -R peter /home/pacha
-
-
-## Install Ubuntu Desktop
-apt-get install xubuntu-desktop
-apt-get install xubuntu-core
-## Install x2go for remote sessions
-apt-get install x2goserver x2goserver-xsession
-apt-get install x2goclient
-## Prevent freezing the client by removing the screen saver
-apt remove xfce4-screensaver
-
-## need to reboot
-reboot
-```
-
-Read how to set up x2go client to connect to desktop over `ssh`: <https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-desktop-with-x2go-on-ubuntu-20-04>
-
-## System dependencies
-
-The following are required for spatial stuff:
+cp -a /root/content/public/wbi-nwt/elements/. /root/content/api/v1/public/wbi-nwt/elements/
 
 ```bash
-apt-get update && apt-get install -y --no-install-recommends \
-    sudo \
-    pandoc \
-    pandoc-citeproc \
-    libcurl4-gnutls-dev \
-    libcairo2-dev \
-    libxt-dev \
-    libssl-dev \
-    libssh2-1-dev \
-    libudunits2-dev \
-    libgdal-dev \
-    libgeos-dev \
-    libproj-dev \
-    && rm -rf /var/lib/apt/lists/*
-```
-
-Now you can install these: sp leaflet raster gstat rgdal rgeos sf
-
-## Moving files around
-
-Using rsync
-
-```bash
-rsync --version
-
 export USER="root"
-export HOST="68.183.199.168"
-export DEST="/Volumes/WD 2020831 A/tmp/wbi/"
-export SRC="/home/rstudio/analythium/tiff_output/"
+export HOST="178.128.225.41"
 
-rsync -a -P $USER@$HOST:$SRC $DEST
+wbi-nwt.analythium.app
+
+ssh $USER@$HOST
+
+mkdir content
+mkdir content/api
+mkdir content/api/v1
+mkdir content/api/v1/public
+mkdir content/api/v1/public/wbi-nwt
+mkdir content/api/v1/public/wbi-nwt/elements
+mkdir content/api/v1/private
+mkdir content/api/v1/private/wbi-nwt
+exit
 ```
+
+Move files to the server:
+
+
+```bash
+export DEST="/root/content/public/wbi-nwt/elements/"
+export SRC="/Volumes/WD 2020831 A/tmp/wbi2/"
+
+rsync -a -P $SRC $USER@$HOST:$DEST
+
+```
+
+Install Docker
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-20-04
+
+```bash
+# sudo apt-get update
+# sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+sudo apt update
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+apt-cache policy docker-ce
+sudo apt install -y docker-ce
+sudo apt install docker-compose
+
+sudo systemctl status docker
+```
+
+Set firewall (check in cloud UI as well)
+
+```bash
+sudo apt install ufw
+
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow ssh
+sudo ufw allow http
+sudo ufw allow https
+sudo ufw enable
+
+ufw status
+```
+
+Set up domain (we set up `wbi-nwt.analythium.app`).
+
+We will use Caddy with Docker Compose.
+
+Move the `site/index.html`, `site/apps.js`, and `site/404.html` files into the `content` folder, this will be the root of the file server.
+
+Move the `site/Caddyfile` and `site/docker-compose.yml` file into the home folder where the `content` directory is located. You can include the custom domain for the HOST variable (line with `- HOST="wbi-nwt.analythium.app"`)
+
+Deploy the stack with `docker-compose up -d`
+
+Now visit the `$HOST` address.
+
+Also check one of the assets:
+
+http://178.128.225.41/api/v1/public/wbi-nwt/elements/bird-alfl/landr-scfm-v4/2011/1000m/mean.tif
+
+http://178.128.225.41/api/v1/public/wbi-nwt/elements/bird-alfl/landr-scfm-v4/2011/preview.html
+
+http://178.128.225.41/api/v1/public/wbi-nwt/elements/bird-alfl/landr-scfm-v4/2011/tiles
+
+http://178.128.225.41/api/v1/public/wbi-nwt/elements/bird-alfl/landr-scfm-v4/2011/tiles/0/0/0.png
+
+https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/tree-betu-pap/landr-scfm-v4/2011/preview.html
+
+```R
+library(raster)
+f <- "http://178.128.225.41/api/v1/public/wbi-nwt/elements/bird-alfl/landr-scfm-v4/2011/1000m/mean.tif"
+
+r <- raster(f)
+plot(r)
+
+library(leaflet)
+tiles <- "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/tree-betu-pap/landr-scfm-v4/2011/tiles/{z}/{x}/{y}.png"
+
+leaflet(
+  options = leafletOptions(minZoom = 0, maxZoom = 10, tms = TRUE), width = "100%") %>%
+  addProviderTiles("Esri.WorldImagery") %>%
+  addTiles(
+    urlTemplate = tiles,
+    options = tileOptions(opacity = 0.8, minZoom = 0, maxZoom = 10, tms = TRUE)) %>% 
+  setView(-100, 60, 0)
+
+```
+
+## Parking lot
+
+https://caddyserver.com/docs/caddyfile/directives/file_server
+https://caddyserver.com/docs/caddyfile/directives/basicauth#basicauth
+https://caddyserver.com/docs/command-line#caddy-hash-password
+https://hub.docker.com/_/caddy
+https://github.com/analythium/docker-compose-shiny-example
+caddy hash-password --plaintext hiccup
+
+```R
+h <- "JDJhJDEwJEVCNmdaNEg2Ti5iejRMYkF3MFZhZ3VtV3E1SzBWZEZ5Q3VWc0tzOEJwZE9TaFlZdEVkZDhX"
+pw <- "hiccup"
+
+bb <- base64enc::base64encode(charToRaw(bcrypt::hashpw(pw)))
+
+# this what we get from caddy
+cc <- "JDJhJDE0JGFZSE0xbHlQTG5FeTB1NWRDZmZZUE9SRjZYYkdhZktXQU9YSkZTMXNFaGxubDF4QTYxZkJL"
+
+bcrypt::checkpw(pw, h)
+bcrypt::checkpw(pw, bb)
+bcrypt::checkpw(pw, cc)
+
+```
+
+
+
