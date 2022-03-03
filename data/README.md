@@ -90,7 +90,7 @@ The [`03-process-png-tiles.R`](03-process-png-tiles.R) file explains the process
 
 ## Moving files around
 
-Using rsync
+Using `rsync` and `cp`. Use `cp` for moving files around on a server, use `rsync` to move files across machines.
 
 ```bash
 # check if you have rsync
@@ -106,6 +106,9 @@ rsync -a -P $USER@$HOST:$SRC $DEST
 export DEST="/home/rstudio/analythium/tiff_output/"
 export SRC="/Volumes/WD 2020831 A/tmp/wbi/"
 rsync -a -P $SRC $USER@$HOST:$DEST
+
+# move files between folders (recursive, keeping attributes), example
+cp -a /root/content/public/wbi-nwt/elements/. /root/content/api/v1/public/wbi-nwt/elements/
 ```
 
 The file organization structure is dictated by the file server (API) structure, which is described in the `scripts` folder of the repository.
