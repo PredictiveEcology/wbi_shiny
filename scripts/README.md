@@ -2,6 +2,7 @@
 > Scripts related to deployment, hosting, data migration.
 
 - [Scripts](#scripts)
+  - [Overview](#overview)
   - [Server setup and file transfer](#server-setup-and-file-transfer)
   - [Install system requirements](#install-system-requirements)
     - [Install Docker](#install-docker)
@@ -9,6 +10,14 @@
   - [Shiny app](#shiny-app)
   - [Deployment](#deployment)
   - [Custom domain and TLS](#custom-domain-and-tls)
+  - [Updating the server configs](#updating-the-server-configs)
+
+## Overview
+
+- `$HOST/` static file root will have `index.html` with a general outline and links to follow (apps, methods etc) and a 404 (page not found)
+- `$HOST/apps/` is static file folder with a list of available apps
+  - `$HOST/apps/nwt/` will proxy to the Shiny app (other apps later as `$HOST/apps/<appname>/`)
+- `$HOST/api/v1` holds the static file assets required for the apps
 
 ## Server setup and file transfer
 
@@ -94,7 +103,7 @@ The shiny app deployment to be described here (using Docker).
 
 ## Deployment
 
-We will use Caddy Server with Docker Compose. Caddy takes care of redirects, obtaining and renewing TLS/SSL certificates for HTTPS. The setup by default uses HTTP (`$HOST:80`). Once you add a custom domain, it will start serving over HTTPS.
+We will use [Caddy Server](https://caddyserver.com) with Docker Compose. Caddy takes care of redirects, obtaining and renewing TLS/SSL certificates for HTTPS. The setup by default uses HTTP (`$HOST:80`). Once you add a custom domain, it will start serving over HTTPS.
 
 Move the `site/Caddyfile` and `site/docker-compose.yml` file into the home folder (`~`) where the `content` directory is located. 
 
@@ -111,3 +120,9 @@ Set up domain (we set up `wbi-nwt.analythium.app`) with your DNS provider: and a
 You can include the custom domain for the `$HOST` variable by editing the compose file: look for the line with `- HOST=":80"` and change it to `- HOST="wbi-nwt.analythium.app"`.
 
 Then use `docker-compose up -d` and Docker Compose will pick up the changes and restart the Caddy service (without interrupting other services).
+
+## Updating the server configs
+
+If you change the Caddyfile, it will not be picked up by Docker Compose.
+
+Use `docker-compose restart caddy` command.

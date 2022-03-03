@@ -3,7 +3,7 @@
     handle_path /apps/nwt/* {
         reverse_proxy shinyapp:3838
     }
-    file_server
+    file_server browse
     handle_errors {
         @404 {
             expression {http.error.status_code} == 404
