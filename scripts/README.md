@@ -11,6 +11,7 @@
   - [Deployment](#deployment)
   - [Custom domain and TLS](#custom-domain-and-tls)
   - [Updating the server configs](#updating-the-server-configs)
+  - [Restricted access](#restricted-access)
 
 ## Overview
 
@@ -126,3 +127,19 @@ Then use `docker-compose up -d` and Docker Compose will pick up the changes and 
 If you change the Caddyfile, it will not be picked up by Docker Compose.
 
 Use `docker-compose restart caddy` command.
+
+## Restricted access
+
+The `$HOST/api/v1/private/*` routes are password protected using [HTTP basic authentication](https://caddyserver.com/docs/caddyfile/directives/basicauth). The Caddyfile contains the hashed and encoded password.
+
+Here is the R code to generate the hashed password to be entered into the Caddyfile:
+
+```R
+base64enc::base64encode(charToRaw(bcrypt::hashpw("shiny")))
+```
+
+The current username:password is set to `shiny:shiny`.
+
+This form of authentication is only secure over HTTPS because password is transmitted as encoded plain text.
+
+Example: <https://wbi-nwt.analythium.app/api/v1/private/wbi-nwt/index.html>

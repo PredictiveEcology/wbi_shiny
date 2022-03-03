@@ -3,6 +3,9 @@
     handle_path /apps/nwt/* {
         reverse_proxy shinyapp:3838
     }
+    basicauth /api/v1/private/* {
+        shiny JDJhJDEyJGxKbVIxS24xZWdUWTlvdE5lNnY0N2VKUjBjZ1JrY0M1UGxZUDBjUFI4MFQ1Qm90UkFFamtt
+    }
     file_server browse
     handle_errors {
         @404 {

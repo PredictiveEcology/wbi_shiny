@@ -5,6 +5,7 @@
   - [Paths](#paths)
   - [Elements](#elements)
   - [Linking to file server from R](#linking-to-file-server-from-r)
+  - [Accessing restricted resources](#accessing-restricted-resources)
 
 The deployment consists of a static file folder. This serves as a static API (supporting only GET requests at the moment). This serves the downloadable files and the TMS tiles displayed by the apps.
 
@@ -110,4 +111,20 @@ leaflet(
     urlTemplate = tiles,
     options = tileOptions(opacity = 0.8, minZoom = 0, maxZoom = 10, tms = TRUE)) %>% 
   setView(-100, 60, 0)
+```
+
+## Accessing restricted resources
+
+The `$HOST/api/v1/private/*` routes are password protected using HTTP basic authentication.
+
+https://wbi-nwt.analythium.app/api/v1/private/wbi-nwt/index.html
+
+```R
+library(jsonlite)
+
+# HTTP status was '401 Unauthorized'
+readLines("https://wbi-nwt.analythium.app/api/v1/private/wbi-nwt/index.json")
+
+# works OK
+fromJSON(readLines("https://shiny:shiny@wbi-nwt.analythium.app/api/v1/private/wbi-nwt/index.json"))
 ```
