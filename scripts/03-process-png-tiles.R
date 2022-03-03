@@ -1,28 +1,3 @@
-
-
-
-## focus on 14 species now
-SPP <- c("ALFL", "AMCR", "AMRE", "AMRO", "ATSP", "BAWW", "BBWA", "BBWO", 
-"BCCH", "BHCO", "BHVI", "BLPW", "BOCH", "BRBL")
-library(raster)
-
-## move files into temp dir
-#spp <- "AMCR"
-for (spp in SPP) {
-    fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landr-scfm-v4/2011/250m/mean.tif",
-        tolower(spp))
-    fout <- sprintf("_tmp/%s-2011-mean.tif", tolower(spp))
-    file.copy(fin, fout)
-}
-
-## simple plot
-for (spp in SPP) {
-    r <- raster(sprintf("_tmp/%s-2011-mean.tif", tolower(spp)))
-    png(sprintf("_tmp/png/%s-2011-mean.png", tolower(spp)))
-    plot(r)
-    dev.off()
-}
-
 ## color palettes: divergent for differences
 neg <- colorRampPalette(colors = c("darkred", "lightgoldenrod2"))(10)
 pos <- colorRampPalette(colors = c("lightgoldenrod2", "darkblue"))(10)
@@ -45,6 +20,7 @@ values(r)[!is.na(values(r)) & values(r) > q] <- q
 ##    clipboard
 ## https://opensourceoptions.com/blog/how-to-install-gdal-for-python-with-pip-on-windows/
 ## https://gist.github.com/kelvinn/f14f0fc24445a7994368f984c3e37724?permalink_comment_id=3074415#gistcomment-3074415
+
 library(tiler)
 ## https://cran.r-project.org/web/packages/tiler/vignettes/tiler-intro.html
 library(raster)
@@ -67,7 +43,7 @@ for (i in 1:length(fl)) {
     }
 
     #r <- raster(fn, col=pal)
-    unlink(tile_dir,recursive = TRUE)
+    #unlink(tile_dir,recursive = TRUE)
     tile(fn, tile_dir, "0-10", col = pal)
     #unlink(tile_dir,recursive = TRUE)
 }
