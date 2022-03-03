@@ -107,3 +107,5 @@ export DEST="/home/rstudio/analythium/tiff_output/"
 export SRC="/Volumes/WD 2020831 A/tmp/wbi/"
 rsync -a -P $SRC $USER@$HOST:$DEST
 ```
+
+The file organization structure is dictated by the file server (API) structure, which is described in the `scripts` folder of the repository.
