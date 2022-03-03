@@ -37,3 +37,15 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Image files
+*.tif*
+!scripts/raster-template-NWT.tif
+*.png
+
+# Data files
+*.parquet
+*.RData
+
+scripts/pat
+_tmp/*
