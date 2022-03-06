@@ -6,6 +6,7 @@
   - [System dependencies](#system-dependencies)
   - [Data processing](#data-processing)
   - [Moving files around](#moving-files-around)
+  - [Regional summaries](#regional-summaries)
 
 ## Processing large files for bird species
 
@@ -112,3 +113,18 @@ cp -a /root/content/public/wbi-nwt/elements/. /root/content/api/v1/public/wbi-nw
 ```
 
 The file organization structure is dictated by the file server (API) structure, which is described in the `scripts` folder of the repository.
+
+## Regional summaries
+
+The [`04-study-area-and-regions.R`](04-study-area-and-regions.R) file describes how we processed regions of interest.
+
+The following regional delineations were used:
+
+- [Terrestrial bird conservation regions](https://www.birdscanada.org/download/gislab/bcr_terrestrial_shape.zip) by NABCI
+- [Ecoregions](https://sis.agr.gc.ca/cansis/nsdb/ecostrat/gis_data.html) by the National Ecological Framework for Canada
+- [Protected areas](https://www.canada.ca/en/environment-climate-change/services/national-wildlife-areas/protected-conserved-areas-database.html) by CPCAD
+- [Important Wildlife Areas In The NWT](https://www.geomatics.gov.nt.ca/en/importantwildlifeareasnwt)
+
+Boundaries from these files were organized into a single sf data frame and saved as R binary and GeoPackage file format (`regions/regions.rds` and `regions/regions.gpkg`).
+
+The [`05-regional-summaries.R`](05-regional-summaries.R) file outlines how to summarize across the layers for each elements (species, etc.).
