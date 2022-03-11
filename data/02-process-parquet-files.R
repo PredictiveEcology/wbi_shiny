@@ -10,20 +10,6 @@
 # RUN: each Run (i.e., "run1") is a replicate for stochastic processes# YEAR: each Year of the simulations
 # pixelID: Index to match the raster
 
-
-# SCENARIOS
-#  LandR: non-climate-sensitive version of forest growth model
-#  LandR.CS: climate-sensitive version of forest growth model
-#  SCFM: non-climate-sensitive version of wildfire model
-#  fS: climate-sensitive version of wildfire model
-#  V4: non-climate-sensitive version of bird model
-#  V6a: climate-sensitive version of bird model
-#    i.e., Fully non-climate sensitive model: LandR_SCFM_V4
-#    i.e., Fully climate sensituive model: LandR.CS_fS_V6a
-# RUN: each Run (i.e., "run1") is a replicate for stochastic processes# YEAR: each Year of the simulations
-# pixelID: Index to match the raster
-
-
 ## Use chunked parquet files
 library(arrow)
 library(raster)
