@@ -137,3 +137,6 @@ shinyApp(
 
 ## Add measurement
 leaflet() %>% addTiles() %>% addMeasure()
+
+## Opacity slider
+# https://cran.r-project.org/web/packages/leaflet.opacity/vignettes/leaflet-opacity.html
