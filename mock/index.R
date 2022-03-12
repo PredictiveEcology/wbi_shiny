@@ -2,7 +2,12 @@
 
 shiny::runApp("mock")
 
-
+a <- st_read("data/regions/nwt-bcr6.gpkg")
+p <- st_read("data/regions/regions.gpkg")
+a$classification <- "StudyArea"
+a$region <- "NWT"
+a$area <- st_area(a)
+p <- rbind(a[,colnames(p)], p)
 
 # add interactive maps to a ggplot -------
 library(ggplot2)
