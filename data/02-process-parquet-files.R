@@ -13,6 +13,13 @@
 ## Use chunked parquet files
 library(arrow)
 library(raster)
+library(sf)
+library(stars)
+
+writeRasterFunction <- function(r, f) {
+  s <- st_as_stars(r)
+  write_stars(s, f, options=c("COMPRESS=LZW"))
+}
 
 ## Load raster template for NWT study area
 r <- raster("wbi_shiny/scripts/raster-template-NWT.tif")
@@ -79,7 +86,7 @@ for (SPECIES in SPP) {
 
       dir.create(paste0("tiff_output/bird-", tolower(SPECIES), "/",
                         id_dir, "/", YEAR, "/250m"))
-      writeRaster(rMean,
+      writeRasterFunction(rMean,
                   paste0("tiff_output/bird-", tolower(SPECIES), "/",
                          id_dir, "/", YEAR, "/250m/mean.tif"))
 
@@ -89,7 +96,7 @@ for (SPECIES in SPP) {
 
       dir.create(paste0("tiff_output/bird-", tolower(SPECIES), "/",
                         id_dir, "/", YEAR, "/1000m"))
-      writeRaster(rMean2,
+      writeRasterFunction(rMean2,
                   paste0("tiff_output/bird-", tolower(SPECIES), "/",
                          id_dir, "/", YEAR, "/1000m/mean.tif"))
 
@@ -98,10 +105,10 @@ for (SPECIES in SPP) {
         rSD <- r
         values(rSD)[v0$pixel_id] <- SD
         rSD2 <- aggregate(rMean, c(4, 4))
-        writeRaster(rSD,
+        writeRasterFunction(rSD,
                     paste0("tiff_output/bird-", tolower(SPECIES), "/",
                            id_dir, "/", YEAR, "/250m/stdev.tif"))
-        writeRaster(rSD2,
+        writeRasterFunction(rSD2,
                     paste0("tiff_output/bird-", tolower(SPECIES), "/",
                            id_dir, "/", YEAR, "/1000m/stdev.tif"))
 
@@ -232,25 +239,25 @@ for (spp in SPP) {
   rMean <- raster(fr)
   rMean2 <- aggregate(rMean, c(4, 4))
   dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/1000m", f(spp)))
-  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/1000m/mean.tif", f(spp)), overwrite=TRUE)
+  writeRasterFunction(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2011/1000m/mean.tif", f(spp)), overwrite=TRUE)
 
   fr <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/250m/mean.tif", f(spp))
   rMean <- raster(fr)
   rMean2 <- aggregate(rMean, c(4, 4))
   dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/1000m", f(spp)))
-  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/1000m/mean.tif", f(spp)), overwrite=TRUE)
+  writeRasterFunction(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landrcs-fs-v6a/2100/1000m/mean.tif", f(spp)), overwrite=TRUE)
 
   fr <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/250m/mean.tif", f(spp))
   rMean <- raster(fr)
   rMean2 <- aggregate(rMean, c(4, 4))
   dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/1000m", f(spp)))
-  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/1000m/mean.tif", f(spp)), overwrite=TRUE)
+  writeRasterFunction(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2011/1000m/mean.tif", f(spp)), overwrite=TRUE)
 
   fr <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/250m/mean.tif", f(spp))
   rMean <- raster(fr)
   rMean2 <- aggregate(rMean, c(4, 4))
   dir.create(sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/1000m", f(spp)))
-  writeRaster(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/1000m/mean.tif", f(spp)), overwrite=TRUE)
+  writeRasterFunction(rMean2, sprintf("/Volumes/WD 2020831 A/tmp/wbi2/tree-%s/landr-scfm-v4/2100/1000m/mean.tif", f(spp)), overwrite=TRUE)
 
 }
 
