@@ -27,7 +27,7 @@ if (grepl("for-cast[.]ca", Sys.info()[["nodename"]])) {
 
 writeRasterFunction <- function(r, f) {
   s <- st_as_stars(r)
-  write_stars(s, f, options=c("COMPRESS=LZW"))
+  write_stars(s, f, options = c("COMPRESS=LZW"))
 }
 ## Load raster template for NWT study area
 r_crs <- raster::crs(r)
