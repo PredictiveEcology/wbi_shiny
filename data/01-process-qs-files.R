@@ -32,16 +32,26 @@
 # land_r_cs_scfm_v4: double
 # land_r_cs_scfm_v6a: double
 
-library(qs)
-library(arrow)
-library(dplyr)
-library(janitor)
+if (!require("Require")) {
+  install.packages("Require")
+  library("Require")
+}
+Require(c("qs", "arrow", "dplyr", "janitor"))
 
-finp <- list.files("qsfiles", full.names = TRUE, pattern = "gz")
+dataDir <- if (grepl("for-cast[.]ca", Sys.info()[["nodename"]])) {
+  file.path("/mnt/wbi_data/NWT/outputs/PAPER_EffectsOfClimateChange/posthoc/summaryRasters")
+} else {
+  "."
+}
+
+finp <- list.files(file.path(dataDir, "qsfiles"), full.names = TRUE, pattern = "qs")
+
+Require::checkPath(file.path(dataDir, "arrow"), create = TRUE)
 
 for (i in seq_along(finp)) {
   message(finp[i])
-  fout <- paste0("arrow/", gsub("qsfiles/|.qs", "", finp[i]))
+  fout <- gsub("qsfiles", "arrow", finp[i])
+  fout <- gsub("[.]qs", "", fout)
   if (!file.exists(fout)) {
     d <- qread(finp[i])
 
