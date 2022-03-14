@@ -6,23 +6,30 @@
 #  V4: non-climate-sensitive version of bird model
 #  V6a: climate-sensitive version of bird model
 #    i.e., Fully non-climate sensitive model: LandR_SCFM_V4
-#    i.e., Fully climate sensituive model: LandR.CS_fS_V6a
+#    i.e., Fully climate sensitive model: LandR.CS_fS_V6a
 # RUN: each Run (i.e., "run1") is a replicate for stochastic processes# YEAR: each Year of the simulations
 # pixelID: Index to match the raster
 
 ## Use chunked parquet files
-library(arrow)
-library(raster)
-library(sf)
-library(stars)
+if (!require("Require")) {
+  install.packages("Require")
+  library("Require")
+}
+Require(c("arrow", "raster", "sf", "stars"))
+
+if (grepl("for-cast[.]ca", Sys.info()[["nodename"]])) {
+  dataDir <- file.path("/mnt/wbi_data/NWT/outputs/PAPER_EffectsOfClimateChange/posthoc/summaryRasters")
+  r <- raster("~/GitHub/wbi_shiny/scripts/raster-template-NWT.tif")
+} else {
+  dataDir <- "."
+  r <- raster("wbi_shiny/scripts/raster-template-NWT.tif")
+}
 
 writeRasterFunction <- function(r, f) {
   s <- st_as_stars(r)
   write_stars(s, f, options=c("COMPRESS=LZW"))
 }
-
 ## Load raster template for NWT study area
-r <- raster("wbi_shiny/scripts/raster-template-NWT.tif")
 r_crs <- raster::crs(r)
 r_crs
 # "+proj=lcc +lat_0=0 +lon_0=-95 +lat_1=49 +lat_2=77 +x_0=0 +y_0=0 +ellps=GRS80 +units=m +no_defs"
@@ -32,7 +39,8 @@ r_crs
 # SCENARIO="LandR_SCFM_V4"
 # SPECIES="ALFL"
 tr_path <- function(RUN, SPECIES, YEAR, SCENARIO) {
-  paste0("arrow/", SPECIES, "_rastersSummaryTable/year=", YEAR, "/run=run", RUN, "/part-0.parquet")
+  file.path(dataDir, "arrow", paste0(SPECIES, "_rastersSummaryTable"), paste0("year=", YEAR),
+            paste0("run=run", RUN), "part-0.parquet")
 }
 
 SPP <- substr(list.files("arrow"), 1, 4)
@@ -52,19 +60,11 @@ SAVE_SD <- FALSE
 #YEAR=2011
 #SCENARIO="LandR_SCFM_V4"
 for (SPECIES in SPP) {
-
-  dir.create(paste0("tiff_output/bird-", tolower(SPECIES)))
-
   for (SCENARIO in SCENARIOS) {
     id <- names(SCENARIOS[SCENARIOS==SCENARIO])
     id_dir <- gsub("\\.", "", gsub("_", "-", tolower(SCENARIO)))
-    dir.create(paste0("tiff_output/bird-", tolower(SPECIES), "/", id_dir))
 
     for (YEAR in YEARS) {
-
-      dir.create(paste0("tiff_output/bird-", tolower(SPECIES), "/", id_dir, "/", YEAR))
-
-
       fl <- tr_path(RUNS, SPECIES, YEAR, SCENARIO)
       for (i in seq_along(fl)) {
         message(SPECIES, " ", SCENARIO, " ", YEAR, " ", i)
@@ -80,54 +80,42 @@ for (SPECIES in SPP) {
         }
       }
       message("calculating stats")
-      Mean <- rowMeans(v0[,-1])
+      Mean <- rowMeans(v0[, -1])
       rMean <- r
       values(rMean)[v0$pixel_id] <- Mean
 
-      dir.create(paste0("tiff_output/bird-", tolower(SPECIES), "/",
-                        id_dir, "/", YEAR, "/250m"))
-      writeRasterFunction(rMean,
-                  paste0("tiff_output/bird-", tolower(SPECIES), "/",
-                         id_dir, "/", YEAR, "/250m/mean.tif"))
+      meanRstDir <- checkPath(file.path(dataDir, "tiff_output", paste0("bird-", tolower(SPECIES)),
+                                        id_dir, YEAR, "250m"), create = TRUE)
+      writeRasterFunction(rMean, file.path(meanRstDir, "mean.tif"))
 
       ## aggregate to 1km^2: aggregation function is the mean
       ## goes from 26M to 2M per file
       rMean2 <- aggregate(rMean, c(4, 4))
 
-      dir.create(paste0("tiff_output/bird-", tolower(SPECIES), "/",
-                        id_dir, "/", YEAR, "/1000m"))
-      writeRasterFunction(rMean2,
-                  paste0("tiff_output/bird-", tolower(SPECIES), "/",
-                         id_dir, "/", YEAR, "/1000m/mean.tif"))
+      meanRstDir2 <- checkPath(file.path(dataDir, "tiff_output", paste0("bird-", tolower(SPECIES)),
+                                         id_dir, YEAR, "1000m"), create = TRUE)
+      writeRasterFunction(rMean2, file.path(meanRstDir2, "mean.tif"))
 
       if (SAVE_SD) {
         SD <- apply(v0[,-1], 1, sd)
         rSD <- r
         values(rSD)[v0$pixel_id] <- SD
         rSD2 <- aggregate(rMean, c(4, 4))
-        writeRasterFunction(rSD,
-                    paste0("tiff_output/bird-", tolower(SPECIES), "/",
-                           id_dir, "/", YEAR, "/250m/stdev.tif"))
-        writeRasterFunction(rSD2,
-                    paste0("tiff_output/bird-", tolower(SPECIES), "/",
-                           id_dir, "/", YEAR, "/1000m/stdev.tif"))
-
+        writeRasterFunction(rSD, file.path(meanRstDir, "stdev.tif"))
+        writeRasterFunction(rSD2, file.path(meanRstDir2, "stdev.tif"))
       }
-
     }
   }
 }
-
-
 
 ## Use 2 scenarios
 ## Non-climate-sensitive (LandR_SCFM + Birds V4) LandR_SCFM_V4
 ## Climate-sensitive (LandR.CS_fS + Birds CC) LandR.CS_fS_V6a
 
-## Use 2 time periods: 2011, 2100 
+## Use 2 time periods: 2011, 2100
 
-SPP <- c("ALFL", "AMCR", "AMRE", "AMRO", "ATSP", "BAWW", "BBWA", "BBWO", 
-"BCCH", "BHCO", "BHVI", "BLPW", "BOCH", "BRBL")
+SPP <- c("ALFL", "AMCR", "AMRE", "AMRO", "ATSP", "BAWW", "BBWA", "BBWO",
+         "BCCH", "BHCO", "BHVI", "BLPW", "BOCH", "BRBL")
 
 # 250 m
 for (spp in SPP) {
@@ -159,7 +147,7 @@ for (spp in SPP) {
     fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landrcs-fs-v6a/2100/250m/mean.tif", tolower(spp))
     fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/250m/mean.tif", tolower(spp))
     file.copy(fin, fout)
-    
+
 }
 
 # 1 km
@@ -192,7 +180,7 @@ for (spp in SPP) {
     fin <- sprintf("/Volumes/WD 2020831 A/tmp/wbi/bird-%s/landrcs-fs-v6a/2100/1000m/mean.tif", tolower(spp))
     fout <- sprintf("/Volumes/WD 2020831 A/tmp/wbi2/bird-%s/landrcs-fs-v6a/2100/1000m/mean.tif", tolower(spp))
     file.copy(fin, fout)
-    
+
 }
 
 
