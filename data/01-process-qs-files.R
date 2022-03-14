@@ -38,22 +38,25 @@ if (!require("Require")) {
 }
 Require(c("qs", "arrow", "dplyr", "janitor"))
 
-dataDir <- if (grepl("for-cast[.]ca", Sys.info()[["nodename"]])) {
-  file.path("/mnt/wbi_data/NWT/outputs/PAPER_EffectsOfClimateChange/posthoc/summaryRasters")
+if (grepl("for-cast[.]ca", Sys.info()[["nodename"]])) {
+  dataDir <- file.path("/mnt/wbi_data/NWT/outputs/PAPER_EffectsOfClimateChange/posthoc/summaryRasters")
+  nCores <- 12L
 } else {
-  "."
+  dataDir <- "."
+  nCores <- 1L
 }
 
 finp <- list.files(file.path(dataDir, "qsfiles"), full.names = TRUE, pattern = "qs")
 
 Require::checkPath(file.path(dataDir, "arrow"), create = TRUE)
 
-for (i in seq_along(finp)) {
-  message(finp[i])
-  fout <- gsub("qsfiles", "arrow", finp[i])
+options(mc.cores = nCores) ## number of core to use for processing; requires ~64 GB per species
+parallel::mclapply(finp, function(f) {
+  message(f)
+  fout <- gsub("qsfiles", "arrow", f)
   fout <- gsub("[.]qs", "", fout)
   if (!file.exists(fout)) {
-    d <- qread(finp[i])
+    d <- qread(f)
 
     d <- d %>%
       clean_names() %>%
@@ -79,7 +82,7 @@ for (i in seq_along(finp)) {
 
         j <- j + 1
       } else {
-        d <- qread(finp[i]) %>%
+        d <- qread(f) %>%
           clean_names() %>%
           as_tibble() %>%
           filter(year == y) %>%
@@ -92,4 +95,4 @@ for (i in seq_along(finp)) {
       }
     }
   }
-}
+})
