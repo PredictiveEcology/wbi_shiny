@@ -123,7 +123,7 @@ shinyApp(
       leaflet() %>%
         addProviderTiles("Esri.WorldImagery") %>%
         addGeotiff(
-          url = "https://peter.solymos.org/testapi/amro1k-stars.tif",
+          url = "https://peter.solymos.org/testapi/amro1k-stars-small.tif",
           project = FALSE,
           opacity = 0.8,
           colorOptions = colorOptions(
@@ -153,9 +153,14 @@ plot(r)
 #r <- raster("https://peter.solymos.org/testapi/amro1k9999.tif")
 #NAvalue(r)
 
+# write as COG
+writeRaster(r, "amro1k-cog.tif", gdal = c("of=COG"))
+
 library(stars)
 s <- st_as_stars(r)
 write_stars(s, "amro1k-stars.tif")
+write_stars(s, "amro1k-stars-small.tif", options=c("COMPRESS=LZW"))
+
 
 ## Make an app where color palettes can be picked
 

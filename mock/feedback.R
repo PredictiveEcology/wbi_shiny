@@ -2,10 +2,11 @@ library(shiny)
 library(leaflet)
 library(leafem)
 
-get_pal <- function(n=50, type=c("viridis", "rdylbu", "bam")) {
+get_pal <- function(n=50, type=c("viridis", "rdylbu", "spectral", "bam")) {
   switch(match.arg(type),
     "viridis" = viridis::viridis_pal(option = "D")(n),
     "rdylbu" = grDevices::hcl.colors(n, "RdYlBu", rev = TRUE),
+    "spectral" = grDevices::hcl.colors(n, "spectral", rev = TRUE),
     "bam" = grDevices::colorRampPalette(
         c("#FFFACD", "lemonchiffon","#FFF68F", "khaki1","#ADFF2F", 
         "greenyellow", "#00CD00", "green3", "#48D1CC", "mediumturquoise", 
@@ -28,7 +29,7 @@ base <- function(type) {
 }
 lfun <- function(map, type="viridis", opacity=0.8) {
   addGeotiff(map,
-      url = "https://peter.solymos.org/testapi/amro1k-stars.tif",
+      url = "https://peter.solymos.org/testapi/amro1k-stars-small.tif",
       project = FALSE,
       opacity = opacity,
       autozoom = FALSE,
@@ -37,8 +38,10 @@ lfun <- function(map, type="viridis", opacity=0.8) {
         palette = get_pal(50, type), 
         domain = c(0, 0.62),
         na.color = "transparent")) %>%
-    addLegend(pal = colorNumeric(palette=get_pal(50, type), domain = c(0, 0.62)), 
+    addLegend(pal = colorNumeric(palette=get_pal(50, type), 
+                                 domain = c(0, 0.62)), 
       values = c(0, 0.62),
+      opacity = opacity,
       title = "Abundance")
 }
 
@@ -71,7 +74,7 @@ shinyApp(
           ),
           column(width=6,
             selectInput("type", "Color palette:", 
-                        c("viridis", "rdylbu", "bam"))
+                        c("viridis", "rdylbu", "spectral", "bam"))
           )
         ),
         leafletOutput("map", width = "100%", height = 600)

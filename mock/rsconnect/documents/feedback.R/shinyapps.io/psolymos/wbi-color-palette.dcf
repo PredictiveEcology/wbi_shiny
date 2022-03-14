@@ -1,0 +1,14 @@
+name: wbi-color-palette
+title: wbi-color-palette
+username:
+account: psolymos
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5840162
+bundleId: 5676737
+url: https://psolymos.shinyapps.io/wbi-color-palette/
+when: 1647140626.247
+lastSyncTime: 1647140626.24702
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: clipboard.min.js|functions.R|global.R|index.R|server.R|styles.css|ui.R
