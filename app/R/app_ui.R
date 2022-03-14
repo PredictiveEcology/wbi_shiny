@@ -6,12 +6,53 @@
 #' @noRd
 app_ui <- function(request) {
   tagList(
-    # Leave this function for adding external resources
+    
+    # Add external resources ----
     golem_add_external_resources(),
-    # Your application UI logic 
-    fluidPage(
-      h1("ShinyWBI")
+    
+    # Nav Bar ----
+    bslib::page_navbar(
+      id = "nav_bar", 
+      title = "WBI", 
+      bg = "#3B2313",   # Predictive Ecology Brown
+      theme = bslib::bs_theme(
+        bootswatch = "united",
+        bg = "#FFFFFF",
+        fg = "#3B2313",   # Predictive Ecology Brown
+        primary = "#C4161C",   # Predictive Ecology Red/Orange
+        base_font = bslib::font_google("Arvo")
+      ), 
+      
+      # "Map" Page ----
+      bslib::nav(
+        title = "Map", 
+        
+        shiny::p("Placeholder1")
+      ), 
+      
+      # "Side-by-Side" Page ----
+      bslib::nav(
+        title = "Side-by-Side", 
+        
+        shiny::p("Placeholder2")
+      ), 
+      
+      # "Regions" Page ----
+      bslib::nav(
+        title = "Regions", 
+        
+        shiny::p("Placeholder3")
+      ), 
+      
+      # "Assets" Page ----
+      bslib::nav(
+        title = "Assets", 
+        
+        shiny::p("Placeholder4")
+      ), 
+      
     )
+    
   )
 }
 

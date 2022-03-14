@@ -15,7 +15,13 @@
 
 ## Dependencies ----
 ## Add one line by package you want to add as dependency
-usethis::use_package( "thinkr" )
+usethis::use_package( "shiny" )
+usethis::use_package( "bslib" )
+usethis::use_package( "leaflet" )
+usethis::use_package( "leaflet.extras2" )
+usethis::use_package( "reactable" )
+usethis::use_package( "sf" )
+
 
 ## Add modules ----
 ## Create a module infrastructure in R/

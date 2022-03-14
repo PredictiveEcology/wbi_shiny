@@ -9,8 +9,13 @@ Authors@R:
 Description: What the package does (one paragraph).
 License: GPL-2
 Imports: 
+    bslib,
     config (>= 0.3.1),
     golem (>= 0.3.1),
+    leaflet,
+    leaflet.extras2,
+    reactable,
+    sf,
     shiny (>= 1.6.0)
 Encoding: UTF-8
 LazyData: true
