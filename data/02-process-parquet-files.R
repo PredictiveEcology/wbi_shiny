@@ -18,9 +18,11 @@ if (!require("Require")) {
 Require(c("arrow", "raster", "sf", "stars"))
 
 if (grepl("for-cast[.]ca", Sys.info()[["nodename"]])) {
+  options(mc.cores = 64L) ## number of bird species
   dataDir <- file.path("/mnt/wbi_data/NWT/outputs/PAPER_EffectsOfClimateChange/posthoc/summaryRasters")
-  r <- raster("~/GitHub/wbi_shiny/scripts/raster-template-NWT.tif")
+  r <- raster("~/GitHub/wbi_shiny/data/raster-template-NWT.tif")
 } else {
+  options(mc.cores = 1L)
   dataDir <- "."
   r <- raster("wbi_shiny/scripts/raster-template-NWT.tif")
 }
@@ -29,6 +31,7 @@ writeRasterFunction <- function(r, f) {
   s <- st_as_stars(r)
   write_stars(s, f, options = c("COMPRESS=LZW"))
 }
+
 ## Load raster template for NWT study area
 r_crs <- raster::crs(r)
 r_crs
@@ -43,25 +46,25 @@ tr_path <- function(RUN, SPECIES, YEAR, SCENARIO) {
             paste0("run=run", RUN), "part-0.parquet")
 }
 
-SPP <- substr(list.files("arrow"), 1, 4)
+SPP <- substr(list.files(file.path(dataDir, "arrow")), 1, 4)
 YEARS <- c(2011, 2031, 2051, 2071, 2091, 2100)
 RUNS <- 1:10
-SCENARIOS <- c(land_r_f_s_v4="LandR_fS_V4",
-               land_r_f_s_v6a="LandR_fS_V6a",
-               land_r_cs_f_s_v4="LandR.CS_fS_V4",
-               land_r_cs_f_s_v6a="LandR.CS_fS_V6a",
-               land_r_scfm_v4="LandR_SCFM_V4",
-               land_r_scfm_v6a="LandR_SCFM_V6a",
-               land_r_cs_scfm_v4="LandR.CS_SCFM_V4",
-               land_r_cs_scfm_v6a="LandR.CS_SCFM_V6a")
+SCENARIOS <- c(land_r_f_s_v4 = "LandR_fS_V4",
+               land_r_f_s_v6a = "LandR_fS_V6a",
+               land_r_cs_f_s_v4 = "LandR.CS_fS_V4",
+               land_r_cs_f_s_v6a = "LandR.CS_fS_V6a",
+               land_r_scfm_v4 = "LandR_SCFM_V4",
+               land_r_scfm_v6a = "LandR_SCFM_V6a",
+               land_r_cs_scfm_v4 = "LandR.CS_SCFM_V4",
+               land_r_cs_scfm_v6a = "LandR.CS_SCFM_V6a")
 SAVE_SD <- FALSE
 
 #SPECIES="ALFL"
 #YEAR=2011
 #SCENARIO="LandR_SCFM_V4"
-for (SPECIES in SPP) {
+parallel::mclapply(SPP, function(SPECIES) {
   for (SCENARIO in SCENARIOS) {
-    id <- names(SCENARIOS[SCENARIOS==SCENARIO])
+    id <- names(SCENARIOS[SCENARIOS == SCENARIO])
     id_dir <- gsub("\\.", "", gsub("_", "-", tolower(SCENARIO)))
 
     for (YEAR in YEARS) {
@@ -106,7 +109,9 @@ for (SPECIES in SPP) {
       }
     }
   }
-}
+})
+
+
 
 ## Use 2 scenarios
 ## Non-climate-sensitive (LandR_SCFM + Birds V4) LandR_SCFM_V4
