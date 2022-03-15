@@ -14,7 +14,7 @@ app_ui <- function(request) {
     bslib::page_navbar(
       id = "nav_bar", 
       title = "WBI", 
-      bg = "#3B2313",   # Predictive Ecology Brown
+      bg = "#4E9D28",   # Predictive Ecology Green
       theme = bslib::bs_theme(
         bootswatch = "united",
         bg = "#FFFFFF",
