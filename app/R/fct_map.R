@@ -16,9 +16,9 @@
 #' @noRd
 #' 
 base_map <- function() {
-  leaflet() %>%
-    addProviderTiles("Esri.WorldImagery") %>%
-    setView(-120, 65, 5)
+  leaflet::leaflet() |>
+    leaflet::addProviderTiles("Esri.WorldImagery") |>
+    leaflet::setView(-120, 65, 5)
 }
 
 
@@ -78,11 +78,11 @@ add_element <- function(map, element, scenario, period,
   )
   
   # Add the tiles to the base map
-  m <- map %>%
-    addProviderTiles("Esri.WorldImagery") %>%
-    addTiles(
+  m <- map |>
+    leaflet::addProviderTiles("Esri.WorldImagery") |>
+    leaflet::addTiles(
       urlTemplate = tiles,
-      options = tileOptions(opacity = opacity)
+      options = leaflet::tileOptions(opacity = opacity)
     )
   
   # If `add_legend = TRUE`, show the legend
@@ -92,10 +92,10 @@ add_element <- function(map, element, scenario, period,
     title <- "Abundance"   # title for the legend
     
     # add legend to the leaflet object
-    m <- m %>%
-      addLegend(
+    m <- m |>
+      leaflet::addLegend(
         position = "bottomleft", 
-        pal = colorNumeric(
+        pal = leaflet::colorNumeric(
           palette = viridis::viridis_pal(option = "D")(25),
           domain = c(0, max)   # adjust max here too
         ), 
@@ -120,26 +120,26 @@ add_element <- function(map, element, scenario, period,
 #' @noRd
 #'
 base_map2x <- function() {
-  leaflet() %>%
-    addMapPane(name = "left", zIndex = 0) %>%
-    addMapPane(name = "right", zIndex = 0) %>%
+  leaflet() |>
+    addMapPane(name = "left", zIndex = 0) |>
+    addMapPane(name = "right", zIndex = 0) |>
     addProviderTiles(
       provider = "Esri.WorldImagery", 
       group = "carto_left", 
       options = tileOptions(pane = "left"),
       layerId = "leftid"
-    ) %>%
+    ) |>
     addProviderTiles(
       provider = "Esri.WorldImagery", 
       group = "carto_right", 
       options = tileOptions(pane = "right"), 
       layerId = "rightid"
-    ) %>%
+    ) |>
     addSidebyside(
       layerId = "sidecontrols",
       leftId = "leftid",
       rightId = "rightid"
-    ) %>%
+    ) |>
     setView(-120, 65, 5)
 }
 
@@ -223,19 +223,19 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
   }
   
   # Add tiles to the map
-  m <- map %>%
+  m <- map |>
     addTiles(
       urlTemplate = tiles1, 
       group = id1, 
       layerId = paste0(id1, "_id"),
       options = tileOptions(pane = "left", opacity = opacity)
-    ) %>% 
+    ) |> 
     addTiles(
       urlTemplate = tiles2, 
       group = id2, 
       layerId = paste0(id2, "_id"),
       options = tileOptions(pane = "right", opacity = opacity)
-    ) %>% 
+    ) |> 
     addLayersControl(overlayGroups = c(id1, id2))
   
   # If `add_legend = TRUE`, include legend on map
@@ -244,7 +244,7 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
     max1 <- 1
     max2 <- 1
     
-    m <- m %>%
+    m <- m |>
       addLegend(
         position = "bottomleft", 
         pal = colorNumeric(
@@ -255,7 +255,7 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
         group = id1, 
         layerId = paste0(id1, "_id"),
         opacity = 1
-      ) %>%
+      ) |>
       addLegend(
         position = "bottomright", 
         pal = colorNumeric(

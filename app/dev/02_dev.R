@@ -25,8 +25,10 @@ usethis::use_package( "sf" )
 
 ## Add modules ----
 ## Create a module infrastructure in R/
-golem::add_module( name = "name_of_module1" ) # Name of the module
-golem::add_module( name = "name_of_module2" ) # Name of the module
+golem::add_module( name = "map" ) # Name of the module
+golem::add_module( name = "sidebyside" ) # Name of the module
+golem::add_module( name = "regions" )
+golem::add_module( name = "assets" )
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

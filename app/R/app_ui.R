@@ -27,7 +27,8 @@ app_ui <- function(request) {
       bslib::nav(
         title = "Map", 
         
-        shiny::p("Placeholder1")
+        mod_map_ui("map_ui_1")
+        
       ), 
       
       # "Side-by-Side" Page ----
@@ -69,7 +70,7 @@ golem_add_external_resources <- function(){
   add_resource_path(
     'www', app_sys('app/www')
   )
- 
+  
   tags$head(
     favicon(),
     bundle_resources(
