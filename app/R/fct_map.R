@@ -9,16 +9,44 @@
 
 #' Create Base Map 
 #'
-#' @description A small function that builds the "base" leaflet map
+#' @description A small function that builds the "base" leaflet map, with the 
+#'   ability to choose the map provider (ESRI, Google, CartoDB, Open Street Map)
+#'   via a floating widget containing radio buttons for each provider
 #'
 #' @return A leaflet map object
 #'
 #' @noRd
 #' 
 base_map <- function() {
-  leaflet::leaflet() |>
-    leaflet::addProviderTiles("Esri.WorldImagery") |>
+  
+  map_attr = "© <a href='https://www.esri.com/en-us/home'>ESRI</a> © <a href='https://www.google.com/maps/'>Google</a> © <a href='https://ebird.org/science/status-and-trends'>eBird / Cornell Lab of Ornithology</a> © <a href='https://www.gatesdupont.com/'>Gates Dupont</a>"
+  
+  leaflet::leaflet() |> 
+    leaflet::addTiles(
+      urlTemplate = "http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga",
+      group = "Google"
+    ) |> 
+    leaflet::addProviderTiles(
+      provider = "CartoDB.Positron", 
+      group = "CartoDB"
+    ) |> 
+    leaflet::addProviderTiles(
+      provider = "OpenStreetMap", 
+      group = "Open Street Map"
+    ) |> 
+    leaflet::addProviderTiles(
+      provider = 'Esri.WorldImagery', 
+      group = "ESRI"
+    ) |> 
+    leaflet::addTiles(
+      urlTemplate = "", 
+      attribution = map_attr
+    ) |> 
+    leaflet::addLayersControl(
+      baseGroups = c("ESRI", "Open Street Map", "CartoDB", "Google"),
+      options = leaflet::layersControlOptions(collapsed = FALSE)) |> 
     leaflet::setView(-120, 65, 5)
+  
 }
 
 
