@@ -107,7 +107,7 @@ add_element <- function(map, element, scenario, period,
   
   # Add the tiles to the base map
   m <- map |>
-    leaflet::addProviderTiles("Esri.WorldImagery") |>
+    # leaflet::addProviderTiles("Esri.WorldImagery") |>
     leaflet::addTiles(
       urlTemplate = tiles,
       options = leaflet::tileOptions(opacity = opacity)
