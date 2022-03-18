@@ -94,7 +94,13 @@ mod_map_server <- function(id, elements){
     
     # Render the map
     output$map <- leaflet::renderLeaflet({
-      base_map()
+      base_map() |> 
+        add_element(
+          element = input$map_element, 
+          scenario = input$map_scenario, 
+          period = input$map_period
+        ) |> 
+        leaflet::addMeasure()
     })
     
   })
