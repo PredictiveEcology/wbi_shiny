@@ -30,23 +30,31 @@ mod_map_ui <- function(id){
         right = 20, 
         bottom = "auto",
         width = 330, 
-        height = "auto",
+        height = "auto", 
         
-        # selectInput(
-        #   inputId = "map_element", 
-        #   label = "Element name:", 
-        #   ELEMENT_NAMES
-        # ), 
-        # 
-        # selectInput(
-        #   inputId = "map_scenario", 
-        #   label = "Scenario:", 
-        #   choices = SCENARIOS
-        # ), 
+        radioButtons(
+          inputId = ns("map_element_type"), 
+          label = "Element Type", 
+          choices = c("Bird", "Tree"), 
+          selected = "Bird", 
+          inline = TRUE
+        ), 
+        
+        selectInput(
+          inputId = ns("map_element"),
+          label = "Element Name:", 
+          choices = row.names(ELEMENTS[ELEMENTS$group == "bird", ])
+        ),
+
+        selectInput(
+          inputId = ns("map_scenario"),
+          label = "Scenario:",
+          choices = SCENARIOS
+        ),
         
         selectInput(
           inputId = ns("map_period"), 
-          label = "Time periods:", 
+          label = "Time Periods:", 
           choices = c(2011, 2100)
         ), 
         
@@ -66,10 +74,25 @@ mod_map_ui <- function(id){
 #' map Server Functions
 #'
 #' @noRd 
-mod_map_server <- function(id){
+mod_map_server <- function(id, elements){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    # Update the options under "Element Name" based upon the selection in the 
+    # "Element Type" radio button
+    observe({
+      
+      element_type <- tolower(input$map_element_type)
+      
+      updateSelectInput(
+        session = session, 
+        inputId = "map_element", 
+        choices = row.names(ELEMENTS[ELEMENTS$group == element_type, ])
+      )
+      
+    })
+    
+    # Render the map
     output$map <- leaflet::renderLeaflet({
       base_map()
     })

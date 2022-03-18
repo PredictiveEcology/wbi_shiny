@@ -5,7 +5,7 @@
 #' @import shiny
 #' @noRd
 app_server <- function( input, output, session ) {
-  # Your application server logic 
+  # Your application server logic
   
   mod_map_server("map_ui_1")
   
