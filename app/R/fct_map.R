@@ -24,19 +24,31 @@ base_map <- function() {
   leaflet::leaflet() |> 
     leaflet::addTiles(
       urlTemplate = "http://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga",
-      group = "Google"
+      group = "Google",
+      options = leaflet::providerTileOptions(
+        zIndex = 200
+      )
     ) |> 
     leaflet::addProviderTiles(
       provider = "CartoDB.Positron", 
-      group = "CartoDB"
+      group = "CartoDB",
+      options = leaflet::providerTileOptions(
+        zIndex = 200
+      )
     ) |> 
     leaflet::addProviderTiles(
       provider = "OpenStreetMap", 
-      group = "Open Street Map"
+      group = "Open Street Map",
+      options = leaflet::providerTileOptions(
+        zIndex = 200
+      )
     ) |> 
     leaflet::addProviderTiles(
       provider = 'Esri.WorldImagery', 
-      group = "ESRI"
+      group = "ESRI",
+      options = leaflet::providerTileOptions(
+        zIndex = 200
+      )
     ) |> 
     leaflet::addTiles(
       urlTemplate = "", 
@@ -110,7 +122,10 @@ add_element <- function(map, element, scenario, period,
     # leaflet::addProviderTiles("Esri.WorldImagery") |>
     leaflet::addTiles(
       urlTemplate = tiles,
-      options = leaflet::tileOptions(opacity = opacity)
+      options = leaflet::tileOptions(
+        opacity = opacity,
+        zIndex = 400
+      )
     )
   
   # If `add_legend = TRUE`, show the legend
@@ -129,7 +144,7 @@ add_element <- function(map, element, scenario, period,
         ), 
         values = c(0, max), # need to adjust max here
         title = title,
-        opacity = 1   # opacity of the legend itself
+        opacity = opacity
       )
   }
   
