@@ -1,4 +1,4 @@
-#' assets UI Function
+#' methods UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,17 +7,17 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_assets_ui <- function(id){
+mod_methods_ui <- function(id){
   ns <- NS(id)
   tagList(
  
   )
 }
     
-#' assets Server Functions
+#' methods Server Functions
 #'
 #' @noRd 
-mod_assets_server <- function(id){
+mod_methods_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
@@ -25,7 +25,7 @@ mod_assets_server <- function(id){
 }
     
 ## To be copied in the UI
-# mod_assets_ui("assets_ui_1")
+# mod_methods_ui("methods_ui_1")
     
 ## To be copied in the server
-# mod_assets_server("assets_ui_1")
+# mod_methods_server("methods_ui_1")

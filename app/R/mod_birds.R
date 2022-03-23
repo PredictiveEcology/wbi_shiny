@@ -1,4 +1,4 @@
-#' sidebyside UI Function
+#' birds UI Function
 #'
 #' @description A shiny Module.
 #'
@@ -7,19 +7,17 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_sidebyside_ui <- function(id){
+mod_birds_ui <- function(id){
   ns <- NS(id)
   tagList(
  
-    shiny::p("Placeholder2")
-    
   )
 }
     
-#' sidebyside Server Functions
+#' birds Server Functions
 #'
 #' @noRd 
-mod_sidebyside_server <- function(id){
+mod_birds_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
@@ -27,7 +25,7 @@ mod_sidebyside_server <- function(id){
 }
     
 ## To be copied in the UI
-# mod_sidebyside_ui("sidebyside_ui_1")
+# mod_birds_ui("birds_ui_1")
     
 ## To be copied in the server
-# mod_sidebyside_server("sidebyside_ui_1")
+# mod_birds_server("birds_ui_1")
