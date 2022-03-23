@@ -28,7 +28,11 @@ usethis::use_package( "sf" )
 golem::add_module( name = "map" ) # Name of the module
 golem::add_module( name = "sidebyside" ) # Name of the module
 golem::add_module( name = "regions" )
-golem::add_module( name = "assets" )
+golem::add_module( name = "birds", open = FALSE )
+golem::add_module( name = "caribou", open = FALSE )
+golem::add_module( name = "methods", open = FALSE )
+golem::add_module( name = "download", open = FALSE )
+
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*

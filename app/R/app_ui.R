@@ -35,21 +35,48 @@ app_ui <- function(request) {
       bslib::nav(
         title = "Side-by-Side", 
         
-        shiny::p("Placeholder2")
+        mod_sidebyside_ui("sidebyside_ui_1")
+        
       ), 
       
       # "Regions" Page ----
       bslib::nav(
         title = "Regions", 
         
-        shiny::p("Placeholder3")
+        mod_regions_ui("regions_ui_1")
+        
       ), 
       
-      # "Assets" Page ----
+      # "Birds" Page ----
       bslib::nav(
-        title = "Assets", 
+        title = "Birds", 
         
-        shiny::p("Placeholder4")
+        mod_birds_ui("birds_ui_1")
+        
+      ), 
+      
+      # "Caribou" Page ----
+      bslib::nav(
+        title = "Caribou", 
+        
+        mod_caribou_ui("caribou_ui_1")
+        
+      ), 
+      
+      # "Methods" Page ----
+      bslib::nav(
+        title = "Methods", 
+        
+        mod_methods_ui("methods_ui_1")
+        
+      ), 
+      
+      # "Download" Page ----
+      bslib::nav(
+        title = "Download", 
+        
+        mod_download_ui("download_ui_1")
+        
       ), 
       
     )
