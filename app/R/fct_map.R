@@ -163,27 +163,27 @@ add_element <- function(map, element, scenario, period,
 #' @noRd
 #'
 base_map2x <- function() {
-  leaflet() |>
-    addMapPane(name = "left", zIndex = 0) |>
-    addMapPane(name = "right", zIndex = 0) |>
-    addProviderTiles(
+  leaflet::leaflet() |>
+    leaflet::addMapPane(name = "left", zIndex = 0) |>
+    leaflet::addMapPane(name = "right", zIndex = 0) |>
+    leaflet::addProviderTiles(
       provider = "Esri.WorldImagery", 
       group = "carto_left", 
-      options = tileOptions(pane = "left"),
+      options = leaflet::tileOptions(pane = "left"),
       layerId = "leftid"
     ) |>
-    addProviderTiles(
+    leaflet::addProviderTiles(
       provider = "Esri.WorldImagery", 
       group = "carto_right", 
-      options = tileOptions(pane = "right"), 
+      options = leaflet::tileOptions(pane = "right"), 
       layerId = "rightid"
     ) |>
-    addSidebyside(
+    leaflet.extras2::addSidebyside(
       layerId = "sidecontrols",
       leftId = "leftid",
       rightId = "rightid"
     ) |>
-    setView(-120, 65, 5)
+    leaflet::setView(-120, 65, 5)
 }
 
 
@@ -267,19 +267,19 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
   
   # Add tiles to the map
   m <- map |>
-    addTiles(
+    leaflet::addTiles(
       urlTemplate = tiles1, 
       group = id1, 
       layerId = paste0(id1, "_id"),
-      options = tileOptions(pane = "left", opacity = opacity)
+      options = leaflet::tileOptions(pane = "left", opacity = opacity)
     ) |> 
-    addTiles(
+    leaflet::addTiles(
       urlTemplate = tiles2, 
       group = id2, 
       layerId = paste0(id2, "_id"),
-      options = tileOptions(pane = "right", opacity = opacity)
+      options = leaflet::tileOptions(pane = "right", opacity = opacity)
     ) |> 
-    addLayersControl(overlayGroups = c(id1, id2))
+    leaflet::addLayersControl(overlayGroups = c(id1, id2))
   
   # If `add_legend = TRUE`, include legend on map
   if (add_legend) {
@@ -288,9 +288,9 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
     max2 <- 1
     
     m <- m |>
-      addLegend(
+      leaflet::addLegend(
         position = "bottomleft", 
-        pal = colorNumeric(
+        pal = leaflet::colorNumeric(
           palette = viridis::viridis_pal(option = "D")(25),
           domain = c(0, max1)), # adjust max here too
         values = c(0, max1), # need to adjust max here
@@ -299,9 +299,9 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
         layerId = paste0(id1, "_id"),
         opacity = 1
       ) |>
-      addLegend(
+      leaflet::addLegend(
         position = "bottomright", 
-        pal = colorNumeric(
+        pal = leaflet::colorNumeric(
           palette = viridis::viridis_pal(option = "D")(25),
           domain = c(0, max2)), # adjust max here too
         values = c(0, max2), # need to adjust max here
