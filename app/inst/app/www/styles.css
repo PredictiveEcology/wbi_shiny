@@ -4,7 +4,7 @@ input[type="number"] {
   
   div.outer {
     position: fixed;
-    top: 41px;
+    top: 56px;   /* Avoid overlapping the maps and the navbar */
     left: 0;
     right: 0;
     bottom: 0;
@@ -81,4 +81,4 @@ input[type="number"] {
       float: left;
       margin-right: 8px;
       opacity: 0.7;
-  } 
+  }
