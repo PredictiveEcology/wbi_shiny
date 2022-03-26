@@ -25,7 +25,7 @@ mod_sidebyside_ui <- function(id){
         class = "panel panel-default", 
         fixed = TRUE,
         draggable = TRUE, 
-        top = 60, 
+        top = 80, 
         left = "auto", 
         right = 20, 
         bottom = "auto",
@@ -97,7 +97,9 @@ mod_sidebyside_server <- function(id){
           element = input$map_element, 
           by = input$by_2x
         ) |> 
-        leaflet::addMeasure()
+        leaflet::addMeasure(
+          position = "topleft"
+        )
     })
     
     

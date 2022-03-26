@@ -12,7 +12,7 @@ mod_map_ui <- function(id){
   tagList(
     
     div(
-      class = "outer",
+      class = "outer", 
       
       leaflet::leafletOutput(
         outputId = ns("map"), 
@@ -25,7 +25,7 @@ mod_map_ui <- function(id){
         class = "panel panel-default", 
         fixed = TRUE,
         draggable = TRUE, 
-        top = 60, 
+        top = 80, 
         left = "auto", 
         right = 20, 
         bottom = "auto",
@@ -100,7 +100,9 @@ mod_map_server <- function(id, elements){
           scenario = input$map_scenario, 
           period = input$map_period
         ) |> 
-        leaflet::addMeasure()
+        leaflet::addMeasure(
+          position = "topleft"
+        )
     })
     
   })

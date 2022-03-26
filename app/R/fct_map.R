@@ -55,7 +55,8 @@ base_map <- function() {
       attribution = map_attr
     ) |> 
     leaflet::addLayersControl(
-      baseGroups = c("ESRI", "Open Street Map", "CartoDB", "Google"),
+      baseGroups = c("ESRI", "Open Street Map", "CartoDB", "Google"), 
+      position = "topleft", 
       options = leaflet::layersControlOptions(collapsed = FALSE)) |> 
     leaflet::setView(-120, 65, 5)
   
@@ -278,8 +279,7 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
       group = id2, 
       layerId = paste0(id2, "_id"),
       options = leaflet::tileOptions(pane = "right", opacity = opacity)
-    ) |> 
-    leaflet::addLayersControl(overlayGroups = c(id1, id2))
+    )
   
   # If `add_legend = TRUE`, include legend on map
   if (add_legend) {
