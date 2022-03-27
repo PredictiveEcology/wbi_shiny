@@ -1,5 +1,5 @@
-## Color palette: sequential for nonnegative domains
-pal <- viridis::viridis_pal(option = "D")(25)
+## Color palette: spectral for nonnegative domains, blue=low, yellow=mid, red=high
+pal <- grDevices::hcl.colors(101, "spectral", rev = TRUE)
 
 ## color palettes: divergent for differences (real domains)
 neg <- colorRampPalette(colors = c("darkred", "lightgoldenrod2"))(10)

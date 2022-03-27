@@ -98,7 +98,7 @@ Using `rsync` and `cp`. Use `cp` for moving files around on a server, use `rsync
 rsync --version
 
 export USER="root"
-export HOST="68.183.199.168"
+export HOST="178.128.225.41"
 
 # move files from the server to local machine
 rsync -a -P $USER@$HOST:$SRC $DEST
