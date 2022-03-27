@@ -100,12 +100,24 @@ st_write(xx, sprintf("data/regions/%s.gpkg", o))
 f <- "data/boundaries/Johnsonetal2020_studyareas/Enhanced_MetaHerds_20191029.shp"
 x <- st_read(f)
 x <- st_transform(x, st_crs(r))
+x <- x[x$PROV_TERR=="NWT",]
+x <- st_intersection(x, z)
 
+o <- "caribou-metaherds-nwt-bcr6"
+png(sprintf("data/regions/%s.png", o))
+plot(x$geometry, border=as.factor(x$HERD))
+dev.off()
+st_write(x, sprintf("data/regions/%s.gpkg", o))
 
 ## combine regions into a single sf object
 
 library(sf)
 library(dplyr)
+
+p0 <- st_read("data/regions/nwt-bcr6.gpkg")
+p0$classification <- "NWT"
+p0$region <- "Northwest Territories"
+p0$area <- st_area(p0)
 
 p1 <- st_read("data/regions/ecodistricsts-in-nwt-bcr6.gpkg")
 p1 <- p1 |> group_by(ECOREGION) |> summarize()
@@ -128,8 +140,35 @@ p3$region <- p3$IWA
 p3$area <- st_area(p3)
 p3 <- p3[names(p1)]
 
-pp <- rbind(p1, p2, p3)
+p4 <- st_read("data/regions/caribou-metaherds-nwt-bcr6.gpkg")
+p4$classification <- "Caribou Meta-herds"
+p4$region <- p4$StudyArea
+p4$area <- st_area(p4)
+p4 <- p4[names(p1)]
 
-st_write(pp, "data/regions/regions.gpkg")
+
+pp <- rbind(p0[,colnames(p1)], p1, p2, p3, p4)
+
+## plot all the boundaries to check what to exclude
+pf <- function(i) {
+    p <- pp[i,]
+    Main <- paste(p$classification, "/", p$region)
+    Sub <- as.character(paste(round(p$area/10^6), "km^2"))
+    message(Main)
+    plot(pp[1,"geom"], main=paste(Main, Sub, sep="\n"))
+    plot(pp[pp$classification == p$classification, "geom"], 
+        border="grey", add=TRUE)
+    plot(p$geom, col="gold", border="tomato", add=TRUE)
+    invisible(NULL)
+}
+
+pdf("_tmp/regions.pdf", onefile=TRUE)
+v <- which(as.numeric(pp$area) / 10^6 > 100)
+for (i in v) {
+    pf(i)
+}
+dev.off()
+
+st_write(pp, "data/regions/regions.gpkg", delete_dsn=TRUE)
 saveRDS(pp, "data/regions/regions.rds")
 
