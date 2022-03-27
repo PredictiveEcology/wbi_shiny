@@ -181,8 +181,14 @@ colnames(ddd) <- c("year", "resolution", "scenario", "element_name",
     "common_name", "scientific_name")
 
 ddd$pal_max <- NA_real_
+
+
+ddd <- read.csv("data/element-stats.csv")
 for (el in ddd$element_name) {
     message(el)
+    fl <- ddd$path[ddd$element_name == el & ddd$resolution == "1000m"]
+    mx <- numeric(4)
+    names(mx) <- fl
     for (k in 1:4) {
         mx[k] <- ddd[ddd$path == names(mx)[k], "max"]
     }
@@ -192,7 +198,10 @@ for (el in ddd$element_name) {
     }
 }
 summary(ddd$pal_max)
-write.csv(ddd, row.names=FALSE, file="data/element-stats.csv") 
+
+table(ddd$resolution,is.na(ddd$pal_max))
+
+write.csv(ddd, row.names=FALSE, file="data/element-stats.csv")
 
 ## 6. install tiler dependencies
 
@@ -229,7 +238,8 @@ s <- read.csv("data/element-stats.csv")
 
 DIR <- "tmp"
 
-for (el in s$element_name) {
+EL <- as.character(unique(s$element_name))
+for (el in EL) {
     message("------------------ ", el, " ----------------")
     fl <- list.files(file.path(DIR, el), recursive=TRUE)
     fl <- fl[endsWith(fl, "tif")]
@@ -238,7 +248,7 @@ for (el in s$element_name) {
     for (k in 1:4) {
         q <- paste0(el, "/", fl[k])
         tile_dir <- file.path(DIR, gsub("1000m/mean\\.tif", "tiles", q))
-        message(el, " - ", tile_dir)
+        message(k, " - ", el, " - ", Sys.time(), " - ", tile_dir)
         if (dir.exists(tile_dir))
             unlink(tile_dir, TRUE)
         dir.create(tile_dir)
