@@ -96,6 +96,12 @@ plot(xx$Shape, border=as.factor(xx$layer))
 dev.off()
 st_write(xx, sprintf("data/regions/%s.gpkg", o))
 
+## Caribou areas / meta-herds
+f <- "data/boundaries/Johnsonetal2020_studyareas/Enhanced_MetaHerds_20191029.shp"
+x <- st_read(f)
+x <- st_transform(x, st_crs(r))
+
+
 ## combine regions into a single sf object
 
 library(sf)
