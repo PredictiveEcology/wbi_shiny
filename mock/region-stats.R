@@ -43,7 +43,7 @@ plotly::ggplotly(plot_stats(d))
 
 d[,c("Scenario", "Year", "Mean")]
 
-map_region(reg, STATS)
+map_region(reg = "Ecoregions: 50", STATS)
 
 ## UI
 ## - birds/trees redio button
