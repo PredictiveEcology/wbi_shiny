@@ -3,9 +3,20 @@
 # DIR <- "/Volumes/WD 2020831 A/tmp/wbi2/"
 # dput(list.files(DIR))
 
+#elements <- list.files("/Volumes/WD 2020831 A/tmp/wbi3out")
 elements <- c("bird-alfl", "bird-amcr", "bird-amre", "bird-amro", "bird-atsp", 
     "bird-baww", "bird-bbwa", "bird-bbwo", "bird-bcch", "bird-bhco", 
-    "bird-bhvi", "bird-blpw", "bird-boch", "bird-brbl", "tree-betu-pap", 
+    "bird-bhvi", "bird-blpw", "bird-boch", "bird-brbl", "bird-brcr", 
+    "bird-btnw", "bird-cawa", "bird-chsp", "bird-cora", "bird-coye", 
+    "bird-deju", "bird-eaki", "bird-eaph", "bird-fosp", "bird-graj", 
+    "bird-heth", "bird-hola", "bird-lcsp", "bird-lefl", "bird-lisp", 
+    "bird-mawa", "bird-nofl", "bird-nowa", "bird-ocwa", "bird-osfl", 
+    "bird-oven", "bird-pawa", "bird-pisi", "bird-piwo", "bird-pufi", 
+    "bird-rbgr", "bird-rbnu", "bird-rcki", "bird-revi", "bird-rugr", 
+    "bird-rwbl", "bird-savs", "bird-sosp", "bird-swsp", "bird-swth", 
+    "bird-tewa", "bird-tres", "bird-wavi", "bird-wcsp", "bird-weta", 
+    "bird-wewp", "bird-wiwa", "bird-wiwr", "bird-wtsp", "bird-wwcr", 
+    "bird-ybfl", "bird-ybsa", "bird-yewa", "bird-yrwa", "tree-betu-pap", 
     "tree-lari-lar", "tree-pice-gla", "tree-pice-mar", "tree-pinu-ban", 
     "tree-popu-tre")
 
@@ -37,6 +48,7 @@ d[d$element=="bird-alfl",]
 library(jsonlite)
 
 writeLines(toJSON(d, pretty=FALSE), "scripts/index.json")
+write.csv(d, row.names=FALSE, file="scripts/api-index.csv")
 
 ## This file will be at `content/api/v1/public/wbi-nwt/elements/index.json`
 

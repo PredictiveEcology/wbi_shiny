@@ -9,8 +9,6 @@ r <- raster("data/raster-template-NWT.tif")
 
 ## Unioned region sf data frame
 p <- st_read("data/regions/regions.gpkg")
-## cutoff: 10 km^2
-p <- p[p$area >= 10^6 * 10,]
 
 ## Get element data
 baseurl <- "https://wbi-nwt.analythium.app"
