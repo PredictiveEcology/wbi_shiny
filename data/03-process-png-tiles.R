@@ -265,3 +265,4 @@ for (el in EL) {
 
 ## 8. finalize dir structure & check results
 
+# cp -a /root/tmp/. /root/content/api/v1/public/wbi-nwt/elements/
