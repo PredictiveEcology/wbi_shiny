@@ -125,6 +125,7 @@ p1$classification <- "Ecoregions"
 p1$region <- as.character(p1$ECOREGION)
 p1$ECOREGION <- NULL
 p1$area <- st_area(p1)
+p1 <- p1[!(p1$region %in% c("35", "68")),]
 
 p2 <- st_read("data/regions/protected-areas-in-nwt-bcr6.gpkg")
 p2$classification <- "Protected Areas"
@@ -135,10 +136,13 @@ p2 <- p2[names(p1)]
 p3 <- st_read("data/regions/iwa-in-nwt-bcr6.gpkg")
 p3$layer <- gsub("BIO_ENR_WFE_", "", p3$layer)
 p3$layer <- gsub("_", " ", p3$layer)
-p3$classification <- p3$layer
-p3$region <- p3$IWA
+p3$region <- p3$layer
+p3 <- p3 |> group_by(region) |> summarize()
+p3$classification <- "IWA"
 p3$area <- st_area(p3)
 p3 <- p3[names(p1)]
+p3 <- p3[!(p3$region %in% c("MINERALLICKDENSITY IWA", "BARRENGROUNDCARIBOU IWA")),]
+
 
 p4 <- st_read("data/regions/caribou-metaherds-nwt-bcr6.gpkg")
 p4$classification <- "Caribou Meta-herds"
@@ -146,8 +150,8 @@ p4$region <- p4$StudyArea
 p4$area <- st_area(p4)
 p4 <- p4[names(p1)]
 
-
 pp <- rbind(p0[,colnames(p1)], p1, p2, p3, p4)
+pp <- pp[as.numeric(pp$area)/10^6 >= 250,]
 
 ## plot all the boundaries to check what to exclude
 pf <- function(i) {
