@@ -13,12 +13,16 @@ app_ui <- function(request) {
     # Nav Bar ----
     bslib::page_navbar(
       id = "nav_bar", 
-      title = "WBI", 
-      bg = "#4E9D28",   # Predictive Ecology Green
+      title = span(
+        img(src = "www/favicon.ico", height = 30), 
+        span(strong("WBI"), style = "color: #C4161C")   # Predictive Ecology Red/Orange
+      ), 
+      bg = "#607086", 
       theme = bslib::bs_theme(
-        bootswatch = "united",
+        version = 5, 
+        bootswatch = "zephyr",
         bg = "#FFFFFF",
-        fg = "#3B2313",   # Predictive Ecology Brown
+        fg = "#000000",   
         primary = "#C4161C",   # Predictive Ecology Red/Orange
         base_font = bslib::font_google("Arvo")
       ), 

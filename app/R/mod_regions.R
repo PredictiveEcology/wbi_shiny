@@ -56,7 +56,7 @@ mod_regions_ui <- function(id){
       
     ), 
     
-    hr(), 
+    br(), 
     
     fluidRow(
       
