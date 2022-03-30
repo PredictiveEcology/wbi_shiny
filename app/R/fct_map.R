@@ -147,6 +147,7 @@ add_element <- function(map, element, scenario, period,
         title = title,
         opacity = opacity
       )
+    
   }
   
   return(m)
@@ -314,5 +315,32 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
   }
   
   return(m)
+  
+}
+
+
+#' Title
+#'
+#' @param region 
+#'
+#' @return
+#' 
+#' @noRd
+#'
+#' @examples
+map_region <- function(region) {
+  
+  # Build the base map
+  plot(STATS$regions[1, "geom"])
+  
+  # Plot the region, in gold
+  plot(
+    STATS$regions[region, "geom"], 
+    col = "gold", 
+    border = "tomato", 
+    add = TRUE
+  )
+  
+  invisible(NULL)
   
 }
