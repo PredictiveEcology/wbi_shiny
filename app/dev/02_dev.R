@@ -38,6 +38,7 @@ golem::add_module( name = "download", open = FALSE )
 ## Creates fct_* and utils_*
 golem::add_fct( "assets" )
 golem::add_fct( "map" )
+golem::add_fct( "stats" )
 golem::add_utils( "helpers" )
 
 ## External resources
