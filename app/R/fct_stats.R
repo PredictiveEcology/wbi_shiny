@@ -48,42 +48,39 @@ get_stats <- function(element, region) {
 
 
 
+#' Build Trendline Chart
+#'
+#' @param data The resulting data frame output from the `get_stats()` function
+#'
+#' @return An interactive {echarts4r} line chart
+#' 
+#' @details Note that `dplyr::group_by()` is currently 
+#' [exported from {echarts4r}](https://github.com/JohnCoene/echarts4r/blob/master/R/utils-exports.R), 
+#' but it appears from recent commits in the GitHub repository that this may be 
+#' subject to further ongoing development 
+#' 
+#' @noRd
+#'
+#' @examples
+#' get_stats(
+#'   element = "bird-alfl", 
+#'   region = "Ecoregions: 50"
+#' ) |> 
+#'   plot_trend()
 plot_trend <- function(data) {
-  
-  # data$Mean <- round(data$Mean, 4)
   
   data |> 
     dplyr::group_by(Scenario) |> 
     echarts4r::e_charts(Year) |> 
-    echarts4r::e_bar(Mean) |> 
-    echarts4r::e_y_axis(
-      formatter = echarts4r::e_axis_formatter(digits = 2)
+    echarts4r::e_line(
+      serie = Mean, 
+      symbol = "circle", 
+      symbolSize = 15
     ) |> 
     echarts4r::e_axis_labels(
       x = "Year", 
       y = "Mean"
     ) |> 
-    echarts4r::e_tooltip(
-      trigger = "item", 
-      formatter = htmlwidgets::JS("
-      function(params){
-        return('Year: ' + params.value[0] +
-               '<br />Mean: ' + params.value[1])
-      }
-    ")
-    )
+    echarts4r::e_tooltip(trigger = "axis")
+  
 }
-
-
-# 
-# plot_stats <- function(d, ...) {
-#   p <- ggplot(d,
-#               aes(x = as.integer(Year),
-#                   y = Mean,
-#                   group = Scenario,
-#                   fill = Scenario,
-#                   col = Scenario)) +
-#     geom_point() +
-#     geom_line()
-#   p
-# }

@@ -61,21 +61,27 @@ mod_regions_ui <- function(id){
     fluidRow(
       
       column(
-        width = 5, 
+        width = 4, 
         
-        plotOutput(outputId = ns("regions_map"))
+        plotOutput(
+          outputId = ns("regions_map"), 
+          height = "375px"
+        )
         
       ), 
       
       column(
-        width = 7, 
+        width = 8, 
         
         tabsetPanel(
           
           tabPanel(
             title = "Table", 
             
-            reactable::reactableOutput(outputId = ns("regions_stats_tbl"))
+            reactable::reactableOutput(
+              outputId = ns("regions_stats_tbl"), 
+              height = "375px"
+            )
             
           ), 
           
@@ -83,7 +89,8 @@ mod_regions_ui <- function(id){
             title = "Chart", 
             
             echarts4r::echarts4rOutput(
-              outputId = ns("regions_trend_chart")
+              outputId = ns("regions_trend_chart"), 
+              height = "375px"
             )
             
           )
