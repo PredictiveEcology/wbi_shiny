@@ -46,6 +46,35 @@ get_stats <- function(element, region) {
   
 }
 
+
+
+plot_trend <- function(data) {
+  
+  # data$Mean <- round(data$Mean, 4)
+  
+  data |> 
+    dplyr::group_by(Scenario) |> 
+    echarts4r::e_charts(Year) |> 
+    echarts4r::e_bar(Mean) |> 
+    echarts4r::e_y_axis(
+      formatter = echarts4r::e_axis_formatter(digits = 2)
+    ) |> 
+    echarts4r::e_axis_labels(
+      x = "Year", 
+      y = "Mean"
+    ) |> 
+    echarts4r::e_tooltip(
+      trigger = "item", 
+      formatter = htmlwidgets::JS("
+      function(params){
+        return('Year: ' + params.value[0] +
+               '<br />Mean: ' + params.value[1])
+      }
+    ")
+    )
+}
+
+
 # 
 # plot_stats <- function(d, ...) {
 #   p <- ggplot(d,

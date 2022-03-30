@@ -22,7 +22,7 @@ mod_regions_ui <- function(id){
           
           radioButtons(
             inputId = ns("regions_element_type"), 
-            label = "Element Type", 
+            label = "Element Type:", 
             choices = c("Bird", "Tree"), 
             selected = "Bird", 
             inline = TRUE
@@ -75,14 +75,16 @@ mod_regions_ui <- function(id){
           tabPanel(
             title = "Table", 
             
-            reactable::reactableOutput(outputId = ns("stats_tbl"))
+            reactable::reactableOutput(outputId = ns("regions_stats_tbl"))
             
           ), 
           
           tabPanel(
             title = "Chart", 
             
-            h1("Placeholder")
+            echarts4r::echarts4rOutput(
+              outputId = ns("regions_trend_chart")
+            )
             
           )
           
@@ -102,9 +104,24 @@ mod_regions_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    regions_data <- reactive({
+      
+      df <- get_stats(
+        element = input$regions_element, 
+        region = input$regions_region
+      )
+      
+      df$Mean <- round(df$Mean, 4)
+      
+      df
+      
+    })
+    
     # Update the options under "Element Name" based upon the selection in the 
     # "Element Type" radio button
     observe({
+      
+      req(input$regions_element_type)
       
       element_type <- tolower(input$regions_element_type)
       
@@ -116,12 +133,11 @@ mod_regions_server <- function(id){
       
     })
     
-    output$stats_tbl <- reactable::renderReactable({
+    output$regions_stats_tbl <- reactable::renderReactable({
       
-      get_stats(
-        element = input$regions_element, 
-        region = input$regions_region
-      ) |> 
+      req(regions_data())
+      
+      regions_data() |> 
         reactable::reactable(
           
           resizable = TRUE, 
@@ -135,11 +151,7 @@ mod_regions_server <- function(id){
             
             Year = reactable::colDef(minWidth = 50), 
             
-            Region = reactable::colDef(minWidth = 200), 
-            
-            Mean = reactable::colDef(
-              format = reactable::colFormat(digits = 4)
-            )
+            Region = reactable::colDef(minWidth = 200)
             
           )
         )
@@ -148,7 +160,17 @@ mod_regions_server <- function(id){
     
     output$regions_map <- renderPlot({
       
+      req(input$regions_region)
+      
       map_region(region = input$regions_region)
+      
+    })
+    
+    output$regions_trend_chart <- echarts4r::renderEcharts4r({
+      
+      req(regions_data())
+      
+      plot_trend(data = regions_data())
       
     })
     

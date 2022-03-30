@@ -21,6 +21,7 @@ usethis::use_package( "leaflet" )
 usethis::use_package( "leaflet.extras2" )
 usethis::use_package( "reactable" )
 usethis::use_package( "sf" )
+usethis::use_package( "echarts4r" )
 
 
 ## Add modules ----

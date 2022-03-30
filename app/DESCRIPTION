@@ -11,6 +11,7 @@ License: GPL-2
 Imports: 
     bslib,
     config (>= 0.3.1),
+    echarts4r,
     golem (>= 0.3.1),
     leaflet,
     leaflet.extras2,
