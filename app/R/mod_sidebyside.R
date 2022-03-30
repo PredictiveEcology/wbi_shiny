@@ -32,7 +32,7 @@ mod_sidebyside_ui <- function(id){
         width = 330, 
         height = "auto", 
         
-        
+        br(), 
         
         selectInput(
           inputId = ns("by_2x"), 
@@ -42,7 +42,7 @@ mod_sidebyside_ui <- function(id){
         
         radioButtons(
           inputId = ns("map_element_type"), 
-          label = "Element Type", 
+          label = "Element Type:", 
           choices = c("Bird", "Tree"), 
           selected = "Bird", 
           inline = TRUE
@@ -101,7 +101,6 @@ mod_sidebyside_server <- function(id){
           position = "topleft"
         )
     })
-    
     
   })
 }

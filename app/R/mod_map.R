@@ -32,9 +32,11 @@ mod_map_ui <- function(id){
         width = 330, 
         height = "auto", 
         
+        br(), 
+        
         radioButtons(
           inputId = ns("map_element_type"), 
-          label = "Element Type", 
+          label = "Element Type:", 
           choices = c("Bird", "Tree"), 
           selected = "Bird", 
           inline = TRUE
