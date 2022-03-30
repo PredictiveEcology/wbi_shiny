@@ -328,12 +328,13 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
 #' @noRd
 #'
 #' @examples
+#' map_region(region = "Ecoregions: 50")
 map_region <- function(region) {
   
   # Build the base map
   plot(STATS$regions[1, "geom"])
   
-  # Plot the region, in gold
+  # Color the region on the map
   plot(
     STATS$regions[region, "geom"], 
     col = "gold", 
