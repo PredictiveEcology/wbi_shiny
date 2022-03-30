@@ -70,7 +70,23 @@ mod_regions_ui <- function(id){
       column(
         width = 7, 
         
-        reactable::reactableOutput(outputId = ns("stats_tbl"))
+        tabsetPanel(
+          
+          tabPanel(
+            title = "Table", 
+            
+            reactable::reactableOutput(outputId = ns("stats_tbl"))
+            
+          ), 
+          
+          tabPanel(
+            title = "Chart", 
+            
+            h1("Placeholder")
+            
+          )
+          
+        )
         
       )
       
