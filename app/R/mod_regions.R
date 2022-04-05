@@ -76,20 +76,20 @@ mod_regions_ui <- function(id){
         tabsetPanel(
           
           tabPanel(
-            title = "Table", 
+            title = "Chart", 
             
-            reactable::reactableOutput(
-              outputId = ns("regions_stats_tbl"), 
+            echarts4r::echarts4rOutput(
+              outputId = ns("regions_trend_chart"), 
               height = "375px"
             )
             
           ), 
           
           tabPanel(
-            title = "Chart", 
+            title = "Table", 
             
-            echarts4r::echarts4rOutput(
-              outputId = ns("regions_trend_chart"), 
+            reactable::reactableOutput(
+              outputId = ns("regions_stats_tbl"), 
               height = "375px"
             )
             
@@ -111,6 +111,8 @@ mod_regions_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    # Capture the current data based upon the user's selections from the 
+    # "Element" and "Region" widgets
     regions_data <- reactive({
       
       df <- get_stats(
@@ -118,7 +120,7 @@ mod_regions_server <- function(id){
         region = input$regions_region
       )
       
-      df$Mean <- round(df$Mean, 4)
+      df$Mean <- round(df$Mean, 4)   # for formatting in table & chart tooltip
       
       df
       
@@ -140,31 +142,7 @@ mod_regions_server <- function(id){
       
     })
     
-    output$regions_stats_tbl <- reactable::renderReactable({
-      
-      req(regions_data())
-      
-      regions_data() |> 
-        reactable::reactable(
-          
-          resizable = TRUE, 
-          bordered = TRUE, 
-          
-          defaultColDef = reactable::colDef(minWidth = 75), 
-          
-          columns = list(
-            
-            Index = reactable::colDef(show = FALSE), 
-            
-            Year = reactable::colDef(minWidth = 50), 
-            
-            Region = reactable::colDef(minWidth = 200)
-            
-          )
-        )
-      
-    })
-    
+    # Render the map visual
     output$regions_map <- renderPlot({
       
       req(input$regions_region)
@@ -173,11 +151,33 @@ mod_regions_server <- function(id){
       
     })
     
+    # Render the interactive chart 
     output$regions_trend_chart <- echarts4r::renderEcharts4r({
       
       req(regions_data())
       
       plot_trend(data = regions_data())
+      
+    })
+    
+    # Render the interactive data table
+    output$regions_stats_tbl <- reactable::renderReactable({
+      
+      req(regions_data())
+      
+      regions_data() |> 
+        reactable::reactable(
+          # Specify overall table "default" settings
+          resizable = TRUE, 
+          bordered = TRUE, 
+          defaultColDef = reactable::colDef(minWidth = 75), 
+          # Specify individual column settings
+          columns = list(
+            Index = reactable::colDef(show = FALSE), 
+            Year = reactable::colDef(minWidth = 50), 
+            Region = reactable::colDef(minWidth = 200)
+          )
+        )
       
     })
     
