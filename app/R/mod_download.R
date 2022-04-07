@@ -15,6 +15,13 @@ mod_download_ui <- function(id){
       column(
         width = 12, 
         
+        radioButtons(
+          inputId = ns("download_group"), 
+          label = "Element Type", 
+          choices = c("Bird", "Tree"), 
+          inline = TRUE
+        ), 
+        
         reactable::reactableOutput(
           outputId = ns("download_tbl")
         )
@@ -32,9 +39,17 @@ mod_download_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
  
+    download_data <- reactive({
+      
+      current_group <- tolower(input$download_group)
+      
+      MAIN[MAIN$group == current_group, ]
+      
+    })
+    
     output$download_tbl <- reactable::renderReactable({
       
-      download_table(MAIN)
+      download_table(data = download_data())
       
     })
     
