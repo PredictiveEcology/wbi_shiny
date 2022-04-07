@@ -36,7 +36,7 @@ mod_map_ui <- function(id){
         
         radioButtons(
           inputId = ns("map_element_type"), 
-          label = "Element Type:", 
+          label = "Species Type:", 
           choices = c("Bird", "Tree"), 
           selected = "Bird", 
           inline = TRUE
@@ -44,7 +44,7 @@ mod_map_ui <- function(id){
         
         selectInput(
           inputId = ns("map_element"),
-          label = "Element Name:", 
+          label = "Species Name:", 
           choices = row.names(ELEMENTS[ELEMENTS$group == "bird", ])
         ),
 
@@ -56,7 +56,7 @@ mod_map_ui <- function(id){
         
         selectInput(
           inputId = ns("map_period"), 
-          label = "Time Periods:", 
+          label = "Time Period:", 
           choices = c(2011, 2100)
         ), 
         

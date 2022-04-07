@@ -3,12 +3,14 @@
 
 #' Build the Interactive "Download" Table
 #'
-#' @param x A data frame containing the data to be displayed in the table
+#' @param data A data frame containing the data to be displayed in the table
 #'
 #' @return An interactive *{reactable}* data table
 #'
 #' @noRd
 #' 
+#' @examples 
+#' download_table(MAIN)
 download_table <- function(data) {
   
   reactable::reactable(
@@ -23,7 +25,7 @@ download_table <- function(data) {
       common_name = reactable::colDef(name = "Common Name"),
       scientific_name = reactable::colDef(name = "Scientific Name"),
       scenario = reactable::colDef(name = "Scenario"),
-      period = reactable::colDef(name = "Period"),
+      period = reactable::colDef(name = "Time Period"),
       resolution = reactable::colDef(name = "Resolution"),
       path = reactable::colDef(
         name = "Link", 

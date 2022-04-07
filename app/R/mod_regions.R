@@ -22,7 +22,7 @@ mod_regions_ui <- function(id){
           
           radioButtons(
             inputId = ns("regions_element_type"), 
-            label = "Element Type:", 
+            label = "Species Type:", 
             choices = c("Bird", "Tree"), 
             selected = "Bird", 
             inline = TRUE
@@ -35,7 +35,7 @@ mod_regions_ui <- function(id){
           
           selectInput(
             inputId = ns("regions_element"),
-            label = "Element Name:", 
+            label = "Species Name:", 
             choices = unique(STATS$elements$element[STATS$elements$group == "bird"])
           )
           

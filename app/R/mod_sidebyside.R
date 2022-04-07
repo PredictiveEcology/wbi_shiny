@@ -36,13 +36,13 @@ mod_sidebyside_ui <- function(id){
         
         selectInput(
           inputId = ns("by_2x"), 
-          label = "Compare by:", 
+          label = "Compare By:", 
           choices = c("scenario", "year")
         ), 
         
         radioButtons(
           inputId = ns("map_element_type"), 
-          label = "Element Type:", 
+          label = "Species Type:", 
           choices = c("Bird", "Tree"), 
           selected = "Bird", 
           inline = TRUE
@@ -50,7 +50,7 @@ mod_sidebyside_ui <- function(id){
         
         selectInput(
           inputId = ns("map_element"),
-          label = "Element Name:", 
+          label = "Species Name:", 
           choices = row.names(ELEMENTS[ELEMENTS$group == "bird", ])
         ),
         

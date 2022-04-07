@@ -17,7 +17,7 @@ mod_download_ui <- function(id){
         
         radioButtons(
           inputId = ns("download_group"), 
-          label = "Element Type", 
+          label = "Species Type:", 
           choices = c("Bird", "Tree"), 
           inline = TRUE
         ), 
