@@ -9,17 +9,17 @@
 #'
 #' @noRd
 #' 
-download_table <- function(x) {
+download_table <- function(data) {
   
   reactable::reactable(
-    x,
+    data,
     rownames = FALSE,
     filterable = TRUE,
     highlight = TRUE,
     showPageSizeOptions = TRUE,
     columns = list(
-      group = reactable::colDef(name = "Group"),
-      species_code = reactable::colDef(name = "Species Code"),
+      group = reactable::colDef(show = FALSE),
+      species_code = reactable::colDef(show = FALSE),
       common_name = reactable::colDef(name = "Common Name"),
       scientific_name = reactable::colDef(name = "Scientific Name"),
       scenario = reactable::colDef(name = "Scenario"),
@@ -28,7 +28,8 @@ download_table <- function(x) {
       path = reactable::colDef(
         name = "Link", 
         align = "left", 
-        sortable = FALSE,
+        sortable = FALSE, 
+        filterable = FALSE, 
         html = TRUE, cell = function(value, index) {
           sprintf('<a href="%s" target="_blank">%s</a>', 
                   paste0("https://wbi-nwt.analythium.app/", LINKS$path[index]), "Link")
