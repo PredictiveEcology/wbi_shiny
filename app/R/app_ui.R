@@ -15,7 +15,7 @@ app_ui <- function(request) {
       id = "nav_bar", 
       title = span(
         img(src = "www/favicon.ico", height = 30), 
-        span(strong("WBI"), style = "color: #C4161C")   # Predictive Ecology Red/Orange
+        span(strong("WBI"), style = "color: #E1E375")   # Predictive Ecology Yellow
       ), 
       bg = "#607086", 
       theme = bslib::bs_theme(
