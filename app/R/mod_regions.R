@@ -174,6 +174,7 @@ mod_regions_server <- function(id){
           # Specify individual column settings
           columns = list(
             Index = reactable::colDef(show = FALSE), 
+            Element = reactable::colDef(name = "Species Name"), 
             Year = reactable::colDef(minWidth = 50), 
             Region = reactable::colDef(minWidth = 200)
           )
