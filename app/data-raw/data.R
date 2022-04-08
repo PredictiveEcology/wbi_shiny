@@ -8,6 +8,10 @@ rownames(ELEMENTS) <- paste0(ELEMENTS$group, "-", tolower(ELEMENTS$species_code)
 # TODO // Peter adding 2 more columns, one is the max value, and the second is 
 # the max index value for the hex code to drive the color scaling... need to add
 # this data to the mapping functions `max` arguments in the legend functions
+
+ELEMENT_STATS <- read.csv("data-raw/element-stats.csv") |> 
+  dplyr::filter(resolution == '1000m')
+
 LINKS <- jsonlite::fromJSON(
   "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/index.json"
 )
@@ -33,6 +37,7 @@ MAIN <- MAIN[MAIN$resolution != "tiles", cols]
 STATS <- readRDS("data-raw/elements-regions-stats-250m.rds")
 
 usethis::use_data(
-  ELEMENTS, LINKS, SCENARIOS, MAIN, STATS, 
+  ELEMENTS, ELEMENT_STATS, LINKS, SCENARIOS, MAIN, STATS,
   overwrite = TRUE
 )
+

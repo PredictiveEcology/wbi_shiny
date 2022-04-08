@@ -132,22 +132,39 @@ add_element <- function(map, element, scenario, period,
   # If `add_legend = TRUE`, show the legend
   if (add_legend) {
     
-    max <- 1   # maximum abundance
+    # max <- 1   # maximum abundance
+    
+    ###############
+    s <- scenario
+    
+    # element = 'bird-alfl'
+    # s <- 'landr-scfm-v4'
+    # period = '2011'
+
+    selected_elem_stat <- ELEMENT_STATS[ELEMENT_STATS$element_name == element & ELEMENT_STATS$scenario == s & ELEMENT_STATS$year == period,]
+    domain_max <- selected_elem_stat$max
+    values_max <- selected_elem_stat$pal_max
+    
+    
+    ###############
+    
+    
     title <- "Abundance"   # title for the legend
+    pal <- leaflet::colorNumeric(
+      palette = grDevices::hcl.colors(101, "Spectral", rev = TRUE),
+      domain = c(0, selected_elem_stat$max),   # adjust max here too
+    )
     
     # add legend to the leaflet object
     m <- m |>
       leaflet::addLegend(
         position = "bottomleft", 
-        pal = leaflet::colorNumeric(
-          palette = viridis::viridis_pal(option = "D")(25),
-          domain = c(0, max)   # adjust max here too
-        ), 
-        values = c(0, max), # need to adjust max here
+        pal = pal, 
+        values = c(0, selected_elem_stat$max), # need to adjust max here
         title = title,
         opacity = opacity
       )
-    
+   
   }
   
   return(m)
