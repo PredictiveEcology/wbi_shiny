@@ -151,7 +151,7 @@ add_element <- function(map, element, scenario, period,
     
     title <- "Abundance"   # title for the legend
     pal <- leaflet::colorNumeric(
-      palette = grDevices::hcl.colors(101, "Spectral", rev = TRUE),
+      palette = grDevices::hcl.colors(101, "Spectral", rev = TRUE)[seq_len(selected_elem_stat$pal_max)],
       domain = c(0, selected_elem_stat$max),   # adjust max here too
     )
     
