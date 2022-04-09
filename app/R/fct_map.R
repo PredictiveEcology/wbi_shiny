@@ -112,7 +112,8 @@ add_element <- function(map, element, scenario, period,
   # Retrieve the appropriate tiles for the element/scenario/period from the 
   # database
   tiles <- sprintf(
-    "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/%s/%s/%s/tiles/{z}/{x}/{-y}.png", 
+    paste0(get_golem_config("app_baseurl"),
+      "api/v1/public/wbi-nwt/elements/%s/%s/%s/tiles/{z}/{x}/{-y}.png"), 
     element, 
     scenario, 
     as.character(period)
@@ -237,13 +238,15 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
     id2 <- "LandR.CS FS V6a"
     
     tiles1 <- paste0(
-      "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/",
+      get_golem_config("app_baseurl"),
+      "api/v1/public/wbi-nwt/elements/",
       element, 
       "/landr-scfm-v4/2100/tiles/{z}/{x}/{-y}.png"
     )
     
     tiles2 <- paste0(
-      "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/",
+      get_golem_config("app_baseurl"),
+      "api/v1/public/wbi-nwt/elements/",
       element, 
       "/landrcs-fs-v6a/2100/tiles/{z}/{x}/{-y}.png"
     )
@@ -254,13 +257,15 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
     id2 <- "2100"
     
     tiles1 <- paste0(
-      "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/",
+      get_golem_config("app_baseurl"),
+      "api/v1/public/wbi-nwt/elements/",
       element, 
       "/landrcs-fs-v6a/2011/tiles/{z}/{x}/{-y}.png"
     )
     
     tiles2 <- paste0(
-      "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/",
+      get_golem_config("app_baseurl"),
+      "api/v1/public/wbi-nwt/elements/",
       element, 
       "/landrcs-fs-v6a/2100/tiles/{z}/{x}/{-y}.png"
     )
