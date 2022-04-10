@@ -13,7 +13,7 @@ mod_download_ui <- function(id){
  
     fluidRow(
       column(
-        width = 12, 
+        width = 3, 
         
         radioButtons(
           inputId = ns("download_group"), 
@@ -21,6 +21,17 @@ mod_download_ui <- function(id){
           choices = c("Bird", "Tree"), 
           inline = TRUE
         ), 
+        shinyBS::bsTooltip(
+          ns("download_group"), 
+          "Tip!",
+          "left"),
+        
+      )
+    ),
+
+    fluidRow(
+      column(
+        width = 12, 
         
         reactable::reactableOutput(
           outputId = ns("download_tbl")
