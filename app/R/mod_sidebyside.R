@@ -42,9 +42,9 @@ mod_sidebyside_ui <- function(id){
         
         radioButtons(
           inputId = ns("map_element_type"), 
-          label = "Species Type:", 
-          choices = c("Bird", "Tree"), 
-          selected = "Bird", 
+          label = "Species Group:", 
+          choices = c("Birds" = "bird", "Trees" = "tree"), 
+          selected = "bird", 
           inline = TRUE
         ), 
         

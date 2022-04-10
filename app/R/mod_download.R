@@ -17,8 +17,9 @@ mod_download_ui <- function(id){
         
         radioButtons(
           inputId = ns("download_group"), 
-          label = "Species Type:", 
-          choices = c("Bird", "Tree"), 
+          label = "Species Group:", 
+          choices = c("Birds" = "bird", "Trees" = "tree"), 
+          selected = "bird", 
           inline = TRUE
         ), 
         shinyBS::bsTooltip(
