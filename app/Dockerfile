@@ -12,6 +12,7 @@ RUN Rscript -e 'remotes::install_version("leaflet.extras2",upgrade="never", vers
 RUN Rscript -e 'remotes::install_version("golem",upgrade="never", version = "0.3.2")'
 RUN Rscript -e 'remotes::install_version("echarts4r",upgrade="never", version = "0.4.3")'
 RUN Rscript -e 'remotes::install_github("psolymos/shinyBS@86c427aed776fc6d5c4efcee0112e4c22c81a95e")'
+RUN Rscript -e 'remotes::install_version("ggplot2",upgrade="never", version = "3.3.5")'
 RUN mkdir ./build_zone
 ADD . ./build_zone
 WORKDIR ./build_zone
@@ -22,4 +23,4 @@ RUN addgroup --system shiny && adduser --system --ingroup shiny shiny
 USER shiny
 
 EXPOSE 8080
-CMD R -e "options('shiny.port'=8080,shiny.host='0.0.0.0');library(ShinyWBI);run_app()"
+CMD R -e "options('shiny.port'=8080,shiny.host='0.0.0.0');library(ShinyWBI);library(sf);run_app()"

@@ -49,7 +49,7 @@ docker build -t $TAG .
 Test the app locally:
 
 ```bash
-docker run -p 8080:80 $TAG
+docker run -p 8080:8080 $TAG
 ```
 
 Now open `http://localhost:8080` in your browser.
