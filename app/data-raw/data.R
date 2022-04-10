@@ -1,7 +1,5 @@
 ## code to prepare `data` dataset goes here
 
-BASEURL <- "https://wbi-nwt.analythium.app/api/v1/public"
-
 ELEMENTS <- read.csv("data-raw/element-lookup.csv")
 rownames(ELEMENTS) <- paste0(ELEMENTS$group, "-", tolower(ELEMENTS$species_code))
 
@@ -11,6 +9,10 @@ rownames(ELEMENTS) <- paste0(ELEMENTS$group, "-", tolower(ELEMENTS$species_code)
 LINKS <- jsonlite::fromJSON(
   "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/index.json"
 )
+
+MAPSTATS <- read.csv("data-raw/element-stats.csv")
+MAPSTATS <- MAPSTATS[MAPSTATS$resolution == "1000m", 
+  c("element_name", "year", "scenario", "max", "pal_max")]
 
 SCENARIOS <- list(
   "LandR SCFM V4" = "landr-scfm-v4",
@@ -33,6 +35,6 @@ MAIN <- MAIN[MAIN$resolution != "tiles", cols]
 STATS <- readRDS("data-raw/elements-regions-stats-250m.rds")
 
 usethis::use_data(
-  ELEMENTS, LINKS, SCENARIOS, MAIN, STATS, 
+  ELEMENTS, LINKS, SCENARIOS, MAIN, STATS, MAPSTATS,
   overwrite = TRUE
 )
