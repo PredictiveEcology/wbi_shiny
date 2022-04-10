@@ -326,9 +326,10 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
 }
 
 
-#' Title
+#' Small map for regions
 #'
-#' @param region 
+#' @param region Character; region to show.
+#' @param base Logical; use {base} graphics or {ggplot2}.
 #'
 #' @return
 #' 
@@ -336,18 +337,38 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
 #'
 #' @examples
 #' map_region(region = "Ecoregions: 50")
-map_region <- function(region) {
+map_region <- function(region, base=FALSE) {
   
-  # Build the base map
-  plot(STATS$regions[1, "geom"])
-  
-  # Color the region on the map
-  plot(
-    STATS$regions[region, "geom"], 
-    col = "gold", 
-    border = "tomato", 
-    add = TRUE
-  )
+  if (base) {
+
+    # Build the base map
+    plot(STATS$regions["NWT: Northwest Territories", "geom"])
+    
+    # Color the region on the map
+    plot(
+      STATS$regions[region, "geom"], 
+      col = "gold", 
+      border = "tomato", 
+      add = TRUE
+    )
+
+  } else {
+
+    p <- ggplot2::ggplot(
+        data = STATS$regions["NWT: Northwest Territories",]
+      ) + 
+      ggplot2::geom_sf(
+        col="grey", 
+        fill="grey"
+      ) +
+      ggplot2::geom_sf(
+        data = STATS$regions[region,], 
+        fill = "gold"
+      ) +
+      ggplot2::theme_minimal()
+    print(p)
+
+  }
   
   invisible(NULL)
   
