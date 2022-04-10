@@ -32,9 +32,10 @@ download_table <- function(data) {
         align = "left", 
         sortable = FALSE, 
         filterable = FALSE, 
-        html = TRUE, cell = function(value, index) {
+        html = TRUE, 
+        cell = function(value, index) {
           sprintf('<a href="%s" target="_blank">%s</a>',
-                  paste0(get_golem_config("app_baseurl"),#"https://wbi-nwt.analythium.app/",
+                  paste0(get_golem_config("app_baseurl"),
                          LINKS$path[index]),
                   "Link")
         })
