@@ -22,6 +22,11 @@ SCENARIOS <- list(
 ELEMENT_NAMES <- paste0(ELEMENTS$group, "-", tolower(ELEMENTS$species_code))
 names(ELEMENT_NAMES) <- ELEMENTS$common_name
 
+ELEMENT_NAMES <- list(
+  bird = ELEMENT_NAMES[ELEMENTS$group == "bird"],
+  tree = ELEMENT_NAMES[ELEMENTS$group == "tree"])
+
+
 MAIN <- data.frame(
   LINKS[, -1],
   ELEMENTS[match(LINKS$element, rownames(ELEMENTS)), -1]
@@ -35,6 +40,6 @@ MAIN <- MAIN[MAIN$resolution != "tiles", cols]
 STATS <- readRDS("data-raw/elements-regions-stats-250m.rds")
 
 usethis::use_data(
-  ELEMENTS, LINKS, SCENARIOS, MAIN, STATS, MAPSTATS,
+  ELEMENTS, LINKS, SCENARIOS, MAIN, STATS, MAPSTATS, ELEMENT_NAMES,
   overwrite = TRUE
 )

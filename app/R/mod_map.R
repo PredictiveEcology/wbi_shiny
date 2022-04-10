@@ -45,7 +45,7 @@ mod_map_ui <- function(id){
         selectInput(
           inputId = ns("map_element"),
           label = "Species Name:", 
-          choices = row.names(ELEMENTS[ELEMENTS$group == "bird", ])
+          choices = ELEMENT_NAMES$bird
         ),
 
         selectInput(
@@ -89,7 +89,7 @@ mod_map_server <- function(id, elements){
       updateSelectInput(
         session = session, 
         inputId = "map_element", 
-        choices = row.names(ELEMENTS[ELEMENTS$group == element_type, ])
+        choices = ELEMENT_NAMES[[element_type]]
       )
       
     })

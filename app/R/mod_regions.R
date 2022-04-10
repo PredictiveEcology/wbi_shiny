@@ -36,7 +36,7 @@ mod_regions_ui <- function(id){
           selectInput(
             inputId = ns("regions_element"),
             label = "Species Name:", 
-            choices = unique(STATS$elements$element[STATS$elements$group == "bird"])
+            choices = ELEMENT_NAMES$bird
           )
           
         ), 
@@ -137,7 +137,7 @@ mod_regions_server <- function(id){
       updateSelectInput(
         session = session, 
         inputId = "regions_element", 
-        choices = unique(STATS$elements$element[STATS$elements$group == element_type])
+        choices = ELEMENT_NAMES[[element_type]]
       )
       
     })

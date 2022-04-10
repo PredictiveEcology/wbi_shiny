@@ -34,12 +34,6 @@ mod_sidebyside_ui <- function(id){
         
         br(), 
         
-        selectInput(
-          inputId = ns("by_2x"), 
-          label = "Compare By:", 
-          choices = c("scenario", "year")
-        ), 
-        
         radioButtons(
           inputId = ns("map_element_type"), 
           label = "Species Group:", 
@@ -51,9 +45,14 @@ mod_sidebyside_ui <- function(id){
         selectInput(
           inputId = ns("map_element"),
           label = "Species Name:", 
-          choices = row.names(ELEMENTS[ELEMENTS$group == "bird", ])
+          choices = ELEMENT_NAMES$bird
         ),
         
+        selectInput(
+          inputId = ns("by_2x"), 
+          label = "Compare By:", 
+          choices = c("scenario", "year")
+        ), 
     
         sliderInput(
           inputId = ns("map_opacity"), 
@@ -85,7 +84,7 @@ mod_sidebyside_server <- function(id){
       updateSelectInput(
         session = session, 
         inputId = "map_element", 
-        choices = row.names(ELEMENTS[ELEMENTS$group == element_type, ])
+        choices = ELEMENT_NAMES[[element_type]]
       )
       
     })
