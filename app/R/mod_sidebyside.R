@@ -92,10 +92,38 @@ mod_sidebyside_server <- function(id){
     
     # Render the map
     output$map <- leaflet::renderLeaflet({
+      if (input$by_2x == "scenario") {
+        MS1 <- MAPSTATS[
+          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$scenario == "landr-scfm-v4" & 
+          MAPSTATS$year == "2100",
+        ]
+        MS2 <- MAPSTATS[
+          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$scenario == "landrcs-fs-v6a" & 
+          MAPSTATS$year == "2100",
+        ]
+      } else {
+        MS1 <- MAPSTATS[
+          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$scenario == "landrcs-fs-v6a" & 
+          MAPSTATS$year == "2011",
+        ]
+        MS2 <- MAPSTATS[
+          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$scenario == "landrcs-fs-v6a" & 
+          MAPSTATS$year == "2100",
+        ]
+      }
       base_map2x() |> 
         add_element2x(
           element = input$map_element, 
-          by = input$by_2x
+          by = input$by_2x,
+          opacity = input$map_opacity,
+          max1 = MS1$max,
+          max2 = MS2$max,
+          pal_max1 = MS1$pal_max,
+          pal_max2 = MS2$pal_max
         ) |> 
         leaflet::addMeasure(
           position = "topleft"

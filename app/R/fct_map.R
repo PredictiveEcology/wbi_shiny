@@ -79,6 +79,8 @@ base_map <- function() {
 #'   display in the map
 #' @param opacity Numeric; the level of opacity to apply to the map tiles
 #' @param add_legend Logical; should map legend be shown?
+#' @param max Numeric; a positive value to be set as the maximum of the legend.
+#' @param pal_max Integer between 1L and 101L; the max range of the color palette.
 #'
 #' @return A leaflet map object with overlaid tiles
 #' 
@@ -107,7 +109,8 @@ base_map <- function() {
 # need to implement max values for scaling
 # need to implement measurement units for title
 add_element <- function(map, element, scenario, period, 
-                        opacity = 0.8, add_legend = TRUE) {
+                        opacity = 0.8, add_legend = TRUE,
+                        max = 1, pal_max = 101L) {
   
   # Retrieve the appropriate tiles for the element/scenario/period from the 
   # database
@@ -133,7 +136,6 @@ add_element <- function(map, element, scenario, period,
   # If `add_legend = TRUE`, show the legend
   if (add_legend) {
     
-    max <- 1   # maximum abundance
     title <- "Abundance"   # title for the legend
     
     # add legend to the leaflet object
@@ -141,7 +143,7 @@ add_element <- function(map, element, scenario, period,
       leaflet::addLegend(
         position = "bottomleft", 
         pal = leaflet::colorNumeric(
-          palette = viridis::viridis_pal(option = "D")(25),
+          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max)],
           domain = c(0, max)   # adjust max here too
         ), 
         values = c(0, max), # need to adjust max here
@@ -204,6 +206,8 @@ base_map2x <- function() {
 #'   or "period"
 #' @param opacity Numeric; the level of opacity to apply to the map tiles
 #' @param add_legend Logical; should map legend be shown?
+#' @param max1,max2 Numeric; a positive value to be set as the maximum of the legend.
+#' @param pal_max1,pal_max2 Integer between 1L and 101L; the max range of the color palette.
 #'
 #' @return A leaflet map object containing two maps side-by-side with overlaid
 #'   tiles
@@ -229,7 +233,8 @@ base_map2x <- function() {
 #'     add_legend = FALSE
 #'   )
 #' 
-add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
+add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
+                          max1 = 1, max2 = 1, pal_max1 = 101L, pal_max2 = 101L) {
   
   # Build the path to the pre-processed tiles
   if (by == "scenario") {
@@ -290,31 +295,28 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE) {
   # If `add_legend = TRUE`, include legend on map
   if (add_legend) {
     
-    max1 <- 1
-    max2 <- 1
-    
     m <- m |>
       leaflet::addLegend(
         position = "bottomleft", 
         pal = leaflet::colorNumeric(
-          palette = viridis::viridis_pal(option = "D")(25),
+          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
           domain = c(0, max1)), # adjust max here too
         values = c(0, max1), # need to adjust max here
         title = id1,
         group = id1, 
         layerId = paste0(id1, "_id"),
-        opacity = 1
+        opacity = opacity
       ) |>
       leaflet::addLegend(
         position = "bottomright", 
         pal = leaflet::colorNumeric(
-          palette = viridis::viridis_pal(option = "D")(25),
+          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
           domain = c(0, max2)), # adjust max here too
         values = c(0, max2), # need to adjust max here
         title = id2,
         group = id2, 
         layerId = paste0(id2, "_id"),
-        opacity = 1
+        opacity = opacity
       )
     
   }

@@ -96,11 +96,19 @@ mod_map_server <- function(id, elements){
     
     # Render the map
     output$map <- leaflet::renderLeaflet({
+      MS <- MAPSTATS[
+        MAPSTATS$element_name == input$map_element & 
+        MAPSTATS$scenario == input$map_scenario & 
+        MAPSTATS$year == input$map_period,
+      ]
       base_map() |> 
         add_element(
           element = input$map_element, 
           scenario = input$map_scenario, 
-          period = input$map_period
+          period = input$map_period,
+          opacity = input$map_opacity,
+          max = MS$max, 
+          pal_max = MS$pal_max
         ) |> 
         leaflet::addMeasure(
           position = "topleft"
