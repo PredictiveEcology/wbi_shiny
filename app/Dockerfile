@@ -17,5 +17,9 @@ ADD . ./build_zone
 WORKDIR ./build_zone
 RUN R -e 'remotes::install_local(upgrade="never")'
 RUN rm -rf ./build_zone
-EXPOSE 80
-CMD R -e "options('shiny.port'=80,shiny.host='0.0.0.0');library(ShinyWBI);run_app()"
+
+RUN addgroup --system shiny && adduser --system --ingroup shiny shiny
+USER shiny
+
+EXPOSE 8080
+CMD R -e "options('shiny.port'=8080,shiny.host='0.0.0.0');library(ShinyWBI);run_app()"
