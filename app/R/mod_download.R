@@ -23,8 +23,7 @@ mod_download_ui <- function(id){
         ), 
         shinyBS::bsTooltip(
           ns("download_group"), 
-          "Tip!",
-          "left"),
+          "Tip!"),
         
       )
     ),
