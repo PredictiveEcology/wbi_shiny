@@ -19,7 +19,7 @@ Authors@R: c(
       family = "Lindblad",
       role = c("ctb"),
       email = "blindblad@ketchbrookanalytics.com"
-    ), 
+    )
   )
 Description: ShinyWBI serves as a Shiny app that allows users to compare current 
   ecological data (Year 2011) with simulated effects applied over the next 90 
@@ -40,7 +40,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
 Depends: 
-    R (>= 4.10),
+    R (>= 4.1),
     shinyBS
 Remotes:
     psolymos/shinyBS
