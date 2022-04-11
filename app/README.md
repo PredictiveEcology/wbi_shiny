@@ -53,3 +53,5 @@ docker run -p 8080:8080 $TAG
 ```
 
 Now open `http://localhost:8080` in your browser.
+
+Push to Docker Hub: `docker push $TAG`.

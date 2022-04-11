@@ -1,7 +1,7 @@
 {$HOST} {
     root * /srv
     handle_path /apps/nwt/* {
-        reverse_proxy shinyapp:3838
+        reverse_proxy shinyapp:8080
     }
     basicauth /api/v1/private/* {
         shiny JDJhJDEyJGxKbVIxS24xZWdUWTlvdE5lNnY0N2VKUjBjZ1JrY0M1UGxZUDBjUFI4MFQ1Qm90UkFFamtt
