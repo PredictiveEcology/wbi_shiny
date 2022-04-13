@@ -35,7 +35,7 @@ mod_sidebyside_ui <- function(id){
         br(), 
         
         radioButtons(
-          inputId = ns("map_element_type"), 
+          inputId = ns("map2x_element_type"), 
           label = "Species Group:", 
           choices = c("Birds" = "bird", "Trees" = "tree"), 
           selected = "bird", 
@@ -43,7 +43,7 @@ mod_sidebyside_ui <- function(id){
         ), 
         
         selectInput(
-          inputId = ns("map_element"),
+          inputId = ns("map2x_element"),
           label = "Species Name:", 
           choices = ELEMENT_NAMES$bird
         ),
@@ -55,7 +55,7 @@ mod_sidebyside_ui <- function(id){
         ), 
     
         sliderInput(
-          inputId = ns("map_opacity"), 
+          inputId = ns("map2x_opacity"), 
           label = "Opacity:", 
           min = 0, 
           max = 1, 
@@ -79,11 +79,11 @@ mod_sidebyside_server <- function(id){
     # "Element Type" radio button
     observe({
       
-      element_type <- tolower(input$map_element_type)
+      element_type <- tolower(input$map2x_element_type)
       
       updateSelectInput(
         session = session, 
-        inputId = "map_element", 
+        inputId = "map2x_element", 
         choices = ELEMENT_NAMES[[element_type]]
       )
       
@@ -93,32 +93,32 @@ mod_sidebyside_server <- function(id){
     output$map <- leaflet::renderLeaflet({
       if (input$by_2x == "scenario") {
         MS1 <- MAPSTATS[
-          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$element_name == input$map2x_element & 
           MAPSTATS$scenario == "landr-scfm-v4" & 
           MAPSTATS$year == "2100",
         ]
         MS2 <- MAPSTATS[
-          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$element_name == input$map2x_element & 
           MAPSTATS$scenario == "landrcs-fs-v6a" & 
           MAPSTATS$year == "2100",
         ]
       } else {
         MS1 <- MAPSTATS[
-          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$element_name == input$map2x_element & 
           MAPSTATS$scenario == "landrcs-fs-v6a" & 
           MAPSTATS$year == "2011",
         ]
         MS2 <- MAPSTATS[
-          MAPSTATS$element_name == input$map_element & 
+          MAPSTATS$element_name == input$map2x_element & 
           MAPSTATS$scenario == "landrcs-fs-v6a" & 
           MAPSTATS$year == "2100",
         ]
       }
       base_map2x() |> 
         add_element2x(
-          element = input$map_element, 
+          element = input$map2x_element, 
           by = input$by_2x,
-          opacity = input$map_opacity,
+          opacity = input$map2x_opacity,
           max1 = MS1$max,
           max2 = MS2$max,
           pal_max1 = MS1$pal_max,
