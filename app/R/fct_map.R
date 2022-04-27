@@ -128,6 +128,7 @@ add_element <- function(map, element, scenario, period,
     leaflet::addTiles(
       urlTemplate = tiles,
       options = leaflet::tileOptions(
+        maxNativeZoom = 10,
         opacity = opacity,
         zIndex = 400
       )
@@ -283,13 +284,13 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
       urlTemplate = tiles1, 
       group = id1, 
       layerId = paste0(id1, "_id"),
-      options = leaflet::tileOptions(pane = "left", opacity = opacity)
+      options = leaflet::tileOptions(pane = "left", opacity = opacity, maxNativeZoom = 10)
     ) |> 
     leaflet::addTiles(
       urlTemplate = tiles2, 
       group = id2, 
       layerId = paste0(id2, "_id"),
-      options = leaflet::tileOptions(pane = "right", opacity = opacity)
+      options = leaflet::tileOptions(pane = "right", opacity = opacity, maxNativeZoom = 10)
     )
   
   # If `add_legend = TRUE`, include legend on map
