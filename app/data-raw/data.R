@@ -39,7 +39,26 @@ MAIN <- MAIN[MAIN$resolution != "tiles", cols]
 
 STATS <- readRDS("data-raw/elements-regions-stats-250m.rds")
 
+i <- which(rownames(STATS$regions) == "Caribou Meta-herds: Decho South")
+rownames(STATS$regions)[i] <- "Caribou Meta-herds: Dehcho South"
+STATS$regions$region[i] <- "Dehcho South"
+dimnames(STATS$statistics)[[2]][i] <- "Caribou Meta-herds: Dehcho South"
+
+i <- which(rownames(STATS$regions) == "Caribou Meta-herds: Decho North")
+rownames(STATS$regions)[i] <- "Caribou Meta-herds: Dehcho North"
+STATS$regions$region[i] <- "Dehcho North"
+dimnames(STATS$statistics)[[2]][i] <- "Caribou Meta-herds: Dehcho North"
+
+i <- which(rownames(STATS$regions) == "Caribou Meta-herds: Hay River")
+rownames(STATS$regions)[i] <- "Caribou Meta-herds: Hay River Lowlands"
+STATS$regions$region[i] <- "Hay River Lowlands"
+dimnames(STATS$statistics)[[2]][i] <- "Caribou Meta-herds: Hay River Lowlands"
+
+CARIBOU <- read.csv("data-raw/caribou-lambda.csv")
+CARIBOU$region <- paste("Caribou Meta-herds:", CARIBOU$region)
+
 usethis::use_data(
   ELEMENTS, LINKS, SCENARIOS, MAIN, STATS, MAPSTATS, ELEMENT_NAMES,
+  CARIBOU,
   overwrite = TRUE
 )
