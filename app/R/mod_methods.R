@@ -10,7 +10,8 @@
 mod_methods_ui <- function(id){
   ns <- NS(id)
   tagList(
- 
+    h1("Methods"),
+    p("Coming soon...")
   )
 }
     

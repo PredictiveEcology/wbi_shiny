@@ -10,6 +10,8 @@
 mod_birds_ui <- function(id){
   ns <- NS(id)
   tagList(
+
+    p("Results coming soon...")
  
   )
 }
