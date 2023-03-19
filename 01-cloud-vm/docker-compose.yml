@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  shinyapp:
+    image: psolymos/shinywbi:v1
+    restart: always
+    expose:
+      - "8080"
+  caddy:
+    image: caddy:2.6.4-alpine
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - $PWD/Caddyfile:/etc/caddy/Caddyfile
+      - /root/content:/srv
+      - $PWD/log:/var/log/caddy
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - shinyapp
+    environment:
+      # - HOST="wbi-nwt.analythium.app"
+      - HOST=":80"
+volumes:
+  caddy_data:
+  caddy_config:
+
