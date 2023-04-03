@@ -14,7 +14,7 @@ app_ui <- function(request) {
     bslib::page_navbar(
       id = "nav_bar", 
       title = span(
-        img(src = "www/favicon.ico", height = 30), 
+        img(src = "www/logo.png", height = 30), 
         span(strong("WBI"), style = "color: #E1E375")   # Predictive Ecology Yellow
       ), 
       bg = "#607086", 
