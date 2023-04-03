@@ -1,10 +1,28 @@
 # Set up a cloud VM
 
+- [Set up a cloud VM](#set-up-a-cloud-vm)
+  - [Adding SSH keys](#adding-ssh-keys)
+  - [Install system requirements for hosting](#install-system-requirements-for-hosting)
+    - [Install Docker](#install-docker)
+    - [Set firewall](#set-firewall)
+  - [Mount a volume](#mount-a-volume)
+      - [Partition](#partition)
+      - [Format](#format)
+      - [Mount](#mount)
+      - [Unmounting](#unmounting)
+  - [Scaffolding the file server folder](#scaffolding-the-file-server-folder)
+  - [Static WBI website](#static-wbi-website)
+  - [The Shiny app](#the-shiny-app)
+  - [Deployment](#deployment)
+  - [Custom domain and TLS](#custom-domain-and-tls)
+  - [Updating the server configs](#updating-the-server-configs)
+  - [Restricted access](#restricted-access)
+
 We are using the Arbutus Cloud from Digital Research Alliance (former Compute Canada):
 <https://arbutus.cloud.computecanada.ca/>.
 
 - Log into the dashboard with your CCID
-- Click "Key Pairs" and create a keypair or upload a public key that you can use later for `ssh`
+- Click "Key Pairs" and create a key pair or upload a public key that you can use later for `ssh`
 - Click "Instances" then click "Launch Instance"
 - Give a name, description
   - pick availability zone "Persistent_01"
@@ -13,12 +31,14 @@ We are using the Arbutus Cloud from Digital Research Alliance (former Compute Ca
   - Create New Volume: No
   - Search for Ubuntu and pick Ubuntu 22.04 at least
 - Flavor: p4-8gb (4 vCPUs, 8 GB RAM, 20 GB root disk)
-- Networks: select both def-stevec-subnet and IPv6
+- Networks: select both `def-stevec-subnet` and `IPv6`
 - Security groups: add the wbi group that has SSH, HTTP, HTTPS ports defined for ingress
 - Add a key pair
 - Click Create
 
 You should see the instance state "Running"
+
+Read more: <https://docs.alliancecan.ca/wiki/Cloud_Quick_Start>
 
 Once the instance is created, allocate a floating IP and associate with the instance. This will connect the instance to the public network. Copy the floating IP address for ssh login:
 
@@ -82,11 +102,70 @@ sudo ufw enable
 ufw status
 ```
 
+## Mount a volume
+
+Go to the dashboard:
+
+- click Volumes, then Volumes
+- there is a 5TB volume available (`cac0f4fd-c85b-47f0-bf74-90cb4f4cae5b`), click the dropdown
+- select Manage Attachments
+- select the instance (`wbi`) and click Attach Volume (you'll see it is attached to `/dev/vdb`)
+
+**The next section will need to be run only on first mount, no need to format later when there are data stored on the volume!**
+
+#### Partition
+
+For volumes up to 2TB, follow: <https://docs.alliancecan.ca/wiki/Using_a_new_empty_volume_on_a_Linux_VM>.
+Create a partition on the volume with `fdisk /dev/vdb`. At the prompt, use this sequence:
+
+- `n` => new partition
+- `p` => primary, only one partition on disk
+- `2` => partition number 2
+- `<return>` => first sector (use default)
+- `w` => write partition table to disk and exit
+
+`fdisk -l /dev/vdb` will give you the info.
+
+For volumes > 2TB, follow: <https://www.dell.com/support/kbdoc/en-ca/000140053/how-to-create-a-linux-partition-larger-than-2-terabytes>.
+Type `parted /dev/vdb`. At the prompt, use this sequence:
+
+- `unit GB` to set unit to TB,
+- `mklabel gpt` to create a new partition table,
+- `mkpart primary 0 5000GB` to define the start and end,
+- then `quit`.
+
+`parted /dev/vdb print` will give you the info.
+
+#### Format
+
+Format with `mkfs -t ext4 /dev/vdb1`. 
+
+#### Mount
+
+```bash
+# create a directory
+mkdir /media/data
+
+# mount the volume
+mount /dev/vdb1 /media/data
+
+# check available space
+df -k --block-size=G
+```
+
+#### Unmounting
+
+If you need to remove a volume or other device for some reason, for example to create image from it, or to attach it to a different VM, it is best to unmount it first. Unmounting a volume before detaching it helps prevent data corruption.
+
+To unmount our previously mounted volume above, use the following command: `umount /media/data`.
+
+This command will work if no files are being accessed by the operating system or any other program running on the VM. This can be both reading and writing to files. If this is the case, when you try to unmount a volume, you will get a message letting you know that the volume is still busy and it won't be unmounted.
+
 ## Scaffolding the file server folder
 
-FIXME: edit this piece after the mounted volume is ready
+Create a `/media/data/content` directory with `mkdir /media/data/content`.
 
-Create folder structure inside the folder of your choice (makes sense to use a home folder, i.e. `~` directory). `cd` into this folder, commands are relative to this folder.
+Create folder structure inside the `/media/data/content` folder: `cd` into this folder, commands are relative to this folder.
 
 ```bash
 mkdir content
@@ -101,7 +180,7 @@ mkdir content/api/v1/private/wbi-nwt
 
 ## Static WBI website
 
-Move the `site/Caddyfile` and `site/docker-compose.yml` file into the home folder (`~`) where the `content` directory is located:
+Move the `site/Caddyfile` and `site/docker-compose.yml` file into the home folder (`~`):
 
 ```bash
 rsync -a -P $(pwd)/01-cloud-vm/Caddyfile $USER@$HOST:/home/ubuntu/Caddyfile
@@ -182,25 +261,3 @@ The current username:password is set to `shiny:shiny`.
 This form of authentication is only secure over HTTPS because password is transmitted as encoded plain text.
 
 Example: <https://wbi-nwt.analythium.app/api/v1/private/wbi-nwt/index.html>
-
-
-
-```
-export SRC=""
-export DEST="."
-
-rsync -a -P $SRC $USER@$HOST:$DEST
-
-rsync -a -P root@wbi-nwt.analythium.app:$SRC $DEST
-
-Caddyfile  content  docker-compose.yml  element-stats.csv  log  site  snap  tiles  tmp
-root@Tile-Server:~# ls site
-SpaDES.html  apps.html  images  index.html  site_libs  team.html
-
-
-rsync -a -P root@wbi-nwt.analythium.app:/root/Caddyfile ./Caddyfile
-rsync -a -P root@wbi-nwt.analythium.app:/root/docker-compose.yml ./docker-compose.yml
-rsync -a -P root@wbi-nwt.analythium.app:/root/site/ ./site/
-
-
-```
