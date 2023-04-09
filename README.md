@@ -1,4 +1,4 @@
-# Shiny App for the Western Boreal Initiative
+# Shiny Apps for the Western Boreal Initiative
 
 This repository contains the following folders:
 
