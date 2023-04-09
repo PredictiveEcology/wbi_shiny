@@ -1,5 +1,8 @@
 # Set up a cloud VM
 
+> This page describes how to set up and host the data and the apps on Digital Research Alliance.
+Previous setup scripts in the [`old`](./old/) directory refer to the DigitalOcean server that is not live any more.
+
 - [Set up a cloud VM](#set-up-a-cloud-vm)
   - [Adding SSH keys](#adding-ssh-keys)
   - [Install system requirements for hosting](#install-system-requirements-for-hosting)

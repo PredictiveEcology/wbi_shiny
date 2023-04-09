@@ -1,9 +1,0 @@
-default:
-  golem_name: ShinyWBI
-  golem_version: 0.0.0.9000
-  app_prod: no
-  app_baseurl: "https://wbi.predictiveecology.org/"
-production:
-  app_prod: yes
-dev:
-  golem_wd: !expr here::here()
