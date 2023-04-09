@@ -48,6 +48,6 @@ vignettes/*.pdf
 *.RData
 
 01-cloud-vm/old/scripts/pat
-_tmp/*
+_tmp
 02-data-proc/wbi_nwt/boundaries/*
 docs
