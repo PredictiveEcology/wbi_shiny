@@ -1,8 +1,7 @@
 # Shiny App for the Western Boreal Initiative
-> Northwest Territories
 
 This repository contains the following folders:
 
-- `scripts`: scripts related to deployment, hosting, data migration
-- `app`: the {golem} project with function/modules and the Shiny app
-- `data`: data related scripts, i.e. compile final data to be displayed by the app
+- [`01-cloud-vm`](./01-cloud-vm/): scripts related to deployment, hosting, data migration
+- [`02-data-proc`](./02-data-proc/): data related scripts, i.e. compile final data to be displayed by the app
+- [`03-apps`](./03-apps/): the Shiny apps

@@ -47,7 +47,7 @@ vignettes/*.pdf
 *.parquet
 *.RData
 
-scripts/pat
+01-cloud-vm/old/scripts/pat
 _tmp/*
-data/boundaries/*
+02-data-proc/wbi_nwt/boundaries/*
 docs

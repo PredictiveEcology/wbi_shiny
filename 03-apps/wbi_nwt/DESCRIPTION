@@ -1,0 +1,47 @@
+Package: ShinyWBI
+Title: Interactive Visualization of Simulated Climate Effects to the Western Boreal 
+Version: 0.0.0.9000
+Authors@R: c(
+    person(
+      given = "Peter",
+      family = "Solymos",
+      role = c("aut", "cre"),
+      email = "peter@analythium.io"
+    ), 
+    person(
+      given = "Michael",
+      family = "Thomas",
+      role = c("ctb"),
+      email = "mthomas@ketchbrookanalytics.com"
+    ), 
+    person(
+      given = "Brad",
+      family = "Lindblad",
+      role = c("ctb"),
+      email = "blindblad@ketchbrookanalytics.com"
+    )
+  )
+Description: ShinyWBI serves as a Shiny app that allows users to compare current 
+  ecological data (Year 2011) with simulated effects applied over the next 90 
+  years (Year 2100) through interactive geospatial and traditional (tables & 
+  charts) visualizations.
+License: GPL-2
+Imports: 
+    bslib,
+    config (>= 0.3.1),
+    echarts4r,
+    golem (>= 0.3.1),
+    leaflet,
+    leaflet.extras2,
+    reactable,
+    sf,
+    shiny (>= 1.6.0),
+    ggplot2
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
+Depends: 
+    R (>= 4.1),
+    shinyBS
+Remotes:
+    psolymos/shinyBS

@@ -12,6 +12,7 @@
       - [Unmounting](#unmounting)
   - [Scaffolding the file server folder](#scaffolding-the-file-server-folder)
   - [Static WBI website](#static-wbi-website)
+      - [Migrating files](#migrating-files)
   - [The Shiny app](#the-shiny-app)
   - [Deployment](#deployment)
   - [Custom domain and TLS](#custom-domain-and-tls)
@@ -163,7 +164,7 @@ This command will work if no files are being accessed by the operating system or
 
 ## Scaffolding the file server folder
 
-Create a `/media/data/content` directory with `mkdir /media/data/content`.
+Create a `/media/data` directory with `mkdir /media/data`.
 
 Create folder structure inside the `/media/data/content` folder: `cd` into this folder, commands are relative to this folder.
 
@@ -199,6 +200,47 @@ cp -a /home/ubuntu/site/. /media/data/content
 
 The `site` folder includes the `index.html`, `404.html`, and other files.
 The `content` folder, this will be the root of the file server.
+
+#### Migrating files
+
+It is safe to ignore this section ...
+
+Set up ssh key between the machines:
+
+```bash
+su - root -c 'ssh-keygen -t rsa -q -f "/root/.ssh/id_rsa" -N ""'
+cat /root/.ssh/id_rsa.pub # copy into /root/.ssh/authorized_keys on the other machine
+
+ssh root@wbi-nwt.analythium.app
+```
+
+```R
+f <- list.files("/root/content/api", recursive=TRUE)
+ex <- tools::file_ext(f)
+f2 <- f[ex %in% c("json","tif")]
+for (i in seq_along(f2)) {
+  message(i, ": ", f2[i])
+  x <- f2[i]
+  ds <- strsplit(x, "/")[[1]]
+  ds <- ds[-length(ds)]
+  for (j in seq_along(ds)) {
+    dir.create(
+      paste0("/root/content2/api/", paste0(ds[1:j], collapse="/"))
+    )
+  }
+  file.copy(
+    paste0("/root/content/api/", f2[i]),
+    paste0("/root/content2/api/", f2[i])
+  )
+}
+
+f3 <- list.files("/root/content2/api", recursive=TRUE)
+```
+
+```bash
+rsync -av root@wbi-nwt.analythium.app:/root/content/api/v1/private/wbi-nwt/index.html /media/data/content/api/v1/private/wbi-nwt/index.html
+rsync -av root@wbi-nwt.analythium.app:/root/content2/api/ /media/data/content/api
+```
 
 ## The Shiny app
 
