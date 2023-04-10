@@ -279,6 +279,8 @@ Deploy the stack with `docker-compose up -d` from the home (`~`) folder. Where y
 
 Now visit the `$HOST` address to see the landing page and navigate to the Shiny app.
 
+If you need to test the file server, you might want to use the contents of the `Caddyfile-CORS` to allow cross-origin resource sharing (CORS).
+
 ## Custom domain and TLS
 
 Set up domain (we set up `wbi.predictiveecology.org`) with your DNS provider: and an A or AAA recird for the domain/subdomain, and add the `$HOST` IPv4 address.
