@@ -126,7 +126,14 @@ mod_sidebyside_server <- function(id){
         ) |> 
         leaflet::addMeasure(
           position = "topleft"
-        )
+        ) |>
+        htmlwidgets::onRender("
+          function(el, x) {
+            this.on('baselayerchange', function(e) {
+              e.layer.bringToBack();
+            })
+          }
+        ")
     })
     
   })
