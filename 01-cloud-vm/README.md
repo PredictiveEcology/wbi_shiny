@@ -365,6 +365,21 @@ for (i in 1:length(f1k)) {
     dir.create(dr)
   write_stars(s2, o1k[i], options = c("COMPRESS=LZW"))
 }
+## TODO
+## - need to catch extremes (by percentile)
+## - register max values
+
+f1k <- f[endsWith(f, "lonlat/mean.tif")]
+f1k <- paste0("/media/data/content/api/", f1k)
+for (i in 1:length(f1k)) {
+  message("Writing file ", i)
+  r <- raster(f1k[i])
+  q <- quantile(values(r), 0.999, na.rm=TRUE)
+  values(r)[!is.na(values(r)) & values(r) > q] <- q
+  s2 <- st_as_stars(r)
+  write_stars(s2, f1k[i], options = c("COMPRESS=LZW"))
+}
+
 
 ```
 
