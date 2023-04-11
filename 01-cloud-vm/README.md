@@ -15,7 +15,10 @@ Previous setup scripts in the [`old`](./old/) directory refer to the DigitalOcea
       - [Unmounting](#unmounting)
   - [Scaffolding the file server folder](#scaffolding-the-file-server-folder)
   - [Static WBI website](#static-wbi-website)
-      - [Migrating files](#migrating-files)
+  - [Migrating files](#migrating-files)
+      - [Migrating files](#migrating-files-1)
+      - [Setting up R and GDAL to process TIFs](#setting-up-r-and-gdal-to-process-tifs)
+      - [Generating long/lat version of 1k rasters](#generating-longlat-version-of-1k-rasters)
   - [The Shiny app](#the-shiny-app)
   - [Deployment](#deployment)
   - [Custom domain and TLS](#custom-domain-and-tls)
@@ -157,6 +160,12 @@ mount /dev/vdb1 /media/data
 df -k --block-size=G
 ```
 
+If the VM is rebooted for some reason the volume will need to be remounted. To cause the VM to mount the volume automatically at boot time, edit `/etc/fstab` and add a line like:
+
+```
+/dev/vdb1 /media/data ext4 defaults 0 2
+```
+
 #### Unmounting
 
 If you need to remove a volume or other device for some reason, for example to create image from it, or to attach it to a different VM, it is best to unmount it first. Unmounting a volume before detaching it helps prevent data corruption.
@@ -204,9 +213,11 @@ cp -a /home/ubuntu/site/. /media/data/content
 The `site` folder includes the `index.html`, `404.html`, and other files.
 The `content` folder, this will be the root of the file server.
 
-#### Migrating files
+## Migrating files
 
-It is safe to ignore this section ...
+This section is related to migration and can safely be ignored for future updates, but is kept here for reference.
+
+#### Migrating files
 
 Set up ssh key between the machines:
 
@@ -243,6 +254,118 @@ f3 <- list.files("/root/content2/api", recursive=TRUE)
 ```bash
 rsync -av root@wbi-nwt.analythium.app:/root/content/api/v1/private/wbi-nwt/index.html /media/data/content/api/v1/private/wbi-nwt/index.html
 rsync -av root@wbi-nwt.analythium.app:/root/content2/api/ /media/data/content/api
+```
+
+#### Setting up R and GDAL to process TIFs
+
+```bash
+## --- Set up R with BSPM a la r2u ---
+## from https://github.com/eddelbuettel/r-ci/blob/master/docs/run.sh
+
+Retry() {
+    if "$@"; then
+        return 0
+    fi
+    for wait_time in 5 20 30 60; do
+        echo "Command failed, retrying in ${wait_time} ..."
+        sleep ${wait_time}
+        if "$@"; then
+            return 0
+        fi
+    done
+    echo "Failed all retries!"
+    exit 1
+}
+
+## Check for sudo_release and install if needed
+test -x /usr/bin/sudo || apt-get install -y --no-install-recommends sudo
+## Hotfix for key issue
+echo 'Acquire::AllowInsecureRepositories "true";' | sudo tee /etc/apt/apt.conf.d/90local-secure >/dev/null
+
+## Check for lsb_release and install if needed
+test -x /usr/bin/lsb_release || sudo apt-get install -y --no-install-recommends lsb-release
+## Check for add-apt-repository and install if needed, using a fudge around the (manual) tz config dialog
+test -x /usr/bin/add-apt-repository || \
+(echo 12 > /tmp/input.txt; echo 5 >> /tmp/input.txt; sudo apt-get install -y tzdata < /tmp/input.txt; sudo apt-get install -y --no-install-recommends software-properties-common)
+
+## from r2u setup script
+sudo apt update -qq && sudo apt install --yes --no-install-recommends wget ca-certificates dirmngr gnupg gpg-agent
+wget -q -O- https://eddelbuettel.github.io/r2u/assets/dirk_eddelbuettel_key.asc | sudo tee -a /etc/apt/trusted.gpg.d/cranapt_key.asc
+echo "deb [arch=amd64] https://r2u.stat.illinois.edu/ubuntu $(lsb_release -cs) main" | sudo tee -a /etc/apt/sources.list.d/cranapt.list
+wget -q -O- https://cloud.r-project.org/bin/linux/ubuntu/marutter_pubkey.asc  | sudo tee -a /etc/apt/trusted.gpg.d/cran_ubuntu_key.asc
+echo "deb [arch=amd64] https://cloud.r-project.org/bin/linux/ubuntu $(lsb_release -cs)-cran40/" | sudo tee -a /etc/apt/sources.list.d/cran_r.list
+echo "Package: *" | sudo tee -a /etc/apt/preferences.d/99cranapt
+echo "Pin: release o=CRAN-Apt Project" | sudo tee -a /etc/apt/preferences.d/99cranapt
+echo "Pin: release l=CRAN-Apt Packages" | sudo tee -a /etc/apt/preferences.d/99cranapt
+echo "Pin-Priority: 700" | sudo tee -a /etc/apt/preferences.d/99cranapt
+
+# Update after adding all repositories.  Retry several times to work around
+# flaky connection to Launchpad PPAs.
+Retry sudo apt-get update -qq
+Retry sudo apt-get upgrade
+
+# Install an R development environment. qpdf is also needed for
+# --as-cran checks:
+#   https://stat.ethz.ch/pipermail/r-help//2012-September/335676.html
+# May 2020: we also need devscripts for checkbashism
+# Sep 2020: add bspm and remotes
+Retry sudo apt-get install -y --no-install-recommends r-base r-base-dev r-recommended qpdf devscripts r-cran-bspm r-cran-remotes
+
+# Default to no recommends
+echo 'APT::Install-Recommends "false";' | sudo tee /etc/apt/apt.conf.d/90local-no-recommends >/dev/null
+
+# Change permissions for /usr/local/lib/R/site-library
+# This should really be via 'staff adduser travis staff'
+# but that may affect only the next shell
+sudo chmod 2777 /usr/local/lib/R /usr/local/lib/R/site-library
+
+# We add a backports PPA for more recent TeX packages.
+# sudo add-apt-repository -y "ppa:texlive-backports/ppa"
+Retry sudo apt-get install -y --no-install-recommends \
+        texlive-base texlive-latex-base \
+        texlive-fonts-recommended texlive-fonts-extra \
+        texlive-extra-utils texlive-latex-recommended texlive-latex-extra \
+        texinfo lmodern
+# no longer exists: texlive-generic-recommended
+
+echo "suppressMessages(bspm::enable())" | sudo tee --append /etc/R/Rprofile.site >/dev/null
+echo "options(bspm.version.check=FALSE)" | sudo tee --append /etc/R/Rprofile.site >/dev/null
+
+## spatial libs
+sudo add-apt-repository ppa:ubuntugis/ppa && sudo apt-get update
+sudo apt-get install gdal-bin libgdal-dev
+export CPLUS_INCLUDE_PATH=/usr/include/gdal
+export C_INCLUDE_PATH=/usr/include/gdal
+sudo apt install python-is-python3 python3-gdal python3-pip
+pip install GDAL
+R -q -e 'install.packages(c("rgdal","raster","png","tiler","terra","sf","stars"))'
+```
+
+#### Generating long/lat version of 1k rasters
+
+```R
+f <- list.files("/media/data/content/api", recursive=TRUE)
+
+f1k <- f[endsWith(f, "1000m/mean.tif")]
+f1k <- paste0("/media/data/content/api/", f1k)
+o1k <- gsub("/1000m/", "/lonlat/", f1k)
+
+library(raster)
+library(stars)
+rt <- raster("https://peter.solymos.org/testapi/amro1k.tif")
+
+#i <- 1
+for (i in 1:length(f1k)) {
+  message("Writing file ", i)
+  r <- raster(f1k[i])
+  r2 <- projectRaster(r, rt)
+  s2 <- st_as_stars(r2)
+  dr <- gsub("/mean.tif", "/", o1k[i])
+  if (!dir.exists(dr))
+    dir.create(dr)
+  write_stars(s2, o1k[i], options = c("COMPRESS=LZW"))
+}
+
 ```
 
 ## The Shiny app
