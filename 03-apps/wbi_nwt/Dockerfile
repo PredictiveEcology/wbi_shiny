@@ -3,7 +3,7 @@ FROM eddelbuettel/r2u:jammy
 
 RUN apt-get update && apt-get install -y  gdal-bin git-core libcurl4-openssl-dev libgdal-dev libgeos-dev libgeos++-dev libgit2-dev libicu-dev libpng-dev libproj-dev libssl-dev libudunits2-dev libxml2-dev make pandoc pandoc-citeproc zlib1g-dev && rm -rf /var/lib/apt/lists/*
 
-RUN install.r bslib shiny leaflet config sf reactable leaflet.extras2 golem echarts4r ggplot2
+RUN install.r bslib shiny leaflet config sf reactable leaflet.extras2 golem echarts4r ggplot2 leafem
 # RUN echo "options(repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" >> /usr/local/lib/R/etc/Rprofile.site
 # RUN R -e 'install.packages("remotes")'
 # RUN Rscript -e 'remotes::install_version("bslib",upgrade="never", version = "0.3.1")'
