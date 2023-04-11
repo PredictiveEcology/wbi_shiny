@@ -1,6 +1,6 @@
 Package: ShinyWBI
 Title: Interactive Visualization of Simulated Climate Effects to the Western Boreal 
-Version: 0.0.0.9000
+Version: 0.0.1
 Authors@R: c(
     person(
       given = "Peter",
@@ -31,6 +31,7 @@ Imports:
     config (>= 0.3.1),
     echarts4r,
     golem (>= 0.3.1),
+    leafem,
     leaflet,
     leaflet.extras2,
     reactable,
@@ -39,7 +40,7 @@ Imports:
     ggplot2
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Depends: 
     R (>= 4.1),
     shinyBS
