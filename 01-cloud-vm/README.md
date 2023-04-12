@@ -256,6 +256,33 @@ rsync -av root@wbi-nwt.analythium.app:/root/content/api/v1/private/wbi-nwt/index
 rsync -av root@wbi-nwt.analythium.app:/root/content2/api/ /media/data/content/api
 ```
 
+Moving all files using `tmux` to run processes in the background even after we log out of the server:
+
+- `tmux new -s bench` for new session
+- Ctrl+B then D to exit without stopping the processes
+- `tmux a` to go back
+- Ctrl+B then X to stop the session (answer yes)
+
+```bash
+ssh $USER@$HOST
+
+sudo -i
+
+## examples
+# tmux                         # start new
+# tmux new -s myname           # start new with session name
+# tmux a                       #  (or at, or attach)
+# tmux a -t myname             # attach to named
+# tmux ls                      # list sessions
+# tmux kill-session -t myname  # kill session
+# tmux ls | grep : | cut -d. -f1 | awk '{print substr($1, 0, length($1)-1)}' | xargs kill # Kill all the tmux sessions:
+
+tmux new -s migrate
+
+export DIR=v1/public/wbi-nwt/elements
+rsync --ignore-existing -hvrPt root@wbi-nwt.analythium.app:/root/content/api/${DIR}/ /media/data/content/api/${DIR}
+```
+
 #### Setting up R and GDAL to process TIFs
 
 ```bash
