@@ -25,6 +25,5 @@ Describe how to set up jobs and what scripts to run, also RAM/CPU requests etc.
 - `ELEMENT`: element name (bird or tree species abbreviation), e.g. `bird-alfl` or `tree-betu-pap`
 - `SCENARIO`: screnario or treatment type (`landr-scfm-v4`, `landrcs-fs-v6a`)
 - `PERIOD`: time period, i.e. year (`2011`, `2100`)
-- `RESOLUTION`: resolution (`250m` or `1000m`), `tiles`, etc.
+- `RESOLUTION`: resolution (`250m` or `1000m`), `lonlat`, `tiles`, etc.
 - `FILE.EXT`: file name, e.g. `mean.tif` meaning that the pixel values are the mean of the runs
-
