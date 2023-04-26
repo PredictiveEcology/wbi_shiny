@@ -86,19 +86,23 @@ Move to local: this can be run directly on te host 2 server, using `tmux`
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/AB*
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/BC*
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/SK*
+SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/MB*
+SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/NT*
+SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs_postprocess.zip
 
 # Not done
-SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/NT*
-SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/MB*
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/YT*
 
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/summary.tar.gz.*
 
-SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs_postprocess.zip
 
 # DEST=/Users/Peter/tmp/narval/outputs
 DEST=/mnt/volume_tor1_01/wbi/outputs2
 rsync -Pav $USER@$HOST:$SRC $DEST
+
+rsync --ignore-existing -Pav $USER@$HOST:$SRC $DEST
+# ???? NT_CNRM-ESM2-1_SSP585_run03.tar.gz
+rsync -Pav $USER@$HOST:/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/NT_CNRM-ESM2-1_SSP585_run03.tar.gz $DEST/NT_CNRM-ESM2-1_SSP585_run03.tar.gz
 ```
 
 Once it is there, unpack & process
@@ -111,62 +115,68 @@ du -sh /mnt/volume_tor1_01
 # this will recreate the AB folder
 cat AB.tar.gz.* | tar xvfz -
 cat BC.tar.gz.* | tar xvfz -
+cat SK.tar.gz.* | tar xvfz -
+cat MB.tar.gz.* | tar xvfz -
+cat NT.tar.gz.* | tar xvfz -
+cat YT.tar.gz.* | tar xvfz -
+# rm -rf NT/*.qs
+
+du -sh $(pwd)
+du -sh /mnt/volume_tor1_01/wbi
+df -hT /mnt/volume_tor1_01/
 
 # this will copy things into outputs folder
-export PROV=BC
+export PROV=NT
 # export SCEN=CNRM-ESM2-1_SSP370
 # export SCEN=CNRM-ESM2-1_SSP585
 # export SCEN=CanESM5_SSP370
 export SCEN=CanESM5_SSP585
 
-du -sh $(pwd)
-du -sh /mnt/volume_tor1_01/wbi
-
 export RUN=1
 tar -xvf ${PROV}_${SCEN}_run0${RUN}.tar.gz
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
 
 export RUN=2
 tar -xvf ${PROV}_${SCEN}_run0${RUN}.tar.gz
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
 
 export RUN=3
 tar -xvf ${PROV}_${SCEN}_run0${RUN}.tar.gz
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
 
 export RUN=4
 tar -xvf ${PROV}_${SCEN}_run0${RUN}.tar.gz
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
 
 export RUN=5
 tar -xvf ${PROV}_${SCEN}_run0${RUN}.tar.gz
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
-rm -rf /mnt/volume_tor1_01/wbi/outputs/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/*.qs
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/pixelGroupMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/mortalityMap*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/fireSense*
+rm -rf /mnt/volume_tor1_01/wbi/outputs2/outputs/${PROV}_${SCEN}_run0${RUN}/ANPPMap*
 
-rm ${PROV}_${SCEN}_run01.tar.gz
-rm ${PROV}_${SCEN}_run02.tar.gz
-rm ${PROV}_${SCEN}_run03.tar.gz
-rm ${PROV}_${SCEN}_run04.tar.gz
-rm ${PROV}_${SCEN}_run05.tar.gz
+# rm ${PROV}_${SCEN}_run01.tar.gz
+# rm ${PROV}_${SCEN}_run02.tar.gz
+# rm ${PROV}_${SCEN}_run03.tar.gz
+# rm ${PROV}_${SCEN}_run04.tar.gz
+# rm ${PROV}_${SCEN}_run05.tar.gz
 # rm -rf BC_*.tar.gz
 
 
@@ -182,4 +192,75 @@ HOST=159.203.31.192
 rsync -Pav root@$HOST:$SRC $DEST
 
 
+```
+
+
+```
+# run 01 ro 05
+
+AB_CanESM5_SSP370_run01.tar.gz
+AB_CanESM5_SSP585_run01.tar.gz
+AB_CNRM-ESM2-1_SSP370_run01.tar.gz
+AB_CNRM-ESM2-1_SSP585_run01.tar.gz
+
+# run aa to an
+
+AB.tar.gz.aa
+
+
+# ----- in each of the runs:
+
+
+AB_CNRM-ESM2-1_SSP370_run01.qs
+ANPPMap_2011_year2011.tif
+...
+ANPPMap_2100_year2100.tif
+burnMap_2011_year2011.tif
+burnMap_2011_year2011.tif.aux.xml
+...
+burnMap_2100_year2100.tif
+burnMap_2100_year2100.tif.aux.xml
+burnSummary_year2100.qs
+climate-sensitive_growth_ggplot.png
+climate-sensitive_mortality_ggplot.png
+cohortData_2011_year2011.qs
+...
+cohortData_2100_year2100.qs
+figures
+fireSense_EscapePredicted_2011_year2011.tif
+fireSense_EscapePredicted_2011_year2011.tif.aux.xml
+...
+fireSense_EscapePredicted_2100_year2100.tif
+fireSense_EscapePredicted_2100_year2100.tif.aux.xml
+fireSense_IgnitionPredicted_2011_year2011.tif
+fireSense_IgnitionPredicted_2011_year2011.tif.aux.xml
+...
+fireSense_IgnitionPredicted_2100_year2100.tif
+fireSense_IgnitionPredicted_2100_year2100.tif.aux.xml
+fireSense_SpreadPredicted_2011_year2011.tif
+fireSense_SpreadPredicted_2011_year2011.tif.aux.xml
+...
+fireSense_SpreadPredicted_2100_year2100.tif
+fireSense_SpreadPredicted_2100_year2100.tif.aux.xml
+mortalityMap_2011_year2011.tif
+...
+mortalityMap_2100_year2100.tif
+null_growth_ggplot.png
+null_mortality_ggplot.png
+pixelGroupMap_2011_year2011.tif
+pixelGroupMap_2011_year2011.tif.aux.xml
+...
+pixelGroupMap_2100_year2100.tif
+pixelGroupMap_2100_year2100.tif.aux.xml
+rstCurrentBurn_2011_year2011.tif
+rstCurrentBurn_2011_year2011.tif.aux.xml
+...
+rstCurrentBurn_2100_year2100.tif
+rstCurrentBurn_2100_year2100.tif.aux.xml
+simulatedBiomassMap_2011_year2011.tif
+...
+simulatedBiomassMap_2100_year2100.tif
+simulationOutput_year2100.qs
+speciesEcoregion_year2100.qs
+species_year2100.qs
 ```

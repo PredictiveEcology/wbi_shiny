@@ -75,8 +75,16 @@ parse_path <- function(p) {
 }
 rast_stats <- function(r) {
   if (is.character(r))
-    r <- rast(r)
+    r <- terra::rast(r)
   v <- na.omit(values(r))
+  q <- quantile(v, c(0, 0.5, 0.99, 0.999, 1))
+  names(q) <- paste0("q", c(0, 50, 99, 999, 1))
+  c(mean=mean(v), q)
+}
+rast_stats2 <- function(r) {
+  if (is.character(r))
+    r <- stars::read_stars(r)
+  v <- na.omit(as.numeric(r[[1]]))
   q <- quantile(v, c(0, 0.5, 0.99, 0.999, 1))
   names(q) <- paste0("q", c(0, 50, 99, 999, 1))
   c(mean=mean(v), q)
@@ -93,3 +101,22 @@ SCENS <- c(
 
 YRS20 <- c(2011, 2031, 2051, 2071, 2091)
 YRS10 <- c(2011, 2021, 2031, 2041, 2051, 2061, 2071, 2081, 2091, 2100)
+
+Values <- list(
+  region = list(
+    "Alberta" = "ab",
+    "British Columbia" = "bc", 
+    "Manitoba" = "mb", 
+    "Northwest Territories" = "nt", 
+    "Saskatchewan" = "sk", 
+    "Yukon Territory" = "yt"),
+  scenario <- list(
+    "CNRM-ESM2-1 SSP370" = "cnrm-esm2-1-ssp370", 
+    "CanESM5 SSP370" = "canesm5-ssp370", 
+    "CNRM-ESM2-1 SSP585" = "cnrm-esm2-1-ssp585", 
+    "CanESM5 SSP585" = "canesm5-ssp585"),
+  year20 = c(2011, 2031, 2051, 2071, 2091),
+  year10 = c(2011, 2021, 2031, 2041, 2051, 2061, 2071, 2081, 2091, 2100))
+
+
+

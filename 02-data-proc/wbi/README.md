@@ -27,3 +27,19 @@ Describe how to set up jobs and what scripts to run, also RAM/CPU requests etc.
 - `PERIOD`: time period, i.e. year (`2011`, `2100`)
 - `RESOLUTION`: resolution (`250m` or `1000m`), `lonlat`, `tiles`, etc.
 - `FILE.EXT`: file name, e.g. `mean.tif` meaning that the pixel values are the mean of the runs
+
+## Files in this folder
+
+```
+.
+├── 01-data.md          # move/unzip files
+├── README.md           # this file
+├── birds.R             # process birds maps
+├── burn-biomass.R      # calculate burn/biomass maps
+├── element-lookup.csv  # species lookup
+├── full-extent.R       # fill extent summaries
+├── functions.R         # common functions for scripts
+├── scales.R            # 1 km scale maps
+├── setup.sh            # setup server for geo processing
+└── trees.R             # process leading tree species maps
+```

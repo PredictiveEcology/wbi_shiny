@@ -1,8 +1,8 @@
 source("functions.R")
 
-i_scen <- 1
+i_scen <- 4
 
-overwrite <- FALSE
+overwrite <- TRUE
 q <- 1
 
 fl <- list.files(OUT1, recursive=TRUE)
@@ -13,7 +13,9 @@ fl <- list.files(OUT1, recursive=TRUE)
 
 pp <- parse_path(fl)
 pp <- pp[pp$scenario == names(SCENS)[i_scen],]
-pp <- pp[pp$region == "sk",]
+pp <- pp[pp$region == "ab",]
+pp <- pp[pp$resolution == "250m",]
+pp <- pp[!startsWith(pp$element, "tree"),]
 lapply(pp, table)
 
 ## process scales
@@ -100,3 +102,8 @@ mefa4::compare_sets(fl1,fl2)
 setdiff(fl1,fl2)
 setdiff(fl2,fl1)
 
+table(pp$resolution, pp$region)
+p <- pp[pp$resolution=="250m",]
+u <- table(p$element, p$region)
+u <- u[rowSums(u) != 120,]
+u <- u[rowSums(u) != 240,]
