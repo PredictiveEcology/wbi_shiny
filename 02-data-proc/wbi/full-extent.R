@@ -3,13 +3,14 @@ source("functions.R")
 i_scen <- 4
 overwrite <- TRUE
 
-fl <- list.files(OUT1, recursive=TRUE)
-
-pp <- parse_path(fl)
-lapply(pp, table)
+# fl <- list.files(OUT1, recursive=TRUE)
+# pp <- parse_path(fl)
+# lapply(pp, table)
+pp <- readRDS("/mnt/volume_tor1_01/wbi/final/maps.rds")
 table(pp$region, pp$resolution)
 #pp0 <- pp
-pp$path <- paste0(OUT1, "/", fl)
+# pp$path <- paste0(OUT1, "/", fl)
+pp$path <- paste0(OUT1, "/", pp$path)
 pp <- pp[pp$scenario == names(SCENS)[i_scen],]
 
 pp <- pp[pp$region != "full-extent",]
@@ -32,10 +33,11 @@ for (i in 1:nrow(pp)) {
   for (j in 1:6) {
     rr[[ppi$region[j]]] <- st_as_stars(rast(ppi$path[j]))
   }
-  m <- rr[[1]]
-  for (j in 2:5) {
-    m <- st_mosaic(m, rr[[j]])
-  }
+  # m <- rr[[1]]
+  # for (j in 2:6) {
+  #   m <- st_mosaic(m, rr[[j]])
+  # }
+  m <- st_mosaic(rr[[1]], rr[[2]], rr[[3]], rr[[4]], rr[[5]], rr[[6]])
   mll <- st_warp(m, crs=4326)
   
   ppo <- pp1[i,]
@@ -45,10 +47,12 @@ for (i in 1:nrow(pp)) {
   output1kll <- make_name_from_list(ppoll, OUT1)
   
   if (!file.exists(output1k) || overwrite) {
+    message("\twriting 1k")
     make_dir(dirname(output1k))
     write_stars(m, output1k, options = c("COMPRESS=LZW"))
   }
   if (!file.exists(output1kll) || overwrite) {
+    message("\twriting ll")
     make_dir(dirname(output1kll))
     write_stars(mll, output1kll, options = c("COMPRESS=LZW"))
   }

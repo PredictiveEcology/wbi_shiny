@@ -190,10 +190,25 @@ SRC=/root/data/outputs
 DEST=/mnt/volume_tor1_01/wbi
 HOST=159.203.31.192
 rsync -Pav root@$HOST:$SRC $DEST
-
-
 ```
 
+Finally download the files:
+
+```bash
+# pull down files from processing server
+rsync -Pav root@68.183.195.136:/mnt/volume_tor1_01/wbi/final /Users/Peter/wbi
+rsync -Pav root@68.183.195.136:/mnt/volume_tor1_01/wbi/mid /Users/Peter/wbi
+
+# push to final destination
+rsync -Pav /Users/Peter/wbi/mid/api/v1/public/wbi ubuntu@206.12.95.40:/media/data/content/api/v1/public
+
+rsync /Users/Peter/wbi/final/*.rds ubuntu@206.12.95.40:/media/data/content/api/v1/public/wbi
+rsync /Users/Peter/wbi/final/*.parquet ubuntu@206.12.95.40:/media/data/content/api/v1/public/wbi
+
+# or add /root/.ssh/id_rsa.pub to /home/ubuntu/.ssh/authorized_keys and push directly
+rsync -Pav /mnt/volume_tor1_01/wbi/final/*.rds ubuntu@206.12.95.40:/media/data/content/api/v1/public/wbi
+rsync -Pav /mnt/volume_tor1_01/wbi/mid/api/v1/public/wbi ubuntu@206.12.95.40:/media/data/content/api/v1/public
+```
 
 ```
 # run 01 ro 05

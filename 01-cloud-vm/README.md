@@ -283,6 +283,9 @@ export DIR=v1/public/wbi-nwt/elements
 rsync --ignore-existing -hvrPt root@wbi-nwt.analythium.app:/root/content/api/${DIR}/ /media/data/content/api/${DIR}
 ```
 
+It is also a good idea to give the ubuntu user permission to the `/media/data/content` folder: `sudo chown -R ubuntu:ubuntu /media/data/content`.
+Otherwise `rsync` might now work very well, i.e. you'll have to move file in 2 steps and the VM hard drive outside of the mounted volume might not be large enough to do that efficiently.
+
 #### Setting up R and GDAL to process TIFs
 
 ```bash

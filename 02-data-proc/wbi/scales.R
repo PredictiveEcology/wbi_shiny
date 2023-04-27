@@ -5,18 +5,19 @@ i_scen <- 4
 overwrite <- TRUE
 q <- 1
 
-fl <- list.files(OUT1, recursive=TRUE)
+# fl <- list.files(OUT1, recursive=TRUE)
 
 # cleanup
 #  flx <- fl[grep("/2080/", fl)]
 #  unlink(paste0(OUT1, "/", flx))
 
-pp <- parse_path(fl)
+# pp <- parse_path(fl)
+pp <- readRDS("/mnt/volume_tor1_01/wbi/final/maps.rds")
 pp <- pp[pp$scenario == names(SCENS)[i_scen],]
-pp <- pp[pp$region == "ab",]
+# pp <- pp[pp$region == "ab",]
 pp <- pp[pp$resolution == "250m",]
-pp <- pp[!startsWith(pp$element, "tree"),]
-lapply(pp, table)
+# pp <- pp[!startsWith(pp$element, "tree"),]
+# lapply(pp, table)
 
 ## process scales
 for (i in 1:nrow(pp)) {
@@ -39,7 +40,7 @@ for (i in 1:nrow(pp)) {
   }
 
   s <- st_as_stars(r)
-  r1k <- aggregate(r, fact=4)
+  r1k <- aggregate(r, fact=4, na.rm=TRUE)
   s1k <- st_as_stars(r1k)
   #s1kll <- st_transform(s1k, "EPSG:4326")
   s1kll <- st_warp(s1k, crs=4326)
@@ -107,3 +108,31 @@ p <- pp[pp$resolution=="250m",]
 u <- table(p$element, p$region)
 u <- u[rowSums(u) != 120,]
 u <- u[rowSums(u) != 240,]
+
+
+library(terra)
+library(stars)
+
+r1 <- rast("/Users/Peter/wbi/mid/api/v1/public/wbi/ab/elements/bird-alfl/canesm5-ssp370/2011/250m/mean.tif")
+r2 <- rast("/Users/Peter/wbi/mid/api/v1/public/wbi/sk/elements/bird-alfl/canesm5-ssp370/2011/250m/mean.tif")
+r3 <- rast("/Users/Peter/wbi/mid/api/v1/public/wbi/mb/elements/bird-alfl/canesm5-ssp370/2011/250m/mean.tif")
+r4 <- rast("/Users/Peter/wbi/mid/api/v1/public/wbi/bc/elements/bird-alfl/canesm5-ssp370/2011/250m/mean.tif")
+r5 <- rast("/Users/Peter/wbi/mid/api/v1/public/wbi/nt/elements/bird-alfl/canesm5-ssp370/2011/250m/mean.tif")
+r6 <- rast("/Users/Peter/wbi/mid/api/v1/public/wbi/yt/elements/bird-alfl/canesm5-ssp370/2011/250m/mean.tif")
+
+r1 <- aggregate(r1, fact=4, na.rm=TRUE)
+r2 <- aggregate(r2, fact=4, na.rm=TRUE)
+r3 <- aggregate(r3, fact=4, na.rm=TRUE)
+r4 <- aggregate(r4, fact=4, na.rm=TRUE)
+r5 <- aggregate(r5, fact=4, na.rm=TRUE)
+r6 <- aggregate(r6, fact=4, na.rm=TRUE)
+
+s1 <- st_as_stars(r1)
+s2 <- st_as_stars(r2)
+s3 <- st_as_stars(r3)
+s4 <- st_as_stars(r4)
+s5 <- st_as_stars(r5)
+s6 <- st_as_stars(r6)
+
+m <- st_mosaic(s1, s2, s3, s4, s5, s6)
+ll <- st_warp(m, crs=4326)
