@@ -21,6 +21,19 @@ rt <- rast(make_name(
 
 ## biomass
 
+#for (i_jurs in seq_along(JURS)) {
+rt <- rast(make_name(
+  root=OUT1,
+  api_ver="api/v1",
+  access="public",
+  project="wbi",
+  region=names(JURS)[i_jurs],
+  kind="elements",
+  element="bird-amro",
+  scenario=names(SCENS)[1],
+  period=YRS[1],
+  resolution="250m",
+  file="mean.tif"))
 for (i_scen in seq_along(SCENS)) {
     for (i_year in seq_along(YRS)) {
       
@@ -82,84 +95,98 @@ for (i_scen in seq_along(SCENS)) {
     }
   }
 }
-
+#}
 
 ## burn
 
-for (i_year in seq_along(YRS)[-1]) {
-  for (i_scen in seq_along(SCENS)) {
+source("functions.R")
 
-      message(paste(JURS[i_jurs], 
-                    SCENS[i_scen], 
-                    YRS[i_year]))
-      start_yr <- if (YRS[i_year-1] == 2011) YRS[i_year-1] else YRS[i_year-1]+1
-      yy <- start_yr:YRS[i_year]
-      
-      rrr <- NULL
-      for (i_run in 1:5) {
-        rr <- NULL
-        for (y in yy) {
-          message(i_run, " / ", y)
-          input <- paste0(
-            ROOT, "/outputs/",
-            JURS[i_jurs], "_",
-            SCENS[i_scen], "_",
-            "run0", i_run, "/",
-            #"burnMap_", y, "_year", y, ".tif")
-            "rstCurrentBurn_", y, "_year", y, ".tif")
-          
-          r <- rast(input)
-          values(r)[is.na(values(r)) & !is.na(values(rt))] <- 0
-          if (is.null(rr)) {
-            rr <- r
-          } else {
-            rr <- rr+r
-          }
-          
-        }
-        rr <- rr / length(yy)
+YRS <- YRS10
+i_scen <- 4
 
-        #values(rr)[!is.na(values(rr)) & values(rr) > 1] <- 1
-        if (is.null(rrr)) {
-          rrr <- rr
-        } else {
-          rrr <- rrr+rr
-        }
-        rrr <- rrr/5
+for (i_jurs in seq_along(JURS)) {
+  rt <- rast(make_name(
+    root=OUT1,
+    api_ver="api/v1",
+    access="public",
+    project="wbi",
+    region=names(JURS)[i_jurs],
+    kind="elements",
+    element="bird-amro",
+    scenario=names(SCENS)[1],
+    period=YRS[1],
+    resolution="250m",
+    file="mean.tif"))
+  
+  for (i_year in seq_along(YRS)[-1]) {
+    #for (i_scen in seq_along(SCENS)) {
+  
+        message(paste(JURS[i_jurs], 
+                      SCENS[i_scen], 
+                      YRS[i_year]))
+        start_yr <- if (YRS[i_year-1] == 2011) YRS[i_year-1] else YRS[i_year-1]+1
+        yy <- start_yr:YRS[i_year]
         
-      }
-      
-      output <- make_name(
-        root=OUT1,
-        api_ver="api/v1",
-        access="public",
-        project="wbi",
-        region=names(JURS)[i_jurs],
-        kind="elements",
-        element="burn",
-        scenario=names(SCENS)[i_scen],
-        period=YRS[i_year],
-        resolution="250m",
-        file="mean.tif")
-      s <- st_as_stars(rrr)
-      make_dir(dirname(output))
-      write_stars(s, output, options = c("COMPRESS=LZW"))
-      
-    }
+        rr <- NULL
+        n <- 0
+        for (i_run in 1:5) {
+          for (y in yy) {
+            message(i_run, " / ", y)
+            input <- paste0(
+              ROOT, "/outputs/",
+              JURS[i_jurs], "_",
+              SCENS[i_scen], "_",
+              "run0", i_run, "/",
+              #"burnMap_", y, "_year", y, ".tif")
+              "rstCurrentBurn_", y, "_year", y, ".tif")
+            r <- rast(input)
+            values(r)[is.na(values(r)) & !is.na(values(rt))] <- 0
+            n <- n+1
+            if (is.null(rr)) {
+              rr <- r
+            } else {
+              rr <- rr+r
+            }
+          }
+        }
+        rr <- rr / n
+        
+        output <- make_name(
+          root=OUT1,
+          api_ver="api/v1",
+          access="public",
+          project="wbi",
+          region=names(JURS)[i_jurs],
+          kind="elements",
+          element="burn",
+          scenario=names(SCENS)[i_scen],
+          period=YRS[i_year],
+          resolution="250m",
+          file="mean.tif")
+        s <- st_as_stars(rr)
+        make_dir(dirname(output))
+        write_stars(s, output, options = c("COMPRESS=LZW"))
+        
+    #}
+  }
 }
 
 miss2 <- list()
+n <- 0
+for (i_jurs in seq_along(JURS)) {
 for (i_year in seq_along(YRS)[-1]) {
   for (i_scen in seq_along(SCENS)) {
     yy <- (YRS[i_year-1]+1):YRS[i_year]
     for (i_run in 1:5) {
       for (y in yy) {
+        n <- n+1
         input <- paste0(
           ROOT, "/outputs/",
           JURS[i_jurs], "_",
           SCENS[i_scen], "_",
           "run0", i_run, "/",
-          "burnMap_", y, "_year", y, ".tif")
+          #"burnMap_", y, "_year", y, ".tif")
+          "rstCurrentBurn_", y, "_year", y, ".tif")
         if (!file.exists(input)) {
           message(input)
           miss2[[length(miss2)+1]] <- input
@@ -168,5 +195,6 @@ for (i_year in seq_along(YRS)[-1]) {
     }
   }
 }
+}
 
-
+gsub("/mnt/volume_tor1_01/wbi/outputs2/outputs/", "", unlist(miss2))

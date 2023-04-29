@@ -1,7 +1,5 @@
 source("functions.R")
 
-i_scen <- 4
-
 overwrite <- TRUE
 q <- 1
 
@@ -13,24 +11,34 @@ q <- 1
 
 # pp <- parse_path(fl)
 pp <- readRDS("/mnt/volume_tor1_01/wbi/final/maps.rds")
-pp <- pp[pp$scenario == names(SCENS)[i_scen],]
-# pp <- pp[pp$region == "ab",]
 pp <- pp[pp$resolution == "250m",]
+# pp <- pp[pp$region == "ab",]
 # pp <- pp[!startsWith(pp$element, "tree"),]
 # lapply(pp, table)
+
+# i_scen <- 1
+# pp <- pp[pp$scenario == names(SCENS)[i_scen],]
+
 
 ## process scales
 for (i in 1:nrow(pp)) {
   p0 <- pp[i,]
-  message(paste0(
-    paste(names(p0[4:8]), 
-          unname(unlist(p0[4:8])), sep="="), collapse=" "))
   
   p1k <- p0
   p1k$resolution <- "1000m"
   p1kll <- p0
   p1kll$resolution <- "lonlat"
   input <- make_name_from_list(p0, OUT1)
+
+  output1k <- make_name_from_list(p1k, OUT1)
+  output1kll <- make_name_from_list(p1kll, OUT1)
+
+  # if (file.mtime(output1k) < "2023-04-28 00:00:00 UTC") { # !!!
+
+  message(paste0(
+    paste(names(p0[4:8]), 
+          unname(unlist(p0[4:8])), sep="="), collapse=" "))
+
 
   r <- rast(input)
   # might have to make this depend on element name, startsWith bird or tree
@@ -45,10 +53,7 @@ for (i in 1:nrow(pp)) {
   #s1kll <- st_transform(s1k, "EPSG:4326")
   # s1kll <- st_warp(s1k, crs=4326)
   s1kll <- st_warp(s1k, crs=4326, method = "bilinear", use_gdal = TRUE, no_data_value = NA_real_) # check this !!!!
-  
-  output1k <- make_name_from_list(p1k, OUT1)
-  output1kll <- make_name_from_list(p1kll, OUT1)
-  
+    
   if (!file.exists(output1k) || overwrite) {
     message("\tsaving 1k")
     make_dir(dirname(output1k))
@@ -59,6 +64,7 @@ for (i in 1:nrow(pp)) {
     make_dir(dirname(output1kll))
     write_stars(s1kll, output1kll, options = c("COMPRESS=LZW"))
   }
+  # } # !!!
   
 }
 
