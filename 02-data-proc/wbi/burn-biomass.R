@@ -1,7 +1,7 @@
 source("functions.R")
 
 YRS <- YRS10
-i_jurs <- which(JURS == "NT")
+i_jurs <- which(JURS == "YT")
 #i_scen <- 1
 #i_year <- 1
 
@@ -12,7 +12,7 @@ rt <- rast(make_name(
     project="wbi",
     region=names(JURS)[i_jurs],
     kind="elements",
-    element="tree-popu-tre",
+    element="bird-amro",
     scenario=names(SCENS)[1],
     period=YRS[1],
     resolution="250m",
@@ -82,17 +82,6 @@ for (i_scen in seq_along(SCENS)) {
     }
   }
 }
-# Missing
-#[1] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2011_year2011.tif"
-#[2] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2021_year2021.tif"
-#[3] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2031_year2031.tif"
-#[4] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2041_year2041.tif"
-#[5] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2051_year2051.tif"
-#[6] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2061_year2061.tif"
-#[7] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2071_year2071.tif"
-#[8] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2081_year2081.tif"
-#[9] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2091_year2091.tif"
-#[10] "/mnt/volume_tor1_01/wbi/outputs2/outputs/YT_CNRM-ESM2-1_SSP585_run02/simulatedBiomassMap_2100_year2100.tif"
 
 
 ## burn
@@ -103,7 +92,8 @@ for (i_year in seq_along(YRS)[-1]) {
       message(paste(JURS[i_jurs], 
                     SCENS[i_scen], 
                     YRS[i_year]))
-      yy <- (YRS[i_year-1]+1):YRS[i_year]
+      start_yr <- if (YRS[i_year-1] == 2011) YRS[i_year-1] else YRS[i_year-1]+1
+      yy <- start_yr:YRS[i_year]
       
       rrr <- NULL
       for (i_run in 1:5) {
@@ -115,7 +105,9 @@ for (i_year in seq_along(YRS)[-1]) {
             JURS[i_jurs], "_",
             SCENS[i_scen], "_",
             "run0", i_run, "/",
-            "burnMap_", y, "_year", y, ".tif")
+            #"burnMap_", y, "_year", y, ".tif")
+            "rstCurrentBurn_", y, "_year", y, ".tif")
+          
           r <- rast(input)
           values(r)[is.na(values(r)) & !is.na(values(rt))] <- 0
           if (is.null(rr)) {
@@ -125,14 +117,16 @@ for (i_year in seq_along(YRS)[-1]) {
           }
           
         }
+        rr <- rr / length(yy)
+
         #values(rr)[!is.na(values(rr)) & values(rr) > 1] <- 1
         if (is.null(rrr)) {
           rrr <- rr
         } else {
           rrr <- rrr+rr
         }
+        rrr <- rrr/5
         
-
       }
       
       output <- make_name(
