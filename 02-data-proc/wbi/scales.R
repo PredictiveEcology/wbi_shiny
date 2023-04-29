@@ -43,7 +43,8 @@ for (i in 1:nrow(pp)) {
   r1k <- aggregate(r, fact=4, na.rm=TRUE)
   s1k <- st_as_stars(r1k)
   #s1kll <- st_transform(s1k, "EPSG:4326")
-  s1kll <- st_warp(s1k, crs=4326)
+  # s1kll <- st_warp(s1k, crs=4326)
+  s1kll <- st_warp(s1k, crs=4326, method = "bilinear", use_gdal = TRUE, no_data_value = NA_real_) # check this !!!!
   
   output1k <- make_name_from_list(p1k, OUT1)
   output1kll <- make_name_from_list(p1kll, OUT1)
