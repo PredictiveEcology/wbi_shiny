@@ -14,7 +14,7 @@ read_with <- function(FUN, url, ...) {
     FUN(tmp, ...)
 }
 
-source("https://raw.githubusercontent.com/PredictiveEcology/wbi_shiny/wbi-full-extent/03-apps/wbi_nwt/R/fct_map.R")
+# source("https://raw.githubusercontent.com/PredictiveEcology/wbi_shiny/wbi-full-extent/03-apps/wbi_nwt/R/fct_map.R")
 
 make_name <- function(
     root=".",

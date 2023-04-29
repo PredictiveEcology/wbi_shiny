@@ -98,7 +98,7 @@ for (i_scen in seq_along(SCENS)) {
 ## burn
 
 for (i_year in seq_along(YRS)[-1]) {
-  for (i_scen in seq_along(SCENS)[3:4]) {
+  for (i_scen in seq_along(SCENS)) {
 
       message(paste(JURS[i_jurs], 
                     SCENS[i_scen], 

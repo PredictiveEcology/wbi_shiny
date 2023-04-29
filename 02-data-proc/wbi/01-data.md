@@ -89,10 +89,10 @@ SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/S
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/MB*
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/NT*
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs_postprocess.zip
+SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/YT*
+SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/YT_CNRM-ESM2-1_SSP585_run02.tar.gz
 
 # Not done
-SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/YT*
-
 SRC=/home/psolymos/projects/rrg-stevec/achubaty/wbi_data/WBI_forecasts/outputs/summary.tar.gz.*
 
 
@@ -126,11 +126,11 @@ du -sh /mnt/volume_tor1_01/wbi
 df -hT /mnt/volume_tor1_01/
 
 # this will copy things into outputs folder
-export PROV=NT
+export PROV=YT
 # export SCEN=CNRM-ESM2-1_SSP370
-# export SCEN=CNRM-ESM2-1_SSP585
+export SCEN=CNRM-ESM2-1_SSP585
 # export SCEN=CanESM5_SSP370
-export SCEN=CanESM5_SSP585
+# export SCEN=CanESM5_SSP585
 
 export RUN=1
 tar -xvf ${PROV}_${SCEN}_run0${RUN}.tar.gz

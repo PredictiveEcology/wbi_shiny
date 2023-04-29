@@ -22,9 +22,12 @@ YRS <- YRS10
 #i_year <- 1
 for (i_jurs in seq_along(JURS)) {
   for (i_scen in seq_along(SCENS)) {
-    #for (i_year in seq_along(YRS)) {
+    for (i_year in seq_along(YRS)) {
  
-      i_year <- 8     
+      # i_year <- 8     
+      # check year
+      # check NA when 1+2+.../      ## !!!!!
+
       message(paste(JURS[i_jurs], 
                     SCENS[i_scen], 
                     YRS[i_year]))
@@ -73,7 +76,7 @@ for (i_jurs in seq_along(JURS)) {
         
       }
 
-    #}
+    }
   }
 }
 
