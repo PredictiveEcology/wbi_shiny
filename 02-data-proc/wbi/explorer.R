@@ -83,7 +83,7 @@ lfun <- function(map, url, type="viridis", opacity=0.8) {
 ## ------------- lookup for selections and map urls ---------------
 
 x <- read_with(readRDS, "https://wbi.predictiveecology.org/api/v1/public/wbi/maps-lonlat-with-stats.rds")
-Elements <- read.csv("https://raw.githubusercontent.com/PredictiveEcology/wbi_shiny/wbi-full-extent/02-data-proc/wbi/element-lookup.csv")
+Elements <- read.csv("https://raw.githubusercontent.com/PredictiveEcology/wbi_shiny/master/02-data-proc/wbi/element-lookup.csv")
 Values <- list(
   region = list(
     "Full Extent" = "full-extent",
@@ -111,10 +111,10 @@ Values <- list(
 ## ------------- Shiny App ------------------
 
 shinyApp(
-    ui=fluidPage(
+    ui = fluidPage(
         titlePanel("WBI GeoTIF Explorer"),
         sidebarLayout(
-        sidebarPanel(width=3,
+        sidebarPanel(width = 3,
             sliderInput("opacity", label = "Opacity:", 
             min = 0, value = 0.8, max = 1),
             selectInput("type", "Color palette:", 
@@ -129,9 +129,15 @@ shinyApp(
         )
         )
     ),
-    server=function(input, output) {
+    server = function(input, output) {
         observeEvent(input$element, {
-            y <- sort(unique(x$period[x$element == input$element]))
+            # y <- sort(unique(x$period[x$element == input$element]))
+            i <- Elements$species_code == input$element
+            y <- seq(Elements$year_start[i], Elements$year_end[i], Elements$year_interval[i])
+            # if (max(y) < Elements$year_end[i])
+            #   y <- c(y, Elements$year_end[i])
+            if (!all(sort(unique(x$period[x$element == input$element])) == y))
+              stop("!!!!!!!!!!!!!!!!")
             output$ui_yrs <- renderUI(selectInput("years", "Time period:", y))
         })
         url <- reactive({

@@ -1,4 +1,4 @@
-group,species_code,common_name,scientific_name,french,full_extent,year_start,year_last,year_interval
+group,species_code,common_name,scientific_name,french,full_extent,year_start,year_end,year_interval
 bird,bird-alfl,Alder Flycatcher,Empidonax alnorum,Moucherolle des aulnes,TRUE,2011,2091,20
 bird,bird-amcr,American Crow,Corvus brachyrhynchos,Corneille d'Am&eacute;rique,TRUE,2011,2091,20
 bird,bird-amgo,American Goldfinch,Spinus tristis,Chardonneret jaune,TRUE,2011,2091,20
