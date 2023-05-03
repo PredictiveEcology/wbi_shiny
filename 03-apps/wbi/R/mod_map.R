@@ -115,86 +115,98 @@ mod_map_server <- function(id, elements){
     # This will help make user choices redundant when re-launching the modal;
     # Start by setting some defaults that will appear the first time the modal
     # is launched
-    current_selections <- shiny::reactiveValues()
-    current_selections$element_type <- "bird"
-    #   element_type = list("Birds" = "bird"),
-    #   element_choices = ELEMENT_NAMES$bird,
-    #   element = ELEMENT_NAMES$bird[1],
-    #   scenario = SCENARIOS[1],
-    #   period = 2011,
-    #   opacity = 0.8
-    # )
-    
-    ## Modal ----
-    modal <- shiny::modalDialog(
-      
-      title = "Set Map Preferences",
-      
-      radioButtons(
-        inputId = ns("map_element_type"), 
-        label = "Species Group:", 
-        choices = list("Birds" = "bird", "Trees" = "tree"), 
-        selected = "bird"
-      ), 
-      
-      selectInput(
-        inputId = ns("map_element"),
-        label = "Species Name:", 
-        choices = ELEMENT_NAMES$bird
-      ),
-      
-      selectInput(
-        inputId = ns("map_scenario"),
-        label = "Scenario:",
-        choices = SCENARIOS
-      ),
-      
-      selectInput(
-        inputId = ns("map_period"), 
-        label = "Time Period:", 
-        choices = c(2011, 2100)
-      ), 
-      
-      sliderInput(
-        inputId = ns("map_opacity"), 
-        label = "Opacity:", 
-        min = 0, 
-        max = 1, 
-        value = 0.8
-      ), 
-      
-      footer = shiny::actionButton(
-        inputId = ns("close_modal"), 
-        label = "Apply"
-      ),
-      size = "s"
-      
+    current_selections <- shiny::reactiveValues(
+      element_type = "bird",
+      element_choices = ELEMENT_NAMES$bird,
+      element = ELEMENT_NAMES$bird[[1]],
+      scenario = SCENARIOS[[1]],
+      period = 2011,
+      opacity = 0.8,
+      element_type_display = "bird", 
+      element_display = ELEMENT_NAMES$bird[[1]]
     )
     
-    # Show the modal on launch (once)
-    shiny::showModal(modal)
+    ## Modal ----
+    # Create modal to hold all input widgets / filters
+    shiny::observeEvent(input$edit_map_settings, {
+      
+      modal <- shiny::modalDialog(
+        
+        title = "Set Map Preferences",
+        
+        radioButtons(
+          inputId = ns("map_element_type"), 
+          label = "Species Group:", 
+          choices = list("Birds" = "bird", "Trees" = "tree"), 
+          selected = current_selections$element_type
+        ), 
+        
+        selectInput(
+          inputId = ns("map_element"),
+          label = "Species Name:", 
+          choices = current_selections$element_choices,
+          selected = current_selections$element
+        ),
+        
+        selectInput(
+          inputId = ns("map_scenario"),
+          label = "Scenario:",
+          choices = SCENARIOS,
+          selected = current_selections$scenario
+        ),
+        
+        selectInput(
+          inputId = ns("map_period"), 
+          label = "Time Period:", 
+          choices = c(2011, 2100),
+          selected = current_selections$period
+        ), 
+        
+        sliderInput(
+          inputId = ns("map_opacity"), 
+          label = "Opacity:", 
+          min = 0, 
+          max = 1, 
+          value = current_selections$opacity
+        ), 
+        
+        footer = shiny::actionButton(
+          inputId = ns("close_modal"), 
+          label = "Apply"
+        ),
+        size = "s"
+        
+      )
+      
+      shiny::showModal(modal)
+      
+    }, ignoreNULL = FALSE)   # run once on load
     
     # Filter Updates ----
     # Update the choices in the "Species Name" dropdown filter based upon the 
     # selected "Species Group" radio button
-    shiny::observe({
+    shiny::observeEvent(input$map_element_type, {
       
       shiny::req(
         current_selections$element_type,
         input$map_element_type
       )
-        
+      
+      # If there is a change in the "Species Group" radio button...
       if (current_selections$element_type != input$map_element_type) {
         
+        # ... update the choices in the "Species Name" dropdown filter list
         updateSelectInput(
           session = session, 
           inputId = "map_element", 
           choices = ELEMENT_NAMES[[input$map_element_type]]
         )
         
-        current_selections$element_type <- input$map_element_type
-        
       }
+      
+      # Overwrite the `element_type` reactiveValue to the currently-selected 
+      # "Species Group" radio button value
+      current_selections$element_type <- input$map_element_type
       
     })
     
@@ -209,86 +221,33 @@ mod_map_server <- function(id, elements){
       current_selections$period <- input$map_period
       current_selections$opacity <- input$map_opacity
       
+      current_selections$element_type_display <- current_selections$element_type
+      current_selections$element_display <- current_selections$element
+      
       shiny::removeModal(session = session)
       
     })
-    
-    # Re-launch the modal when the "Change Preferences" button is clicked
-    shiny::observeEvent(input$edit_map_settings, {
-      
-      shiny::showModal(modal)
-      
-      shiny::updateRadioButtons(
-        session = session,
-        inputId = "map_element_type",
-        selected = current_selections$element_type
-      )
-      
-      shiny::updateSelectInput(
-        session = session,
-        inputId = "map_element",
-        choices = current_selections$element_choices,
-        selected = current_selections$element
-      )
-      
-      shiny::updateSelectInput(
-        session = session,
-        inputId = "map_scenario",
-        selected = current_selections$scenario
-      )
-      
-      shiny::updateSelectInput(
-        session = session,
-        inputId = "map_period",
-        selected = current_selections$period
-      )
-      
-      shiny::updateSliderInput(
-        session = session,
-        inputId = "map_opacity",
-        value = current_selections$opacity
-      )
-      
-    })
-    
-    # Filter Updates ----
-    # Update the options under "Element Name" based upon the selection in the 
-    # "Element Type" radio button
-    # shiny::observeEvent(input$map_element_type, {
-    #   
-    #   if (input$map_element_type != current_selections$element_type) {
-    #     
-    #     updateSelectInput(
-    #       session = session, 
-    #       inputId = "map_element", 
-    #       choices = ELEMENT_NAMES[[input$map_element_type]], 
-    #       selected = ELEMENT_NAMES[[input$map_element_type]][1]
-    #     )
-    #     
-    #   }
-    #   
-    # })
     
     # Map ----
     output$map <- leaflet::renderLeaflet({
       
       shiny::req(
-        input$map_element,
-        input$map_scenario,
-        input$map_period,
-        input$map_opacity
+        current_selections$element,
+        current_selections$scenario,
+        current_selections$period,
+        current_selections$opacity
       )
       
       MS <- MAPSTATS[
-        MAPSTATS$element_name == input$map_element & 
-          MAPSTATS$scenario == input$map_scenario & 
-          MAPSTATS$year == input$map_period,
+        MAPSTATS$element_name == current_selections$element & 
+          MAPSTATS$scenario == current_selections$scenario & 
+          MAPSTATS$year == current_selections$period,
       ]
       base_map() |> 
         add_element(
-          element = input$map_element, 
-          scenario = input$map_scenario, 
-          period = input$map_period,
+          element = current_selections$element, 
+          scenario = current_selections$scenario, 
+          period = current_selections$period,
           opacity = input$map_opacity,
           max = MS$max, 
           pal_max = MS$pal_max
@@ -310,7 +269,7 @@ mod_map_server <- function(id, elements){
     # Render "Species Group" selection text
     output$species_group_text <- shiny::renderText(
       
-      ifelse(input$map_element_type == "bird", "Birds", "Trees")
+      ifelse(current_selections$element_type_display == "bird", "Birds", "Trees")
       
     )
     
@@ -318,29 +277,29 @@ mod_map_server <- function(id, elements){
     output$species_name_text <- shiny::renderText({
       
       shiny::req(
-        input$map_element_type,
-        input$map_element
+        current_selections$element_type_display,
+        current_selections$element_display
       )
       
       lookup_element_name_by_value(
         list = ELEMENT_NAMES,
-        type = input$map_element_type,
-        value = input$map_element
+        type = current_selections$element_type_display,
+        value = current_selections$element_display
       )
       
     })
     
     # Render "Scenario" selection text
-    output$scenario_text <- shiny::renderText(
+    output$scenario_text <- shiny::renderText({
       
       names(
-        SCENARIOS[SCENARIOS == input$map_scenario]
+        SCENARIOS[SCENARIOS == current_selections$scenario]
       )
       
-    )
+    })
     
     # Render "Period" selection text
-    output$period_text <- shiny::renderText(input$map_period)
+    output$period_text <- shiny::renderText(current_selections$period)
     
   })
 }
