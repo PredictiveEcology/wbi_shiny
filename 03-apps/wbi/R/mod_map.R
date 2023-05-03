@@ -111,6 +111,20 @@ mod_map_server <- function(id, elements){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    # Create a `reactiveValues` list to hold current selections for each filter;
+    # This will help make user choices redundant when re-launching the modal;
+    # Start by setting some defaults that will appear the first time the modal
+    # is launched
+    current_selections <- shiny::reactiveValues()
+    current_selections$element_type <- "bird"
+    #   element_type = list("Birds" = "bird"),
+    #   element_choices = ELEMENT_NAMES$bird,
+    #   element = ELEMENT_NAMES$bird[1],
+    #   scenario = SCENARIOS[1],
+    #   period = 2011,
+    #   opacity = 0.8
+    # )
+    
     ## Modal ----
     modal <- shiny::modalDialog(
       
@@ -119,9 +133,8 @@ mod_map_server <- function(id, elements){
       radioButtons(
         inputId = ns("map_element_type"), 
         label = "Species Group:", 
-        choices = c("Birds" = "bird", "Trees" = "tree"), 
-        selected = "bird", 
-        inline = TRUE
+        choices = list("Birds" = "bird", "Trees" = "tree"), 
+        selected = "bird"
       ), 
       
       selectInput(
@@ -150,7 +163,10 @@ mod_map_server <- function(id, elements){
         value = 0.8
       ), 
       
-      footer = shiny::modalButton(label = "Done"),
+      footer = shiny::actionButton(
+        inputId = ns("close_modal"), 
+        label = "Apply"
+      ),
       size = "s"
       
     )
@@ -158,30 +174,100 @@ mod_map_server <- function(id, elements){
     # Show the modal on launch (once)
     shiny::showModal(modal)
     
+    # Filter Updates ----
+    # Update the choices in the "Species Name" dropdown filter based upon the 
+    # selected "Species Group" radio button
+    shiny::observe({
+      
+      shiny::req(
+        current_selections$element_type,
+        input$map_element_type
+      )
+        
+      if (current_selections$element_type != input$map_element_type) {
+        
+        updateSelectInput(
+          session = session, 
+          inputId = "map_element", 
+          choices = ELEMENT_NAMES[[input$map_element_type]]
+        )
+        
+        current_selections$element_type <- input$map_element_type
+        
+      }
+      
+    })
+    
+    # When the "Apply" button is clicked in the modal, capture the inputs to
+    # apply when the modal is re-launched
+    shiny::observeEvent(input$close_modal, {
+      
+      current_selections$element_type <- input$map_element_type
+      current_selections$element_choices <- ELEMENT_NAMES[[input$map_element_type]]
+      current_selections$element <- input$map_element
+      current_selections$scenario <- input$map_scenario
+      current_selections$period <- input$map_period
+      current_selections$opacity <- input$map_opacity
+      
+      shiny::removeModal(session = session)
+      
+    })
+    
     # Re-launch the modal when the "Change Preferences" button is clicked
     shiny::observeEvent(input$edit_map_settings, {
       
       shiny::showModal(modal)
+      
+      shiny::updateRadioButtons(
+        session = session,
+        inputId = "map_element_type",
+        selected = current_selections$element_type
+      )
+      
+      shiny::updateSelectInput(
+        session = session,
+        inputId = "map_element",
+        choices = current_selections$element_choices,
+        selected = current_selections$element
+      )
+      
+      shiny::updateSelectInput(
+        session = session,
+        inputId = "map_scenario",
+        selected = current_selections$scenario
+      )
+      
+      shiny::updateSelectInput(
+        session = session,
+        inputId = "map_period",
+        selected = current_selections$period
+      )
+      
+      shiny::updateSliderInput(
+        session = session,
+        inputId = "map_opacity",
+        value = current_selections$opacity
+      )
       
     })
     
     # Filter Updates ----
     # Update the options under "Element Name" based upon the selection in the 
     # "Element Type" radio button
-    shiny::observeEvent(input$map_element_type, {
-      
-      shiny::req(
-        input$map_element,
-        input$map_element_type
-      )
-      
-      updateSelectInput(
-        session = session, 
-        inputId = "map_element", 
-        choices = ELEMENT_NAMES[[input$map_element_type]]
-      )
-      
-    })
+    # shiny::observeEvent(input$map_element_type, {
+    #   
+    #   if (input$map_element_type != current_selections$element_type) {
+    #     
+    #     updateSelectInput(
+    #       session = session, 
+    #       inputId = "map_element", 
+    #       choices = ELEMENT_NAMES[[input$map_element_type]], 
+    #       selected = ELEMENT_NAMES[[input$map_element_type]][1]
+    #     )
+    #     
+    #   }
+    #   
+    # })
     
     # Map ----
     output$map <- leaflet::renderLeaflet({
