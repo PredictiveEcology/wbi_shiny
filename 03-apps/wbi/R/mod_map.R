@@ -14,12 +14,14 @@ mod_map_ui <- function(id){
     div(
       class = "outer", 
       
+      # Map ----
       leaflet::leafletOutput(
         outputId = ns("map"), 
         width = "100%", 
         height = "100%"
       ), 
       
+      # Panel ----
       absolutePanel(
         id = "controls", 
         class = "panel panel-default", 
@@ -32,41 +34,70 @@ mod_map_ui <- function(id){
         width = 330, 
         height = "auto", 
         
-        br(), 
-        
-        radioButtons(
-          inputId = ns("map_element_type"), 
-          label = "Species Group:", 
-          choices = c("Birds" = "bird", "Trees" = "tree"), 
-          selected = "bird", 
-          inline = TRUE
-        ), 
-        
-        selectInput(
-          inputId = ns("map_element"),
-          label = "Species Name:", 
-          choices = ELEMENT_NAMES$bird
+        build_accordion(
+          id = "map",
+          header = "You are now viewing:",
+          content = shiny::tags$ul(
+            
+            # shiny::tags$li(
+            #   shiny::span(
+            #     "Region: ", 
+            #     shiny::textOutput(
+            #       outputId = "region_text", 
+            #       inline = TRUE
+            #     ) |> shiny::tags$em()
+            #   )
+            # ),
+            
+            shiny::tags$li(
+              shiny::span(
+                "Species Group: ", 
+                shiny::textOutput(
+                  outputId = ns("species_group_text"),
+                  inline = TRUE
+                ) |> shiny::tags$em()
+              )
+            ),
+            
+            shiny::tags$li(
+              shiny::span(
+                "Species Name: ", 
+                shiny::textOutput(
+                  outputId = ns("species_name_text"),
+                  inline = TRUE
+                ) |> shiny::tags$em()
+              )
+            ),
+            
+            shiny::tags$li(
+              shiny::span(
+                "Scenario: ", 
+                shiny::textOutput(
+                  outputId = ns("scenario_text"),
+                  inline = TRUE
+                ) |> shiny::tags$em()
+              )
+            ),
+            
+            shiny::tags$li(
+              shiny::span(
+                "Time Period: ", 
+                shiny::textOutput(
+                  outputId = ns("period_text"),
+                  inline = TRUE
+                ) |> shiny::tags$em()
+              )
+            )
+            
+          )
         ),
-
-        selectInput(
-          inputId = ns("map_scenario"),
-          label = "Scenario:",
-          choices = SCENARIOS
-        ),
         
-        selectInput(
-          inputId = ns("map_period"), 
-          label = "Time Period:", 
-          choices = c(2011, 2100)
-        ), 
-        
-        sliderInput(
-          inputId = ns("map_opacity"), 
-          label = "Opacity:", 
-          min = 0, 
-          max = 1, 
-          value = 0.8
+        shiny::actionButton(
+          inputId = ns("edit_map_settings"),
+          label = "Change Preferences",
+          icon = shiny::icon("gear")
         )
+        
       )
     )
     
@@ -80,26 +111,92 @@ mod_map_server <- function(id, elements){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    ## Modal ----
+    modal <- shiny::modalDialog(
+      
+      title = "Set Map Preferences",
+      
+      radioButtons(
+        inputId = ns("map_element_type"), 
+        label = "Species Group:", 
+        choices = c("Birds" = "bird", "Trees" = "tree"), 
+        selected = "bird", 
+        inline = TRUE
+      ), 
+      
+      selectInput(
+        inputId = ns("map_element"),
+        label = "Species Name:", 
+        choices = ELEMENT_NAMES$bird
+      ),
+      
+      selectInput(
+        inputId = ns("map_scenario"),
+        label = "Scenario:",
+        choices = SCENARIOS
+      ),
+      
+      selectInput(
+        inputId = ns("map_period"), 
+        label = "Time Period:", 
+        choices = c(2011, 2100)
+      ), 
+      
+      sliderInput(
+        inputId = ns("map_opacity"), 
+        label = "Opacity:", 
+        min = 0, 
+        max = 1, 
+        value = 0.8
+      ), 
+      
+      footer = shiny::modalButton(label = "Done"),
+      size = "s"
+      
+    )
+    
+    # Show the modal on launch (once)
+    shiny::showModal(modal)
+    
+    # Re-launch the modal when the "Change Preferences" button is clicked
+    shiny::observeEvent(input$edit_map_settings, {
+      
+      shiny::showModal(modal)
+      
+    })
+    
+    # Filter Updates ----
     # Update the options under "Element Name" based upon the selection in the 
     # "Element Type" radio button
-    observe({
+    shiny::observeEvent(input$map_element_type, {
       
-      element_type <- tolower(input$map_element_type)
+      shiny::req(
+        input$map_element,
+        input$map_element_type
+      )
       
       updateSelectInput(
         session = session, 
         inputId = "map_element", 
-        choices = ELEMENT_NAMES[[element_type]]
+        choices = ELEMENT_NAMES[[input$map_element_type]]
       )
       
     })
     
-    # Render the map
+    # Map ----
     output$map <- leaflet::renderLeaflet({
+      
+      shiny::req(
+        input$map_element,
+        input$map_scenario,
+        input$map_period,
+        input$map_opacity
+      )
+      
       MS <- MAPSTATS[
         MAPSTATS$element_name == input$map_element & 
-        MAPSTATS$scenario == input$map_scenario & 
-        MAPSTATS$year == input$map_period,
+          MAPSTATS$scenario == input$map_scenario & 
+          MAPSTATS$year == input$map_period,
       ]
       base_map() |> 
         add_element(
@@ -121,6 +218,43 @@ mod_map_server <- function(id, elements){
           }
         ")
     })
+    
+    # Summary Text ----
+    
+    # Render "Species Group" selection text
+    output$species_group_text <- shiny::renderText(
+      
+      ifelse(input$map_element_type == "bird", "Birds", "Trees")
+      
+    )
+    
+    # Render "Species Name" selection text
+    output$species_name_text <- shiny::renderText({
+      
+      shiny::req(
+        input$map_element_type,
+        input$map_element
+      )
+      
+      lookup_element_name_by_value(
+        list = ELEMENT_NAMES,
+        type = input$map_element_type,
+        value = input$map_element
+      )
+      
+    })
+    
+    # Render "Scenario" selection text
+    output$scenario_text <- shiny::renderText(
+      
+      names(
+        SCENARIOS[SCENARIOS == input$map_scenario]
+      )
+      
+    )
+    
+    # Render "Period" selection text
+    output$period_text <- shiny::renderText(input$map_period)
     
   })
 }
