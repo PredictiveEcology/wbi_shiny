@@ -1,36 +1,102 @@
-#' Look up the name in a named list that is associated with a particular value
+
+#' Look up the name of an element in a named character vector
 #'
-#' @description A utils function
+#' @description
+#' This function was developed as a pipe-friendly way to extract the 
+#'   corresponding name from a named character vector given a value within that
+#'   vector.
+#' 
+#' @param x A named character vector
+#' @param value The value in `x` to use to look up the corresponding name
 #'
-#' @return A character string representing the plain-English name
+#' @return A character string representing the name of the value in the vector
+#'   specified by `value`
 #'
-#' @noRd
-lookup_element_name_by_value <- function(list, type, value) {
+#' @examples
+#' # The following code would return "Tamarack"
+#' lookup_element_name_by_value(
+#'   x = ELEMENT_NAMES$tree,
+#'   value = "tree-lari-lar"
+#' )
+lookup_element_name_by_value <- function(x, value) {
   
-  names(list[[type]][list[[type]] == value])
+  if (length(value) > 1L) {
+    paste0(
+      "`value` should be length 1, not length ",
+      length(value), "."
+    ) |> 
+      stop()
+  }
+  
+  x[x == value] |> names()
   
 }
 
 
 
+#' Create a bootstrap accordion UI element
+#' 
+#' @description
+#' In bootstrap 5.0 you can create an "accordion" object that allows you to 
+#' collapse/expand the content inside the "accordion" container:
+#' \link{https://getbootstrap.com/docs/5.0/components/accordion/}
+#' 
+#'
+#' @param id (String) A unique id value for the accordion
+#' @param header (String) The text to display in the header of the accordion
+#'   (to the left of the 'collapse' button)
+#' @param content The content (HTML, text, etc.) to be displayed within the 
+#'   accordion
+#'
+#' @return
+#'
+#' @examples
 build_accordion <- function(id, header, content) {
   
-  glue::glue("
-    <div class=\"accordion accordion-flush\" id=\"accordion_{id}\">
-      <div class=\"accordion-item\">
-        <h2 class=\"accordion-header\" id=\"heading_{id}\">
-          <button class=\"accordion-button\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse_{id}\" aria-expanded=\"true\" aria-controls=\"collapse_{id}\">
-             {header}
-          </button>
-        </h2>
-        <div id=\"collapse_{id}\" class=\"accordion-collapse collapse show\" aria-labelledby=\"heading_{id}\" data-bs-parent=\"#accordionExample\">
-          <div class=\"accordion-body\">
-             {content}
-          </div>
-        </div>
-      </div>
-    </div>
-  ") |> 
-    shiny::HTML()
+  # Create 'id' values for divs
+  ids <- list(
+    accordion = glue::glue("accordion_{id}"),
+    header = glue::glue("heading_{id}"),
+    collapse = glue::glue("collapse_{id}")
+  )
+  
+  # Build accordion
+  shiny::div(
+    class = "accordion accordion-flush",
+    id = ids$accordion,
+    
+    shiny::div(
+      class = "accordion-item",
+      
+      shiny::h2(
+        class = "accordion-header",
+        id = ids$header,
+        
+        shiny::tags$button(
+          class = "accordion-button",
+          type = "button", 
+          `data-bs-toggle` = "collapse",
+          `data-bs-target` = glue::glue("#{ids$collapse}"),
+          `aria-expanded` = "true",
+          `aria-controls` = ids$collapse,
+          header
+        )
+        
+      ),
+      
+      shiny::div(
+        id = ids$collapse,
+        class = "accordion-collapse collapse show",
+        `aria-labelledby` = ids$header,
+        `data-bs-parent` = glue::glue("#{ids$accordion}"),
+        
+        shiny::div(
+          class = "accordion-body",
+          content
+        )
+        
+      )
+    )
+  )
   
 }
