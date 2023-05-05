@@ -47,9 +47,26 @@ lookup_element_name_by_value <- function(x, value) {
 #' @param content The content (HTML, text, etc.) to be displayed within the 
 #'   accordion
 #'
-#' @return
+#' @return An HTML div that will display `content` inside a vertically-
+#'   collapsible bootstrap accordion
 #'
 #' @examples
+#' if (interactive()) {
+#'   library(shiny)
+#'   library(bslib)
+#' 
+#'   ui <- page_fluid(
+#'     build_accordion(
+#'       id = "acc1", 
+#'       header = "Open/Close Me", 
+#'       content = tags$em("Here's some collapsible content")
+#'     )
+#'   )
+#' 
+#'   server <- function(input, output) {}
+#' 
+#'   shinyApp(ui, server)
+#' }
 build_accordion <- function(id, header, content) {
   
   # Create 'id' values for divs
