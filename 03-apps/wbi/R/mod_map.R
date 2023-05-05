@@ -281,11 +281,9 @@ mod_map_server <- function(id, elements){
         current_selections$element_display
       )
       
-      lookup_element_name_by_value(
-        list = ELEMENT_NAMES,
-        type = current_selections$element_type_display,
-        value = current_selections$element_display
-      )
+      ELEMENT_NAMES |> 
+        purrr::pluck(current_selections$element_type_display) |> 
+        lookup_element_name_by_value(value = current_selections$element_display)
       
     })
     
