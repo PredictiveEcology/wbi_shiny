@@ -1,4 +1,3 @@
-
 #' Look up the name of an element in a named character vector
 #'
 #' @description

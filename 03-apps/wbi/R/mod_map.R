@@ -269,7 +269,11 @@ mod_map_server <- function(id, elements){
     # Render "Species Group" selection text
     output$species_group_text <- shiny::renderText(
       
-      ifelse(current_selections$element_type_display == "bird", "Birds", "Trees")
+      ifelse(
+        current_selections$element_type_display == "bird", 
+        "Birds", 
+        "Trees"
+      )
       
     )
     
@@ -281,17 +285,19 @@ mod_map_server <- function(id, elements){
         current_selections$element_display
       )
       
-      ELEMENT_NAMES |> 
-        purrr::pluck(current_selections$element_type_display) |> 
-        lookup_element_name_by_value(value = current_selections$element_display)
+      lookup_element_name_by_value(
+        x = ELEMENT_NAMES[[current_selections$element_type_display]],
+        value = current_selections$element_display
+      )
       
     })
     
     # Render "Scenario" selection text
     output$scenario_text <- shiny::renderText({
       
-      names(
-        SCENARIOS[SCENARIOS == current_selections$scenario]
+      lookup_element_name_by_value(
+        x = SCENARIOS,
+        value = current_selections$scenario
       )
       
     })
