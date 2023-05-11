@@ -35,11 +35,19 @@ lookup_element_name_by_value <- function(x, value) {
 
 get_period_choices <- function(x) {
   
-  seq(
+  out <- seq(
     from = x$year_start,
     to = x$year_end,
     by = x$year_interval
   )
+  
+  if (!x$year_end %in% out) {
+    
+    out <- c(out, x$year_end)
+    
+  }
+  
+  return(out)
   
 }
 
