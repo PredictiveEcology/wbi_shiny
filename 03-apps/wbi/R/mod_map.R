@@ -111,6 +111,7 @@ mod_map_server <- function(id, elements){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    ## Set Initial Filter Selections ----
     # Create a `reactiveValues` list to hold current selections for each filter;
     # This will help make user choices redundant when re-launching the modal;
     # Start by setting some defaults that will appear the first time the modal
@@ -174,6 +175,7 @@ mod_map_server <- function(id, elements){
           inputId = ns("close_modal"), 
           label = "Apply"
         ),
+        
         size = "s"
         
       )

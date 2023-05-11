@@ -33,6 +33,18 @@ lookup_element_name_by_value <- function(x, value) {
 
 
 
+get_period_choices <- function(x) {
+  
+  seq(
+    from = x$year_start,
+    to = x$year_end,
+    by = x$year_interval
+  )
+  
+}
+
+
+
 #' Create a bootstrap accordion UI element
 #' 
 #' @description
