@@ -182,7 +182,7 @@ mod_map_server <- function(id, elements){
       
       shiny::showModal(modal)
       
-    }, ignoreNULL = FALSE)   # run once on load
+    })   # run once on load
     
     # Filter Updates ----
     # Update the choices in the "Species Name" dropdown filter based upon the 
