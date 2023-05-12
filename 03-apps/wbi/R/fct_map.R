@@ -16,7 +16,6 @@
 #' @return A leaflet map object
 #'
 #' @noRd
-#' 
 base_map <- function() {
   
   map_attr = "© <a href='https://www.esri.com/en-us/home'>ESRI</a> © <a href='https://www.google.com/maps/'>Google</a>"
@@ -59,6 +58,55 @@ base_map <- function() {
       position = "topleft", 
       options = leaflet::layersControlOptions(collapsed = FALSE)) |> 
     leaflet::setView(-120, 65, 5)
+  
+}
+
+
+
+#' Build path to API data location
+#'
+#' @param root Base API address 
+#' @param api_ver API version
+#' @param access Access type (public/private)
+#' @param project Project name
+#' @param region Region name
+#' @param kind Type of data to be returned (e.g., "elements")
+#' @param element Specific element name
+#' @param scenario Scenario name
+#' @param period Period (year)
+#' @param resolution Resolution level (e.g., "lonlat")
+#' @param file Name of file
+#'
+#' @return A character string representing a full URL path to the API data
+#'
+#' @noRd
+make_api_path <- function(root  =  ".", 
+                      api_ver = "1", 
+                      access = "public", 
+                      project = "wbi", 
+                      region,
+                      kind = "elements",
+                      element,
+                      scenario,
+                      period,
+                      resolution,
+                      file) {
+  
+  # Create the URL to the API data
+  paste(
+    root,
+    paste0("v", api_ver),
+    access,
+    project,
+    region,
+    kind,
+    element,
+    scenario,
+    period,
+    resolution,
+    file,
+    sep = "/"
+  )
   
 }
 
