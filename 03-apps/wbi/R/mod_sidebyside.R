@@ -347,26 +347,26 @@ mod_sidebyside_server <- function(id){
         MS1 <- MAPSTATS[
           MAPSTATS$element_name == current_selections_2x$element & 
             MAPSTATS$scenario == current_selections_2x$map_left & 
-            MAPSTATS$year == "2100",
+            MAPSTATS$year == "2100",  # TODO // change this to user-specified
         ]
         
         MS2 <- MAPSTATS[
           MAPSTATS$element_name == current_selections_2x$element & 
             MAPSTATS$scenario == current_selections_2x$map_right & 
-            MAPSTATS$year == "2100",
+            MAPSTATS$year == "2100",  # TODO // change this to user-specified
         ]
         
       } else {
         
         MS1 <- MAPSTATS[
           MAPSTATS$element_name == current_selections_2x$element & 
-            MAPSTATS$scenario == "landrcs-fs-v6a" & 
+            MAPSTATS$scenario == "landrcs-fs-v6a" &   # TODO // change this to user-specified
             MAPSTATS$year == current_selections_2x$map_left,
         ]
         
         MS2 <- MAPSTATS[
           MAPSTATS$element_name == current_selections_2x$element & 
-            MAPSTATS$scenario == "landrcs-fs-v6a" & 
+            MAPSTATS$scenario == "landrcs-fs-v6a" &   # TODO // change this to user-specified
             MAPSTATS$year == current_selections_2x$map_right,
         ]
         
