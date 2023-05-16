@@ -39,15 +39,15 @@ mod_map_ui <- function(id){
           header = "You are now viewing:",
           content = shiny::tags$ul(
             
-            # shiny::tags$li(
-            #   shiny::span(
-            #     "Region: ", 
-            #     shiny::textOutput(
-            #       outputId = "region_text", 
-            #       inline = TRUE
-            #     ) |> shiny::tags$em()
-            #   )
-            # ),
+            shiny::tags$li(
+              shiny::span(
+                "Region: ",
+                shiny::textOutput(
+                  outputId = ns("region_text"),
+                  inline = TRUE
+                ) |> shiny::tags$em()
+              )
+            ),
             
             shiny::tags$li(
               shiny::span(
@@ -117,11 +117,13 @@ mod_map_server <- function(id, elements){
     # Start by setting some defaults that will appear the first time the modal
     # is launched
     current_selections <- shiny::reactiveValues(
+      region = REGIONS[[1]],
       element_type = "bird",
       element_choices = ELEMENT_NAMES$bird,
       element = ELEMENT_NAMES$bird[[1]],
       scenario = SCENARIOS[[1]],
       period = 2011,
+      palette = "viridis",
       opacity = 0.8,
       element_type_display = "bird", 
       element_display = ELEMENT_NAMES$bird[[1]]
@@ -134,6 +136,13 @@ mod_map_server <- function(id, elements){
       modal <- shiny::modalDialog(
         
         title = "Set Map Preferences",
+        
+        selectInput(
+          inputId = ns("map_region"),
+          label = "Region:", 
+          choices = REGIONS,
+          selected = current_selections$region
+        ),
         
         radioButtons(
           inputId = ns("map_element_type"), 
@@ -161,6 +170,13 @@ mod_map_server <- function(id, elements){
           label = "Time Period:", 
           choices = c(2011, 2100),
           selected = current_selections$period
+        ), 
+        
+        selectInput(
+          inputId = ns("map_palette"), 
+          label = "Color Palette:", 
+          choices = c("bam", "rdylbu", "spectral", "viridis"),
+          selected = current_selections$palette
         ), 
         
         sliderInput(
@@ -216,11 +232,13 @@ mod_map_server <- function(id, elements){
     # apply when the modal is re-launched
     shiny::observeEvent(input$close_modal, {
       
+      current_selections$region <- input$map_region
       current_selections$element_type <- input$map_element_type
       current_selections$element_choices <- ELEMENT_NAMES[[input$map_element_type]]
       current_selections$element <- input$map_element
       current_selections$scenario <- input$map_scenario
       current_selections$period <- input$map_period
+      current_selections$palette <- input$map_palette
       current_selections$opacity <- input$map_opacity
       
       current_selections$element_type_display <- current_selections$element_type
@@ -230,29 +248,40 @@ mod_map_server <- function(id, elements){
       
     })
     
+    # Create the reactive URL to the tif files on the API server
+    url <- shiny::reactive({
+      
+      # shiny::req(
+      #   current_selections$region,
+      #   current_selections$element,
+      #   current_selections$scenario,
+      #   current_selections$period
+      # )
+      
+      make_api_path(
+        root  =  "https://wbi.predictiveecology.org/api", 
+        api_ver = "1", 
+        access = "public", 
+        project = "wbi", 
+        region = current_selections$region,
+        kind = "elements",
+        element = current_selections$element,
+        scenario = current_selections$scenario,
+        period = current_selections$period,
+        resolution = "lonlat",
+        file = "mean.tif"
+      )
+      
+    })
+    
     # Map ----
     output$map <- leaflet::renderLeaflet({
       
-      shiny::req(
-        current_selections$element,
-        current_selections$scenario,
-        current_selections$period,
-        current_selections$opacity
-      )
-      
-      MS <- MAPSTATS[
-        MAPSTATS$element_name == current_selections$element & 
-          MAPSTATS$scenario == current_selections$scenario & 
-          MAPSTATS$year == current_selections$period,
-      ]
       base_map() |> 
         add_element(
-          element = current_selections$element, 
-          scenario = current_selections$scenario, 
-          period = current_selections$period,
-          opacity = input$map_opacity,
-          max = MS$max, 
-          pal_max = MS$pal_max
+          url = url(),
+          palette_length = 50L,
+          palette_type = current_selections$palette
         ) |> 
         leaflet::addMeasure(
           position = "topleft"
@@ -264,9 +293,20 @@ mod_map_server <- function(id, elements){
             })
           }
         ")
+      
     })
     
     # Summary Text ----
+    
+    # Render "Region" selection text
+    output$region_text <- shiny::renderText(
+      
+      lookup_element_name_by_value(
+        x = REGIONS,
+        value = current_selections$region
+      )
+      
+    )
     
     # Render "Species Group" selection text
     output$species_group_text <- shiny::renderText(

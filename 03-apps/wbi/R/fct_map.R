@@ -18,7 +18,7 @@
 #' @noRd
 base_map <- function() {
   
-  map_attr = "© <a href='https://www.esri.com/en-us/home'>ESRI</a> © <a href='https://www.google.com/maps/'>Google</a>"
+  map_attr <- "© <a href='https://www.esri.com/en-us/home'>ESRI</a> © <a href='https://www.google.com/maps/'>Google</a>"
   
   leaflet::leaflet() |> 
     leaflet::addTiles(
@@ -81,16 +81,16 @@ base_map <- function() {
 #'
 #' @noRd
 make_api_path <- function(root  =  ".", 
-                      api_ver = "1", 
-                      access = "public", 
-                      project = "wbi", 
-                      region,
-                      kind = "elements",
-                      element,
-                      scenario,
-                      period,
-                      resolution,
-                      file) {
+                          api_ver = "1", 
+                          access = "public", 
+                          project = "wbi", 
+                          region,
+                          kind = "elements",
+                          element,
+                          scenario,
+                          period,
+                          resolution,
+                          file) {
   
   # Create the URL to the API data
   paste(
@@ -106,6 +106,36 @@ make_api_path <- function(root  =  ".",
     resolution,
     file,
     sep = "/"
+  )
+  
+}
+
+
+
+#' Create color palette for map legend scaling
+#'
+#' @param n Number of gradient levels
+#' @param type Palette type
+#'
+#' @return A vector of hex color codes
+#'
+#' @noRd
+get_palette <- function(n = 50, 
+                        type = c("viridis", "rdylbu", "spectral", "bam")) {
+  
+  switch(
+    match.arg(type),
+    "viridis" = viridis::viridis_pal(option = "D")(n),
+    "rdylbu" = grDevices::hcl.colors(n, "RdYlBu", rev = TRUE),
+    "spectral" = grDevices::hcl.colors(n, "spectral", rev = TRUE),
+    "bam" = grDevices::colorRampPalette(
+      colors = c(
+        "#FFFACD", "lemonchiffon","#FFF68F", "khaki1","#ADFF2F", "greenyellow", 
+        "#00CD00", "green3", "#48D1CC", "mediumturquoise", "#007FFF", "blue"
+      ), 
+      space = "Lab", 
+      bias = 0.5
+    )(n)
   )
   
 }
@@ -156,53 +186,36 @@ make_api_path <- function(root  =  ".",
 #' 
 # need to implement max values for scaling
 # need to implement measurement units for title
-add_element <- function(map, element, scenario, period, 
-                        opacity = 0.8, add_legend = TRUE,
-                        max = 1, pal_max = 101L) {
+add_element <- function(map, url, 
+                        palette_length, palette_type, 
+                        opacity = 0.8, 
+                        # max = 1, 
+                        pal_max = 101L,
+                        add_legend = FALSE) {
   
-  use_tiff <- get_golem_config("app_geotiff")
-
-  # Retrieve the appropriate tiles for the element/scenario/period from the 
-  # database
-  pattern <- if (use_tiff) {
-    "api/v1/public/wbi-nwt/elements/%s/%s/%s/lonlat/mean.tif"
-  } else {
-    "api/v1/public/wbi-nwt/elements/%s/%s/%s/tiles/{z}/{x}/{-y}.png"
-  }
-  tiles <- sprintf(
-    paste0(get_golem_config("app_baseurl"), pattern), 
-    element, 
-    scenario, 
-    as.character(period)
+  # Build the palette
+  palette <- get_palette(
+    n = palette_length,
+    type = palette_type
   )
   
-  # Add the tiles to the base map
-  if (use_tiff) {
-    m <- map |>
-      leafem::addGeotiff(
-        url = tiles,
-        project = FALSE,
-        opacity = opacity,
-        autozoom = FALSE,
-        layerId = "raster",
-        options = leaflet::tileOptions(
-          maxNativeZoom = 10,
-          zIndex = 400),
-        colorOptions = leafem::colorOptions(
-          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max)],
-          domain = c(0, max),
-          na.color = "transparent"))
-  } else {
-    m <- map |>
-      leaflet::addTiles(
-        urlTemplate = tiles,
-        options = leaflet::tileOptions(
-          maxNativeZoom = 10,
-          opacity = opacity,
-          zIndex = 400
-        )
+  # Create the map
+  m <- map |>
+    leafem::addGeotiff(
+      url = url,
+      project = FALSE,
+      opacity = opacity,
+      autozoom = FALSE,
+      layerId = "raster",
+      options = leaflet::tileOptions(
+        maxNativeZoom = 10,
+        zIndex = 400
+      ),
+      colorOptions = leafem::colorOptions(
+        palette = palette,
+        na.color = "transparent"
       )
-  }
+    )
   
   # If `add_legend = TRUE`, show the legend
   if (add_legend) {
@@ -214,8 +227,9 @@ add_element <- function(map, element, scenario, period,
       leaflet::addLegend(
         position = "bottomleft", 
         pal = leaflet::colorNumeric(
-          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max)],
-          domain = c(0, max)   # adjust max here too
+          palette = palette,
+          domain = c(0, max),   # adjust max here too
+          na.color = "transparent"
         ), 
         values = c(0, max), # need to adjust max here
         title = title,
@@ -308,7 +322,7 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
                           max1 = 1, max2 = 1, pal_max1 = 101L, pal_max2 = 101L) {
   
   use_tiff <- get_golem_config("app_geotiff")
-
+  
   # Build the path to the pre-processed tiles
   if (by == "scenario") {
     
@@ -375,7 +389,7 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
         "/landrcs-fs-v6a/2100/lonlat/mean.tif"
       )
     }
-
+    
   }
   
   # Add tiles to the map
@@ -428,8 +442,8 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
           na.color = "transparent")
       )
   }
-
-
+  
+  
   # If `add_legend = TRUE`, include legend on map
   if (add_legend) {
     
@@ -478,7 +492,7 @@ add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
 map_region <- function(region, base=FALSE) {
   
   if (base) {
-
+    
     # Build the base map
     plot(STATS$regions["NWT: Northwest Territories", "geom"])
     
@@ -489,12 +503,12 @@ map_region <- function(region, base=FALSE) {
       border = "tomato", 
       add = TRUE
     )
-
+    
   } else {
-
+    
     p <- ggplot2::ggplot(
-        data = STATS$regions["NWT: Northwest Territories",]
-      ) + 
+      data = STATS$regions["NWT: Northwest Territories",]
+    ) + 
       ggplot2::geom_sf(
         col="grey", 
         fill="grey"
@@ -505,7 +519,7 @@ map_region <- function(region, base=FALSE) {
       ) +
       ggplot2::theme_minimal()
     print(p)
-
+    
   }
   
   invisible(NULL)
