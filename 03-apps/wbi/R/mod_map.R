@@ -277,11 +277,20 @@ mod_map_server <- function(id, elements){
     # Map ----
     output$map <- leaflet::renderLeaflet({
       
+      legend_max <- MAPSTATS[
+        MAPSTATS$region == current_selections$region &
+          MAPSTATS$element == current_selections$element &
+          MAPSTATS$scenario == current_selections$scenario &
+          MAPSTATS$period == current_selections$period,
+        "max"
+      ]
+      
       base_map() |> 
         add_element(
           url = url(),
           palette_length = 50L,
-          palette_type = current_selections$palette
+          palette_type = current_selections$palette,
+          max = legend_max
         ) |> 
         leaflet::addMeasure(
           position = "topleft"
