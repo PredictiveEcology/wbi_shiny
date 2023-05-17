@@ -122,7 +122,10 @@ mod_map_server <- function(id, elements){
       element_choices = ELEMENT_NAMES$bird,
       element = ELEMENT_NAMES$bird[[1]],
       scenario = SCENARIOS[[1]],
-      period = 2011,
+      period = ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], "year_start"],
+      period_choices = get_period_choices(
+        ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], ]
+      ),
       palette = "viridis",
       opacity = 0.8,
       element_type_display = "bird", 
@@ -168,7 +171,7 @@ mod_map_server <- function(id, elements){
         selectInput(
           inputId = ns("map_period"), 
           label = "Time Period:", 
-          choices = c(2011, 2100),
+          choices = current_selections$period_choices,
           selected = current_selections$period
         ), 
         
@@ -228,6 +231,34 @@ mod_map_server <- function(id, elements){
       
     })
     
+    # Update "Period" choices when Species changes
+    shiny::observeEvent(input$map_element, {
+      
+      shiny::req(
+        current_selections$element,
+        input$map_element
+      )
+      
+      # If there is a change in the "Species" dropdown list selections...
+      if (current_selections$element != input$map_element) {
+        
+        # ... update the choices in the "Period" dropdown filter list
+        updateSelectInput(
+          session = session, 
+          inputId = "map_period", 
+          choices = get_period_choices(
+            ELEMENTS[ELEMENTS$species_code == input$map_element, ]
+          )
+        )
+        
+      }
+      
+      # Overwrite the `period` reactiveValue to the currently-selected
+      # "Period" dropdown list value
+      current_selections$period <- input$map_period
+      
+    })
+    
     # When the "Apply" button is clicked in the modal, capture the inputs to
     # apply when the modal is re-launched
     shiny::observeEvent(input$close_modal, {
@@ -238,6 +269,9 @@ mod_map_server <- function(id, elements){
       current_selections$element <- input$map_element
       current_selections$scenario <- input$map_scenario
       current_selections$period <- input$map_period
+      current_selections$period_choices <- get_period_choices(
+        ELEMENTS[ELEMENTS$species_code == input$map_element, ]
+      )
       current_selections$palette <- input$map_palette
       current_selections$opacity <- input$map_opacity
       
@@ -250,13 +284,6 @@ mod_map_server <- function(id, elements){
     
     # Create the reactive URL to the tif files on the API server
     url <- shiny::reactive({
-      
-      # shiny::req(
-      #   current_selections$region,
-      #   current_selections$element,
-      #   current_selections$scenario,
-      #   current_selections$period
-      # )
       
       make_api_path(
         root  =  "https://wbi.predictiveecology.org/api", 
