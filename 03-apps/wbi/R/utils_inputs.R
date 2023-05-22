@@ -1,9 +1,8 @@
 #' Look up the name of an element in a named character vector
 #'
 #' @description
-#' This function was developed as a pipe-friendly way to extract the 
-#'   corresponding name from a named character vector given a value within that
-#'   vector.
+#' This function was developed as an easy way to extract the corresponding name 
+#'   from a named character vector given a value within that vector.
 #' 
 #' @param x A named character vector
 #' @param value The value in `x` to use to look up the corresponding name
@@ -28,6 +27,38 @@ lookup_element_name_by_value <- function(x, value) {
   }
   
   x[x == value] |> names()
+  
+}
+
+
+#' Look up the name of the list element based upon item in one list
+#'
+#' @description
+#' This function was developed as a pipe-friendly way to extract the 
+#'   corresponding name from a named character vector given a value within that
+#'   vector.
+#' 
+#' @param x A list object
+#' @param value The value in one of the lists of `x` to use to look up the 
+#'   name of the list element(s) containing `x`
+#'
+#' @return A character string representing the name(s) of the list(s) containing
+#'   `x`
+#'
+#' @examples
+#' # The following code would return "Tamarack"
+#' lookup_element_type_by_value(
+#'   x = ELEMENT_NAMES,
+#'   value = "tree-lari-lar"
+#' )
+lookup_element_type_by_value <- function(x, value) {
+  
+  out <- sapply(
+    x, 
+    function(y) value %in% y
+  )
+  
+  names(out[out == TRUE])
   
 }
 

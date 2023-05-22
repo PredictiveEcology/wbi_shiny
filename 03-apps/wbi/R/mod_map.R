@@ -128,7 +128,7 @@ mod_map_server <- function(id, elements){
       ),
       palette = "viridis",
       opacity = 0.8,
-      element_type_display = "bird", 
+      element_type_display = "bird",
       element_display = ELEMENT_NAMES$bird[[1]]
     )
     
@@ -147,18 +147,21 @@ mod_map_server <- function(id, elements){
           selected = current_selections$region
         ),
         
-        radioButtons(
-          inputId = ns("map_element_type"), 
-          label = "Species Group:", 
-          choices = list("Birds" = "bird", "Trees" = "tree"), 
-          selected = current_selections$element_type
-        ), 
-        
-        selectInput(
+        shinyWidgets::pickerInput(
           inputId = ns("map_element"),
           label = "Species Name:", 
-          choices = current_selections$element_choices,
-          selected = current_selections$element
+          choices = ELEMENT_NAMES, 
+          selected = current_selections$element, 
+          options = list(
+            `live-search` = TRUE
+            # style = "border-color: #999999;"
+            # style = paste0(
+            #   "background-color: white; ",
+            #   "border-color: #999999; ",
+            #   "font-family: 'Helvetica Neue' Helvetica; ",
+            #   "font-weight: 200;"
+            # )
+          )
         ),
         
         selectInput(
@@ -201,34 +204,6 @@ mod_map_server <- function(id, elements){
       
       shiny::showModal(modal)
       
-    })   # run once on load
-    
-    # Filter Updates ----
-    # Update the choices in the "Species Name" dropdown filter based upon the 
-    # selected "Species Group" radio button
-    shiny::observeEvent(input$map_element_type, {
-      
-      shiny::req(
-        current_selections$element_type,
-        input$map_element_type
-      )
-      
-      # If there is a change in the "Species Group" radio button...
-      if (current_selections$element_type != input$map_element_type) {
-        
-        # ... update the choices in the "Species Name" dropdown filter list
-        updateSelectInput(
-          session = session, 
-          inputId = "map_element", 
-          choices = ELEMENT_NAMES[[input$map_element_type]]
-        )
-        
-      }
-      
-      # Overwrite the `element_type` reactiveValue to the currently-selected 
-      # "Species Group" radio button value
-      current_selections$element_type <- input$map_element_type
-      
     })
     
     # Update "Period" choices when Species changes
@@ -264,8 +239,6 @@ mod_map_server <- function(id, elements){
     shiny::observeEvent(input$close_modal, {
       
       current_selections$region <- input$map_region
-      current_selections$element_type <- input$map_element_type
-      current_selections$element_choices <- ELEMENT_NAMES[[input$map_element_type]]
       current_selections$element <- input$map_element
       current_selections$scenario <- input$map_scenario
       current_selections$period <- input$map_period
@@ -275,6 +248,11 @@ mod_map_server <- function(id, elements){
       current_selections$palette <- input$map_palette
       current_selections$opacity <- input$map_opacity
       
+      current_selections$element_type <- lookup_element_type_by_value(
+        x = ELEMENT_NAMES, 
+        value = input$map_element
+      )
+      current_selections$element_choices <- ELEMENT_NAMES[[current_selections$element_type]]
       current_selections$element_type_display <- current_selections$element_type
       current_selections$element_display <- current_selections$element
       
@@ -347,11 +325,8 @@ mod_map_server <- function(id, elements){
     # Render "Species Group" selection text
     output$species_group_text <- shiny::renderText(
       
-      ifelse(
-        current_selections$element_type_display == "bird", 
-        "Birds", 
-        "Trees"
-      )
+      current_selections$element_type_display |> 
+        tools::toTitleCase()
       
     )
     
