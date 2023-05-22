@@ -189,9 +189,9 @@ get_palette <- function(n = 50,
 add_element <- function(map, url, 
                         palette_length, palette_type, 
                         opacity = 0.8, 
-                        # max = 1, 
+                        max = 1,
                         pal_max = 101L,
-                        add_legend = FALSE) {
+                        add_legend = TRUE) {
   
   # Build the palette
   palette <- get_palette(
@@ -318,164 +318,150 @@ base_map2x <- function() {
 #'     add_legend = FALSE
 #'   )
 #' 
-add_element2x <- function(map, element, by, opacity = 0.8, add_legend = TRUE,
-                          max1 = 1, max2 = 1, pal_max1 = 101L, pal_max2 = 101L) {
-  
-  use_tiff <- get_golem_config("app_geotiff")
-  
-  # Build the path to the pre-processed tiles
-  if (by == "scenario") {
-    
-    id1 <- "LandR SCFM V4"
-    id2 <- "LandR.CS FS V6a"
-    
-    if (!use_tiff) {
-      tiles1 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landr-scfm-v4/2100/tiles/{z}/{x}/{-y}.png"
-      )
-      tiles2 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landrcs-fs-v6a/2100/tiles/{z}/{x}/{-y}.png"
-      )
-    } else {
-      tiles1 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landr-scfm-v4/2100/lonlat/mean.tif"
-      )
-      tiles2 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landrcs-fs-v6a/2100/lonlat/mean.tif"
-      )
-    }
-    
-  } else {
-    
-    id1 <- "2011"
-    id2 <- "2100"
-    
-    if (!use_tiff) {
-      tiles1 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landrcs-fs-v6a/2011/tiles/{z}/{x}/{-y}.png"
-      )
-      tiles2 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landrcs-fs-v6a/2100/tiles/{z}/{x}/{-y}.png"
-      )
-    } else {
-      tiles1 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landrcs-fs-v6a/2011/lonlat/mean.tif"
-      )
-      tiles2 <- paste0(
-        get_golem_config("app_baseurl"),
-        "api/v1/public/wbi-nwt/elements/",
-        element, 
-        "/landrcs-fs-v6a/2100/lonlat/mean.tif"
-      )
-    }
-    
-  }
-  
-  # Add tiles to the map
-  if (!use_tiff) {
-    m <- map |>
-      leaflet::addTiles(
-        urlTemplate = tiles1, 
-        group = id1, 
-        layerId = paste0(id1, "_id"),
-        options = leaflet::tileOptions(pane = "left", opacity = opacity, maxNativeZoom = 10)
-      ) |> 
-      leaflet::addTiles(
-        urlTemplate = tiles2, 
-        group = id2, 
-        layerId = paste0(id2, "_id"),
-        options = leaflet::tileOptions(pane = "right", opacity = opacity, maxNativeZoom = 10)
-      )
-  } else {
-    m <- map |>
-      leafem::addGeotiff(
-        url = tiles1,
-        project = FALSE,
-        opacity = opacity,
-        autozoom = FALSE,
-        group = id1, 
-        layerId = paste0(id1, "_id"),
-        options = leaflet::tileOptions(
-          pane = "left",
-          maxNativeZoom = 10,
-          zIndex = 400),
-        colorOptions = leafem::colorOptions(
-          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
-          domain = c(0, max1),
-          na.color = "transparent")
-      ) |>
-      leafem::addGeotiff(
-        url = tiles2,
-        project = FALSE,
-        opacity = opacity,
-        autozoom = FALSE,
-        group = id2, 
-        layerId = paste0(id2, "_id"),
-        options = leaflet::tileOptions(
-          pane = "right",
-          maxNativeZoom = 10,
-          zIndex = 400),
-        colorOptions = leafem::colorOptions(
-          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
-          domain = c(0, max2),
-          na.color = "transparent")
-      )
-  }
-  
-  
-  # If `add_legend = TRUE`, include legend on map
-  if (add_legend) {
-    
-    m <- m |>
-      leaflet::addLegend(
-        position = "bottomleft", 
-        pal = leaflet::colorNumeric(
-          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
-          domain = c(0, max1)), # adjust max here too
-        values = c(0, max1), # need to adjust max here
-        title = id1,
-        group = id1, 
-        layerId = paste0(id1, "_id"),
-        opacity = opacity
-      ) |>
-      leaflet::addLegend(
-        position = "bottomright", 
-        pal = leaflet::colorNumeric(
-          palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
-          domain = c(0, max2)), # adjust max here too
-        values = c(0, max2), # need to adjust max here
-        title = id2,
-        group = id2, 
-        layerId = paste0(id2, "_id"),
-        opacity = opacity
-      )
-    
-  }
-  
-  return(m)
-  
-}
+# add_element2x <- function(map, element, compare_by, left_map, right_map, 
+#                           opacity = 0.8, add_legend = FALSE,
+#                           max1 = 1, max2 = 1, pal_max1 = 101L, pal_max2 = 101L) {
+#   
+#   use_tiff <- get_golem_config("app_geotiff")
+#   
+#   # If side-by-side comparison is using scenario...
+#   if (compare_by == "scenario") {
+#     
+#     # id1 <- "LandR SCFM V4"
+#     # id2 <- "LandR.CS FS V6a"
+#       tiles1 <- paste0(
+#         get_golem_config("app_baseurl"),
+#         "api/v1/public/wbi-nwt/elements/",
+#         element, 
+#         "/landr-scfm-v4/2100/lonlat/mean.tif"
+#       )
+#       tiles2 <- paste0(
+#         get_golem_config("app_baseurl"),
+#         "api/v1/public/wbi-nwt/elements/",
+#         element, 
+#         "/landrcs-fs-v6a/2100/lonlat/mean.tif"
+#       )
+#     }
+#     
+#   } else {
+#     
+#     id1 <- "2011"
+#     id2 <- "2100"
+#     
+#     if (!use_tiff) {
+#       tiles1 <- paste0(
+#         get_golem_config("app_baseurl"),
+#         "api/v1/public/wbi-nwt/elements/",
+#         element, 
+#         "/landrcs-fs-v6a/2011/tiles/{z}/{x}/{-y}.png"
+#       )
+#       tiles2 <- paste0(
+#         get_golem_config("app_baseurl"),
+#         "api/v1/public/wbi-nwt/elements/",
+#         element, 
+#         "/landrcs-fs-v6a/2100/tiles/{z}/{x}/{-y}.png"
+#       )
+#     } else {
+#       tiles1 <- paste0(
+#         get_golem_config("app_baseurl"),
+#         "api/v1/public/wbi-nwt/elements/",
+#         element, 
+#         "/landrcs-fs-v6a/2011/lonlat/mean.tif"
+#       )
+#       tiles2 <- paste0(
+#         get_golem_config("app_baseurl"),
+#         "api/v1/public/wbi-nwt/elements/",
+#         element, 
+#         "/landrcs-fs-v6a/2100/lonlat/mean.tif"
+#       )
+#     }
+#     
+#   }
+#   
+#   # Add tiles to the map
+#   if (!use_tiff) {
+#     m <- map |>
+#       leaflet::addTiles(
+#         urlTemplate = tiles1, 
+#         group = id1, 
+#         layerId = paste0(id1, "_id"),
+#         options = leaflet::tileOptions(pane = "left", opacity = opacity, maxNativeZoom = 10)
+#       ) |> 
+#       leaflet::addTiles(
+#         urlTemplate = tiles2, 
+#         group = id2, 
+#         layerId = paste0(id2, "_id"),
+#         options = leaflet::tileOptions(pane = "right", opacity = opacity, maxNativeZoom = 10)
+#       )
+#   } else {
+#     m <- map |>
+#       leafem::addGeotiff(
+#         url = tiles1,
+#         project = FALSE,
+#         opacity = opacity,
+#         autozoom = FALSE,
+#         group = id1, 
+#         layerId = paste0(id1, "_id"),
+#         options = leaflet::tileOptions(
+#           pane = "left",
+#           maxNativeZoom = 10,
+#           zIndex = 400),
+#         colorOptions = leafem::colorOptions(
+#           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
+#           domain = c(0, max1),
+#           na.color = "transparent")
+#       ) |>
+#       leafem::addGeotiff(
+#         url = tiles2,
+#         project = FALSE,
+#         opacity = opacity,
+#         autozoom = FALSE,
+#         group = id2, 
+#         layerId = paste0(id2, "_id"),
+#         options = leaflet::tileOptions(
+#           pane = "right",
+#           maxNativeZoom = 10,
+#           zIndex = 400),
+#         colorOptions = leafem::colorOptions(
+#           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
+#           domain = c(0, max2),
+#           na.color = "transparent")
+#       )
+#   }
+#   
+#   
+#   # If `add_legend = TRUE`, include legend on map
+#   if (add_legend) {
+#     
+#     m <- m |>
+#       leaflet::addLegend(
+#         position = "bottomleft", 
+#         pal = leaflet::colorNumeric(
+#           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
+#           domain = c(0, max1)), # adjust max here too
+#         values = c(0, max1), # need to adjust max here
+#         title = id1,
+#         group = id1, 
+#         layerId = paste0(id1, "_id"),
+#         opacity = opacity
+#       ) |>
+#       leaflet::addLegend(
+#         position = "bottomright", 
+#         pal = leaflet::colorNumeric(
+#           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
+#           domain = c(0, max2)), # adjust max here too
+#         values = c(0, max2), # need to adjust max here
+#         title = id2,
+#         group = id2, 
+#         layerId = paste0(id2, "_id"),
+#         opacity = opacity
+#       )
+#     
+#   }
+#   
+#   return(m)
+#   
+# }
 
 
 #' Small map for regions
