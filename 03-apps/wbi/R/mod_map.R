@@ -128,7 +128,6 @@ mod_map_server <- function(id, elements){
       ),
       palette = "viridis",
       opacity = 0.8,
-      element_type_display = "bird",
       element_display = ELEMENT_NAMES$bird[[1]]
     )
     
@@ -214,23 +213,14 @@ mod_map_server <- function(id, elements){
         input$map_element
       )
       
-      # If there is a change in the "Species" dropdown list selections...
-      if (current_selections$element != input$map_element) {
-        
-        # ... update the choices in the "Period" dropdown filter list
-        updateSelectInput(
-          session = session, 
-          inputId = "map_period", 
-          choices = get_period_choices(
-            ELEMENTS[ELEMENTS$species_code == input$map_element, ]
-          )
+      # ... update the choices in the "Period" dropdown filter list
+      updateSelectInput(
+        session = session, 
+        inputId = "map_period", 
+        choices = get_period_choices(
+          ELEMENTS[ELEMENTS$species_code == input$map_element, ]
         )
-        
-      }
-      
-      # Overwrite the `period` reactiveValue to the currently-selected
-      # "Period" dropdown list value
-      current_selections$period <- input$map_period
+      )
       
     })
     
@@ -253,7 +243,6 @@ mod_map_server <- function(id, elements){
         value = input$map_element
       )
       current_selections$element_choices <- ELEMENT_NAMES[[current_selections$element_type]]
-      current_selections$element_type_display <- current_selections$element_type
       current_selections$element_display <- current_selections$element
       
       shiny::removeModal(session = session)
@@ -325,7 +314,7 @@ mod_map_server <- function(id, elements){
     # Render "Species Group" selection text
     output$species_group_text <- shiny::renderText(
       
-      current_selections$element_type_display |> 
+      current_selections$element_type |> 
         tools::toTitleCase()
       
     )
@@ -334,12 +323,12 @@ mod_map_server <- function(id, elements){
     output$species_name_text <- shiny::renderText({
       
       shiny::req(
-        current_selections$element_type_display,
+        current_selections$element_type,
         current_selections$element_display
       )
       
       lookup_element_name_by_value(
-        x = ELEMENT_NAMES[[current_selections$element_type_display]],
+        x = ELEMENT_NAMES[[current_selections$element_type]],
         value = current_selections$element_display
       )
       
