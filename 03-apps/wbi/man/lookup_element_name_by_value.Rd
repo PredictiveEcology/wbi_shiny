@@ -16,9 +16,8 @@ A character string representing the name of the value in the vector
   specified by `value`
 }
 \description{
-This function was developed as a pipe-friendly way to extract the 
-  corresponding name from a named character vector given a value within that
-  vector.
+This function was developed as an easy way to extract the corresponding name 
+  from a named character vector given a value within that vector.
 }
 \examples{
 # The following code would return "Tamarack"
