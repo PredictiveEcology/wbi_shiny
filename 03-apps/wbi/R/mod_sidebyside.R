@@ -195,7 +195,8 @@ mod_sidebyside_server <- function(id){
           inputId = ns("map_comparison_type_2x"), 
           label = "Comparison Type:", 
           choices = list("Period" = "period", "Scenario" = "scenario"), 
-          selected = current_selections_2x$comparison_type
+          selected = current_selections_2x$comparison_type,
+          inline = TRUE
         ), 
         
         selectInput(
@@ -214,7 +215,7 @@ mod_sidebyside_server <- function(id){
         
         selectInput(
           inputId = ns("map_constant_2x"),
-          label = "Period",
+          label = "Period:",
           choices = current_selections_2x$constant_choices,
           selected = current_selections_2x$constant
         ),
@@ -251,7 +252,7 @@ mod_sidebyside_server <- function(id){
       if (input$map_comparison_type_2x == "scenario") {
         
         map_choices <- SCENARIOS
-        constant_label <- "Period"
+        constant_label <- "Period:"
         constant_choices <- ELEMENTS[ELEMENTS$species_code == input$map_element_2x, ] |> 
           get_period_choices()
         
@@ -259,7 +260,7 @@ mod_sidebyside_server <- function(id){
         
         map_choices <- ELEMENTS[ELEMENTS$species_code == input$map_element_2x, ] |> 
           get_period_choices()
-        constant_label <- "Scenario"
+        constant_label <- "Scenario:"
         constant_choices <- SCENARIOS
         
       }
@@ -336,8 +337,6 @@ mod_sidebyside_server <- function(id){
     # Render the map
     output$map_2x <- leaflet::renderLeaflet({
       
-      # browser()
-      
       if (current_selections_2x$comparison_type == "scenario") {
         
         MS1 <- MAPSTATS[
@@ -372,26 +371,17 @@ mod_sidebyside_server <- function(id){
         
       }
       
-      pal_range <- MAPSTATS[, c("element", "max")] |> 
-        merge(
-          ELEMENTS[, c("group", "species_code")], 
-          by.x = "element", 
-          by.y = "species_code"
-        )
-      pal_max <- pal_range$max[pal_range$group == current_selections_2x$element_type] |> 
-        max()
-      
       pal_max1 <- scales::rescale(
         MS1$max,
-        to = c(0, 100),
-        from = c(0, pal_max)
+        to = c(1, 100),
+        from = c(0, max(c(MS1$max, MS2$max)))
       ) |> 
         floor()
       
       pal_max2 <- scales::rescale(
         MS2$max,
-        to = c(0, 100),
-        from = c(0, pal_max)
+        to = c(1, 100),
+        from = c(0, max(c(MS1$max, MS2$max)))
       ) |> 
         floor()
       
@@ -407,7 +397,7 @@ mod_sidebyside_server <- function(id){
           max1 = MS1$max,
           max2 = MS2$max,
           pal_max1 = pal_max1,
-          pal_max2 = pal_max2 
+          pal_max2 = pal_max2
         ) |> 
         leaflet::addMeasure(
           position = "topleft"
