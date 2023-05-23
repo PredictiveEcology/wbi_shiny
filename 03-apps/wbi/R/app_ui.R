@@ -15,7 +15,14 @@ app_ui <- function(request) {
       id = "nav_bar", 
       title = span(
         img(src = "www/favicon.ico", height = 30), 
-        span(strong("WBI"), style = "color: #E1E375")   # Predictive Ecology Yellow
+        shiny::a(
+          span(
+            strong("WBI"),
+            style = "color: #E1E375"
+          ), # Predictive Ecology Yellow
+          href = "https://wbi.predictiveecology.org/", 
+          style = "text-decoration: none;"
+        )
       ), 
       bg = "#607086", 
       theme = bslib::bs_theme(
