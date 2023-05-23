@@ -99,6 +99,7 @@ mod_map_ui <- function(id){
         )
         
       )
+      
     )
     
   )
@@ -207,11 +208,6 @@ mod_map_server <- function(id, elements){
     
     # Update "Period" choices when Species changes
     shiny::observeEvent(input$map_element, {
-      
-      shiny::req(
-        current_selections$element,
-        input$map_element
-      )
       
       # ... update the choices in the "Period" dropdown filter list
       updateSelectInput(

@@ -17,7 +17,7 @@ app_server <- function( input, output, session ) {
   
   mod_map_server("map_ui_1")
   
-  # mod_sidebyside_server("sidebyside_ui_1")
+  mod_sidebyside_server("sidebyside_ui_1")
   
   mod_regions_server("regions_ui_1")
   
