@@ -423,7 +423,8 @@ add_element2x <- function(map, region, element,
         position = "bottomleft",
         pal = leaflet::colorNumeric(
           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
-          domain = c(0, max1)), # adjust max here too
+          domain = c(0, max1)
+        ),
         values = c(0, max1), # need to adjust max here
         title = id1,
         group = id1,
@@ -434,7 +435,8 @@ add_element2x <- function(map, region, element,
         position = "bottomright",
         pal = leaflet::colorNumeric(
           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
-          domain = c(0, max2)), # adjust max here too
+          domain = c(0, max2)
+        ),
         values = c(0, max2), # need to adjust max here
         title = id2,
         group = id2,
