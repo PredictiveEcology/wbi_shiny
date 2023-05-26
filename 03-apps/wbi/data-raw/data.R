@@ -5,12 +5,11 @@ ELEMENTS <- read.csv("data-raw/element-lookup.csv")
 rownames(ELEMENTS) <- paste0(ELEMENTS$group, "-", tolower(ELEMENTS$species_code))
 
 # ELEMENT_NAMES ----
-ELEMENT_NAMES <- tolower(ELEMENTS$species_code)
-names(ELEMENT_NAMES) <- ELEMENTS$common_name
-
-ELEMENT_NAMES <- list(
-  bird = ELEMENT_NAMES[ELEMENTS$group == "bird"],
-  tree = ELEMENT_NAMES[ELEMENTS$group == "tree"]
+ELEMENT_NAMES <- split(ELEMENTS$species_code, ELEMENTS$group)
+ELEMENT_NAMES <- mapply(
+  FUN = function(x, y) setNames(x, y), 
+  x = ELEMENT_NAMES, 
+  y = split(ELEMENTS$common_name, ELEMENTS$group)
 )
 
 # TODO // Peter adding 2 more columns, one is the max value, and the second is 
