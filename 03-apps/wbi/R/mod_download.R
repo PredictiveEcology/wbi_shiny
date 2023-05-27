@@ -31,19 +31,26 @@ mod_download_ui <- function(id){
           )
         )
         
+      ),
+      
+      shiny::selectInput(
+        inputId = ns("download_region"),
+        label = "Region",
+        choices = REGIONS
       )
+      
     ),
     
     shiny::fluidRow(
       shiny::column(
         width = 12,
         
-        build_alert(
-          content = shiny::textOutput(
-            outputId = ns("alert_text"), 
-            inline = TRUE
-          )
-        )
+        # build_alert(
+        #   content = shiny::textOutput(
+        #     outputId = ns("alert_text"), 
+        #     inline = TRUE
+        #   )
+        # )
         
       )
     ),
@@ -80,11 +87,37 @@ mod_download_server <- function(id){
     output$alert_text <- shiny::renderText(alert_text())
     
     
-    download_data <- reactive(
+    download_data <- reactive({
       
-      MAIN[MAIN$group == input$download_element, ]
+      shiny::reg(
+        input$download_element,
+        input$download_region
+      )
       
-    )
+      out <- expand.grid(
+        element = input$download_element,
+        region = input$download_region,
+        scenario = unlist(SCENARIOS) |> unname(),
+        period = get_period_choices(
+          x = ELEMENTS[ELEMENTS$species_code == input$download_element, ]
+        )
+      )
+      
+      links <- lapply()
+      
+      out$link <- make_api_path(
+        root = get_golem_config("app_baseurl"),
+        region = out$region, 
+        element = out$element,
+        scenario = out$scenario,
+        period = out$period,
+        resolution = "lonlat",
+        file = "mean.tif"
+      )
+      
+      out  
+        
+    })
     
     output$download_tbl <- reactable::renderReactable(
       
