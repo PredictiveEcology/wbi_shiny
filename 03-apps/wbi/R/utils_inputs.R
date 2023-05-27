@@ -167,3 +167,45 @@ build_accordion <- function(id, header, content) {
   )
   
 }
+
+
+
+#' Create a bootstrap alert UI element
+#' 
+#' @description
+#' In bootstrap 5.0 you can create an "alert" object that encapsulates content
+#' in a colored box:
+#' \link{https://getbootstrap.com/docs/5.0/components/alerts/}
+#'
+#' @param type (String) One of "primary", "secondary", "success", "info", 
+#'   "danger", "warning", "light", "dark"
+#' @param content The content (HTML, text, etc.) to be displayed within the 
+#'   alert box
+#'
+#' @return An HTML div that will display `content` inside a bootstrap alert box
+#' @export
+#'
+#' @examples
+#' if (interactive()) {
+#'   library(shiny)
+#'   library(bslib)
+#' 
+#'   ui <- page_fluid(
+#'     build_alert(
+#'       content = tags$em("Here's some content you should be alerted to")
+#'     )
+#'   )
+#' 
+#'   server <- function(input, output) {}
+#' 
+#'   shinyApp(ui, server)
+#' }
+build_alert <- function(type = "warning", content) {
+  
+  shiny::div(
+    class = glue::glue("alert alert-{type}"),
+    role = "alert",
+    content
+  )
+  
+}
