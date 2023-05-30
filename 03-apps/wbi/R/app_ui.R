@@ -58,21 +58,21 @@ app_ui <- function(request) {
         
       ), 
       
-      # "Birds" Page ----
-      bslib::nav(
-        title = "Birds", 
-        
-        mod_birds_ui("birds_ui_1")
-        
-      ), 
-      
-      # "Caribou" Page ----
-      bslib::nav(
-        title = "Caribou", 
-        
-        mod_caribou_ui("caribou_ui_1")
-        
-      ), 
+      # # "Birds" Page ----
+      # bslib::nav(
+      #   title = "Birds", 
+      #   
+      #   mod_birds_ui("birds_ui_1")
+      #   
+      # ), 
+
+      # # "Caribou" Page ----
+      # bslib::nav(
+      #   title = "Caribou", 
+      #   
+      #   mod_caribou_ui("caribou_ui_1")
+      #   
+      # ), 
       
       # "Methods" Page ----
       bslib::nav(

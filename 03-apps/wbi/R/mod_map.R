@@ -249,7 +249,7 @@ mod_map_server <- function(id, elements){
     url <- shiny::reactive({
       
       make_api_path(
-        root  =  "https://wbi.predictiveecology.org/api", 
+        root  =  paste0(get_golem_config("app_baseurl"), "api"), 
         api_ver = "1", 
         access = "public", 
         project = "wbi", 

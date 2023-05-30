@@ -9,6 +9,8 @@
 #'
 #' @return A character string representing the name of the value in the vector
 #'   specified by `value`
+#' 
+#' @noRd
 #'
 #' @examples
 #' # The following code would return "Tamarack"
@@ -44,6 +46,8 @@ lookup_element_name_by_value <- function(x, value) {
 #'
 #' @return A character string representing the name(s) of the list(s) containing
 #'   `x`
+#' 
+#' @noRd
 #'
 #' @examples
 #' # The following code would return "Tamarack"
@@ -100,6 +104,8 @@ get_period_choices <- function(x) {
 #'
 #' @return An HTML div that will display `content` inside a vertically-
 #'   collapsible bootstrap accordion
+#' 
+#' @noRd
 #'
 #' @examples
 #' if (interactive()) {
@@ -183,7 +189,8 @@ build_accordion <- function(id, header, content) {
 #'   alert box
 #'
 #' @return An HTML div that will display `content` inside a bootstrap alert box
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 #' if (interactive()) {
