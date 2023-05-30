@@ -30,4 +30,4 @@ USER shiny
 
 EXPOSE 8080
 ENV R_CONFIG_ACTIVE=production
-CMD R -e "options('shiny.port'=8080,shiny.host='0.0.0.0');library(ShinyWBI);library(sf);run_app()"
+CMD R -e "options('shiny.port'=8080,shiny.host='0.0.0.0');library(ShinyWBInwt);library(sf);run_app()"

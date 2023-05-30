@@ -1,5 +1,5 @@
-Package: ShinyWBI
-Title: Interactive Visualization of Simulated Climate Effects to the Western Boreal 
+Package: ShinyWBInwt
+Title: Interactive Visualization of Simulated Climate Effects to the Western Boreal in NWT
 Version: 0.0.1
 Authors@R: c(
     person(
@@ -24,7 +24,7 @@ Authors@R: c(
 Description: ShinyWBI serves as a Shiny app that allows users to compare current 
   ecological data (Year 2011) with simulated effects applied over the next 90 
   years (Year 2100) through interactive geospatial and traditional (tables & 
-  charts) visualizations.
+  charts) visualizations for NWT.
 License: GPL-2
 Imports: 
     bslib,
