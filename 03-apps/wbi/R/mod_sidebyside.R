@@ -167,73 +167,86 @@ mod_sidebyside_server <- function(id){
         
         title = "Set Map Preferences",
         
-        shiny::selectInput(
-          inputId = ns("map_region_2x"),
-          label = "Region",
-          choices = REGIONS,
-          selected = current_selections_2x$region
-        ),
-        
-        shinyWidgets::pickerInput(
-          inputId = ns("map_element_2x"),
-          label = "Species Name:", 
-          choices = ELEMENT_NAMES, 
-          selected = current_selections_2x$element, 
-          options = list(
-            `live-search` = TRUE
-            # style = "border-color: #999999;"
-            # style = paste0(
-            #   "background-color: white; ",
-            #   "border-color: #999999; ",
-            #   "font-family: 'Helvetica Neue' Helvetica; ",
-            #   "font-weight: 200;"
-            # )
+        shiny::fluidRow(
+          shiny::column(
+            width = 6, 
+            
+            shiny::selectInput(
+              inputId = ns("map_region_2x"),
+              label = "Region",
+              choices = REGIONS,
+              selected = current_selections_2x$region
+            ),
+            
+            shinyWidgets::pickerInput(
+              inputId = ns("map_element_2x"),
+              label = "Species Name:", 
+              choices = ELEMENT_NAMES, 
+              selected = current_selections_2x$element, 
+              options = list(
+                `live-search` = TRUE
+                # style = "border-color: #999999;"
+                # style = paste0(
+                #   "background-color: white; ",
+                #   "border-color: #999999; ",
+                #   "font-family: 'Helvetica Neue' Helvetica; ",
+                #   "font-weight: 200;"
+                # )
+              )
+            ),
+            
+            sliderInput(
+              inputId = ns("map_opacity_2x"), 
+              label = "Opacity:", 
+              min = 0, 
+              max = 1, 
+              value = current_selections_2x$opacity
+            )
+            
+          ),
+          
+          shiny::column(
+            width = 6,
+            
+            radioButtons(
+              inputId = ns("map_comparison_type_2x"), 
+              label = "Comparison Type:", 
+              choices = list("Period" = "period", "Scenario" = "scenario"), 
+              selected = current_selections_2x$comparison_type,
+              inline = TRUE
+            ), 
+            
+            selectInput(
+              inputId = ns("map_constant_2x"),
+              label = "Period:",
+              choices = current_selections_2x$constant_choices,
+              selected = current_selections_2x$constant
+            ),
+            
+            selectInput(
+              inputId = ns("map_left_2x"),
+              label = "Left Map:",
+              choices = current_selections_2x$map_left_choices,
+              selected = current_selections_2x$map_left
+            ),
+            
+            selectInput(
+              inputId = ns("map_right_2x"),
+              label = "Right Map:",
+              choices = current_selections_2x$map_right_choices,
+              selected = current_selections_2x$map_right
+            )
+            
           )
+          
         ),
-        
-        radioButtons(
-          inputId = ns("map_comparison_type_2x"), 
-          label = "Comparison Type:", 
-          choices = list("Period" = "period", "Scenario" = "scenario"), 
-          selected = current_selections_2x$comparison_type,
-          inline = TRUE
-        ), 
-        
-        selectInput(
-          inputId = ns("map_left_2x"),
-          label = "Left Map:",
-          choices = current_selections_2x$map_left_choices,
-          selected = current_selections_2x$map_left
-        ),
-        
-        selectInput(
-          inputId = ns("map_right_2x"),
-          label = "Right Map:",
-          choices = current_selections_2x$map_right_choices,
-          selected = current_selections_2x$map_right
-        ),
-        
-        selectInput(
-          inputId = ns("map_constant_2x"),
-          label = "Period:",
-          choices = current_selections_2x$constant_choices,
-          selected = current_selections_2x$constant
-        ),
-        
-        sliderInput(
-          inputId = ns("map_opacity_2x"), 
-          label = "Opacity:", 
-          min = 0, 
-          max = 1, 
-          value = current_selections_2x$opacity
-        ), 
         
         footer = shiny::actionButton(
           inputId = ns("close_modal_2x"), 
           label = "Apply"
         ),
         
-        size = "s"
+        size = "l"
         
       )
       
@@ -371,20 +384,36 @@ mod_sidebyside_server <- function(id){
         
       }
       
+      # Scale the color palette from zero (if `app_usemin = FALSE`) or from the
+      # min value in the data
+      if (get_golem_config("app_usemin")) {
+        
+        legend_start <- min(c(MS1$min, MS2$min))
+        
+        
+      } else {
+        
+        legend_start <- 0
+        
+      }
+      
+      # Equalize the color palettes across both left and right maps (to align 
+      # legend gradients)
       pal_max1 <- scales::rescale(
         MS1$max,
         to = c(1, 100),
-        from = c(0, max(c(MS1$max, MS2$max)))
+        from = c(legend_start, max(c(MS1$max, MS2$max)))
       ) |> 
         floor()
       
       pal_max2 <- scales::rescale(
         MS2$max,
         to = c(1, 100),
-        from = c(0, max(c(MS1$max, MS2$max)))
+        from = c(legend_start, max(c(MS1$max, MS2$max)))
       ) |> 
         floor()
       
+      # Render the side-by-side map
       base_map2x() |> 
         add_element2x(
           region = current_selections_2x$region,
@@ -394,6 +423,8 @@ mod_sidebyside_server <- function(id){
           right_map = current_selections_2x$map_right,
           constant = current_selections_2x$constant,
           opacity = current_selections_2x$opacity,
+          min1 = ifelse(get_golem_config("app_usemin"), MS1$min, 0),
+          min2 = ifelse(get_golem_config("app_usemin"), MS2$min, 0),
           max1 = MS1$max,
           max2 = MS2$max,
           pal_max1 = pal_max1,
