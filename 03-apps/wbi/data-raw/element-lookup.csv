@@ -1,0 +1,128 @@
+group,species_code,common_name,scientific_name,french,full_extent,year_start,year_end,year_interval
+bird,bird-alfl,Alder Flycatcher,Empidonax alnorum,Moucherolle des aulnes,TRUE,2011,2091,20
+bird,bird-amcr,American Crow,Corvus brachyrhynchos,Corneille d'Am&eacute;rique,TRUE,2011,2091,20
+bird,bird-amgo,American Goldfinch,Spinus tristis,Chardonneret jaune,TRUE,2011,2091,20
+bird,bird-amre,American Redstart,Setophaga ruticilla,Paruline flamboyante,TRUE,2011,2091,20
+bird,bird-amro,American Robin,Turdus migratorius,Merle d'Am&eacute;rique,TRUE,2011,2091,20
+bird,bird-atsp,American Tree Sparrow,Spizella arborea,Bruant hudsonien,TRUE,2011,2091,20
+bird,bird-attw,American Three-toed Woodpecker,Picoides dorsalis,Pic &agrave; dos ray&eacute;,TRUE,2011,2091,20
+bird,bird-baor,Baltimore Oriole,Icterus galbula,Oriole de Baltimore,TRUE,2011,2091,20
+bird,bird-bars,Barn Swallow,Hirundo rustica,Hirondelle rustique,TRUE,2011,2091,20
+bird,bird-baww,Black-and-white Warbler,Mniotilta varia,Paruline noir et blanc,TRUE,2011,2091,20
+bird,bird-bbcu,Black-billed Cuckoo,Coccyzus erythropthalmus,Coulicou &agrave; bec noir,TRUE,2011,2091,20
+bird,bird-bbma,Black-billed Magpie,Pica hudsonia,Pie d'Am&eacute;rique,TRUE,2011,2091,20
+bird,bird-bbwa,Bay-breasted Warbler,Setophaga castanea,Paruline &agrave; poitrine baie,TRUE,2011,2091,20
+bird,bird-bbwo,Black-backed Woodpecker,Picoides arcticus,Pic &agrave; dos noir,TRUE,2011,2091,20
+bird,bird-bcch,Black-capped Chickadee,Poecile atricapillus,M&eacute;sange &agrave; t&ecirc;te noire,TRUE,2011,2091,20
+bird,bird-beki,Belted Kingfisher,Megaceryle alcyon,Martin-p&ecirc;cheur d'Am&eacute;rique,TRUE,2011,2091,20
+bird,bird-bhco,Brown-headed Cowbird,Molothrus ater,Vacher &agrave; t&ecirc;te brune,TRUE,2011,2091,20
+bird,bird-bhvi,Blue-headed Vireo,Vireo solitarius,Vir&eacute;o &agrave; t&ecirc;te bleue,TRUE,2011,2091,20
+bird,bird-blbw,Blackburnian Warbler,Setophaga fusca,Paruline &agrave; gorge orang&eacute;e,TRUE,2011,2091,20
+bird,bird-blja,Blue Jay,Cyanocitta cristata,Geai bleu,TRUE,2011,2091,20
+bird,bird-blpw,Blackpoll Warbler,Setophaga striata,Paruline ray&eacute;e,TRUE,2011,2091,20
+bird,bird-bobo,Bobolink,Dolichonyx oryzivorus,Goglu des pr&eacute;s,TRUE,2011,2091,20
+bird,bird-boch,Boreal Chickadee,Poecile hudsonicus,M&eacute;sange &agrave; t&ecirc;te brune,TRUE,2011,2091,20
+bird,bird-bowa,Bohemian Waxwing,Bombycilla garrulus,Jaseur bor&eacute;al,TRUE,2011,2091,20
+bird,bird-brbl,Brewer's Blackbird,Euphagus cyanocephalus,Quiscale de Brewer,TRUE,2011,2091,20
+bird,bird-brcr,Brown Creeper,Certhia americana,Grimpereau brun,TRUE,2011,2091,20
+bird,bird-btnw,Black-throated Green Warbler,Setophaga virens,Paruline &agrave; gorge noire,TRUE,2011,2091,20
+bird,bird-cawa,Canada Warbler,Cardellina canadensis,Paruline du Canada,TRUE,2011,2091,20
+bird,bird-ccsp,Clay-colored Sparrow,Spizella pallida,Bruant des plaines,TRUE,2011,2091,20
+bird,bird-cedw,Cedar Waxwing,Bombycilla cedrorum,Jaseur d'Am&eacute;rique,TRUE,2011,2091,20
+bird,bird-chsp,Chipping Sparrow,Spizella passerina,Bruant familier,TRUE,2011,2091,20
+bird,bird-cmwa,Cape May Warbler,Setophaga tigrina,Paruline tigr&eacute;e,TRUE,2011,2091,20
+bird,bird-cogr,Common Grackle,Quiscalus quiscula,Quiscale bronz&eacute;,TRUE,2011,2091,20
+bird,bird-conw,Connecticut Warbler,Oporornis agilis,Paruline &agrave; gorge grise,TRUE,2011,2091,20
+bird,bird-cora,Common Raven,Corvus corax,Grand Corbeau,TRUE,2011,2091,20
+bird,bird-coye,Common Yellowthroat,Geothlypis trichas,Paruline masqu&eacute;e,TRUE,2011,2091,20
+bird,bird-cswa,Chestnut-sided Warbler,Setophaga pensylvanica,Paruline &agrave; flancs marron,TRUE,2011,2091,20
+bird,bird-deju,Dark-eyed Junco,Junco hyemalis,Junco ardois&eacute;,TRUE,2011,2091,20
+bird,bird-dowo,Downy Woodpecker,Picoides pubescens,Pic mineur,TRUE,2011,2091,20
+bird,bird-eaki,Eastern Kingbird,Tyrannus tyrannus,Tyran tritri,TRUE,2011,2091,20
+bird,bird-eaph,Eastern Phoebe,Sayornis phoebe,Moucherolle ph&eacute;bi,TRUE,2011,2091,20
+bird,bird-eust,European Starling,Sturnus vulgaris,&Eacute;tourneau sansonnet,TRUE,2011,2091,20
+bird,bird-evgr,Evening Grosbeak,Coccothraustes vespertinus,Gros-bec errant,TRUE,2011,2091,20
+bird,bird-fosp,Fox Sparrow,Passerella iliaca,Bruant fauve,TRUE,2011,2091,20
+bird,bird-gcfl,Great Crested Flycatcher,Myiarchus crinitus,Tyran hupp&eacute;,TRUE,2011,2091,20
+bird,bird-gcki,Golden-crowned Kinglet,Regulus satrapa,Roitelet &agrave; couronne dor&eacute;e,TRUE,2011,2091,20
+bird,bird-gcsp,Golden-crowned Sparrow,Zonotrichia atricapilla,Bruant &agrave; couronne dor&eacute;e,TRUE,2011,2091,20
+bird,bird-gcth,Gray-cheeked Thrush,Catharus minimus,Grive &agrave; joues grises,TRUE,2011,2091,20
+bird,bird-graj,Gray Jay,Perisoreus canadensis,M&eacute;sangeai du Canada,TRUE,2011,2091,20
+bird,bird-grca,Gray Catbird,Dumetella carolinensis,Moqueur chat,TRUE,2011,2091,20
+bird,bird-grye,Greater Yellowlegs,Tringa melanoleuca,Grand Chevalier,TRUE,2011,2091,20
+bird,bird-hafl,Hammond's Flycatcher,Empidonax hammondii,Moucherolle de Hammond,TRUE,2011,2091,20
+bird,bird-hawo,Hairy Woodpecker,Picoides villosus,Pic chevelu,TRUE,2011,2091,20
+bird,bird-hola,Horned Lark,Eremophila alpestris,Alouette hausse-col,TRUE,2011,2091,20
+bird,bird-hosp,House Sparrow,Passer domesticus,Moineau domestique,TRUE,2011,2091,20
+bird,bird-howr,House Wren,Troglodytes aedon,Troglodyte familier,TRUE,2011,2091,20
+bird,bird-kill,Killdeer,Charadrius vociferus,Pluvier kildir,TRUE,2011,2091,20
+bird,bird-lalo,Lapland Longspur,Calcarius lapponicus,Plectrophane lapon,TRUE,2011,2091,20
+bird,bird-lcsp,Le Conte's Sparrow,Ammodramus leconteii,Bruant de Le Conte,TRUE,2011,2091,20
+bird,bird-lefl,Least Flycatcher,Empidonax minimus,Moucherolle tch&eacute;bec,TRUE,2011,2091,20
+bird,bird-leye,Lesser Yellowlegs,Tringa flavipes,Petit Chevalier,TRUE,2011,2091,20
+bird,bird-lisp,Lincoln's Sparrow,Melospiza lincolnii,Bruant de Lincoln,TRUE,2011,2091,20
+bird,bird-mawa,Magnolia Warbler,Setophaga magnolia,Paruline &agrave; t&ecirc;te cendr&eacute;e,TRUE,2011,2091,20
+bird,bird-modo,Mourning Dove,Zenaida macroura,Tourterelle triste,TRUE,2011,2091,20
+bird,bird-mowa,Mourning Warbler,Geothlypis philadelphia,Paruline triste,TRUE,2011,2091,20
+bird,bird-nawa,Nashville Warbler,Oreothlypis ruficapilla,Paruline &agrave; joues grises,TRUE,2011,2091,20
+bird,bird-nofl,Northern Flicker,Colaptes auratus,Pic flamboyant,TRUE,2011,2091,20
+bird,bird-nowa,Northern Waterthrush,Parkesia noveboracensis,Paruline des ruisseaux,TRUE,2011,2091,20
+bird,bird-ocwa,Orange-crowned Warbler,Oreothlypis celata,Paruline verd&acirc;tre,TRUE,2011,2091,20
+bird,bird-osfl,Olive-sided Flycatcher,Contopus cooperi,Moucherolle &agrave; c&ocirc;t&eacute;s olive,TRUE,2011,2091,20
+bird,bird-oven,Ovenbird,Seiurus aurocapilla,Paruline couronn&eacute;e,TRUE,2011,2091,20
+bird,bird-pawa,Palm Warbler,Setophaga palmarum,Paruline &agrave; couronne rousse,TRUE,2011,2091,20
+bird,bird-phvi,Philadelphia Vireo,Vireo philadelphicus,Vir&eacute;o de Philadelphie,TRUE,2011,2091,20
+bird,bird-pigr,Pine Grosbeak,Pinicola enucleator,Durbec des sapins,TRUE,2011,2091,20
+bird,bird-pisi,Pine Siskin,Spinus pinus,Tarin des pins,TRUE,2011,2091,20
+bird,bird-piwo,Pileated Woodpecker,Dryocopus pileatus,Grand Pic,TRUE,2011,2091,20
+bird,bird-pufi,Purple Finch,Carpodacus purpureus,Roselin pourpr&eacute;,TRUE,2011,2091,20
+bird,bird-rbgr,Rose-breasted Grosbeak,Pheucticus ludovicianus,Cardinal &agrave; poitrine rose,TRUE,2011,2091,20
+bird,bird-rbnu,Red-breasted Nuthatch,Sitta canadensis,Sittelle &agrave; poitrine rousse,TRUE,2011,2091,20
+bird,bird-rcki,Ruby-crowned Kinglet,Regulus calendula,Roitelet &agrave; couronne rubis,TRUE,2011,2091,20
+bird,bird-recr,Red Crossbill,Loxia curvirostra,Bec-crois&eacute; des sapins,TRUE,2011,2091,20
+bird,bird-revi,Red-eyed Vireo,Vireo olivaceus,Vir&eacute;o aux yeux rouges,TRUE,2011,2091,20
+bird,bird-rubl,Rusty Blackbird,Euphagus carolinus,Quiscale rouilleux,TRUE,2011,2091,20
+bird,bird-rugr,Ruffed Grouse,Bonasa umbellus,G&eacute;linotte hupp&eacute;e,TRUE,2011,2091,20
+bird,bird-rwbl,Red-winged Blackbird,Agelaius phoeniceus,Carouge &agrave; &eacute;paulettes,TRUE,2011,2091,20
+bird,bird-savs,Savannah Sparrow,Passerculus sandwichensis,Bruant des pr&eacute;s,TRUE,2011,2091,20
+bird,bird-sewr,Sedge Wren,Cistothorus platensis,Troglodyte &agrave; bec court,TRUE,2011,2091,20
+bird,bird-sosa,Solitary Sandpiper,Tringa solitaria,Chevalier solitaire,TRUE,2011,2091,20
+bird,bird-sosp,Song Sparrow,Melospiza melodia,Bruant chanteur,TRUE,2011,2091,20
+bird,bird-spsa,Spotted Sandpiper,Actitis macularius,Chevalier grivel&eacute;,TRUE,2011,2091,20
+bird,bird-swsp,Swamp Sparrow,Melospiza georgiana,Bruant des marais,TRUE,2011,2091,20
+bird,bird-swth,Swainson's Thrush,Catharus ustulatus,Grive &agrave; dos olive,TRUE,2011,2091,20
+bird,bird-tewa,Tennessee Warbler,Oreothlypis peregrina,Paruline obscure,TRUE,2011,2091,20
+bird,bird-toso,Townsend's Solitaire,Myadestes townsendi,Solitaire de Townsend,TRUE,2011,2091,20
+bird,bird-towa,Townsend's Warbler,Setophaga townsendi,Paruline de Townsend,TRUE,2011,2091,20
+bird,bird-tres,Tree Swallow,Tachycineta bicolor,Hirondelle bicolore,TRUE,2011,2091,20
+bird,bird-vath,Varied Thrush,Ixoreus naevius,Grive &agrave; collier,TRUE,2011,2091,20
+bird,bird-veer,Veery,Catharus fuscescens,Grive fauve,TRUE,2011,2091,20
+bird,bird-vesp,Vesper Sparrow,Pooecetes gramineus,Bruant vesp&eacute;ral,TRUE,2011,2091,20
+bird,bird-wavi,Warbling Vireo,Vireo gilvus,Vir&eacute;o m&eacute;lodieux,TRUE,2011,2091,20
+bird,bird-wbnu,White-breasted Nuthatch,Sitta carolinensis,Sittelle &agrave; poitrine blanche,TRUE,2011,2091,20
+bird,bird-wcsp,White-crowned Sparrow,Zonotrichia leucophrys,Bruant &agrave; couronne blanche,TRUE,2011,2091,20
+bird,bird-weta,Western Tanager,Piranga ludoviciana,Piranga &agrave; t&ecirc;te rouge,TRUE,2011,2091,20
+bird,bird-wewp,Western Wood-Pewee,Contopus sordidulus,Pioui de l'Ouest,TRUE,2011,2091,20
+bird,bird-wipt,Willow Ptarmigan,Lagopus lagopus,Lagop&egrave;de des saules,TRUE,2011,2091,20
+bird,bird-wisn,Wilson's Snipe,Gallinago delicata,B&eacute;cassine de Wilson,TRUE,2011,2091,20
+bird,bird-wiwa,Wilson's Warbler,Cardellina pusilla,Paruline &agrave; calotte noire,TRUE,2011,2091,20
+bird,bird-wiwr,Winter Wren,Troglodytes hiemalis,Troglodyte des for&ecirc;ts,TRUE,2011,2091,20
+bird,bird-wtsp,White-throated Sparrow,Zonotrichia albicollis,Bruant &agrave; gorge blanche,TRUE,2011,2091,20
+bird,bird-wwcr,White-winged Crossbill,Loxia leucoptera,Bec-crois&eacute; bifasci&eacute;,TRUE,2011,2091,20
+bird,bird-ybfl,Yellow-bellied Flycatcher,Empidonax flaviventris,Moucherolle &agrave; ventre jaune,TRUE,2011,2091,20
+bird,bird-ybsa,Yellow-bellied Sapsucker,Sphyrapicus varius,Pic macul&eacute;,TRUE,2011,2091,20
+bird,bird-yewa,Yellow Warbler,Setophaga petechia,Paruline jaune,TRUE,2011,2091,20
+bird,bird-yhbl,Yellow-headed Blackbird,Xanthocephalus xanthocephalus,Carouge &agrave; t&ecirc;te jaune,TRUE,2011,2091,20
+bird,bird-yrwa,Yellow-rumped Warbler,Setophaga coronata,Paruline &agrave; croupion jaune,TRUE,2011,2091,20
+tree,tree-abie-bal,Balsam Fir,Abies balsamea,,TRUE,2011,2100,10
+tree,tree-abie-las,Subalpine Fir,Abies lasiocarpa,,TRUE,2011,2100,10
+tree,tree-betu-pap,Paper Birch,Betula pendula,,TRUE,2011,2100,10
+tree,tree-lari-lar,Tamarack,Larix laricina,,TRUE,2011,2100,10
+tree,tree-mixed,Mixed,,,TRUE,2011,2100,10
+tree,tree-picea-gla,White Spruce,Picea glauca,,TRUE,2011,2100,10
+tree,tree-picea-mar,Black Spruce,Picea mariana,,TRUE,2011,2100,10
+tree,tree-pinu-ban,Jack Pine,Pinus banksiana,,TRUE,2011,2100,10
+tree,tree-pinu-con,Lodgepole Pine,Pinus contorta,,TRUE,2011,2100,10
+tree,tree-popu-tre,Trembling Aspen,Populus tremuloides,,TRUE,2011,2100,10
+prod,burn,Cumulative burn,,,FALSE,2021,2100,10
+prod,biomass,Biomass,,Biomasse,TRUE,2011,2100,10
