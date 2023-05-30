@@ -29,8 +29,9 @@ MAPSTATS <- paste0(
   readRDS()
 
 # Keep only the columns needed for legend gradients
+MAPSTATS$min <- MAPSTATS$q0
 MAPSTATS$max <- MAPSTATS$q1
-MAPSTATS <- MAPSTATS[, c("region", "element", "scenario", "period", "max")]
+MAPSTATS <- MAPSTATS[, c("region", "element", "scenario", "period", "min", "max")]
 
 # SCENARIOS ----
 SCENARIOS <- list(

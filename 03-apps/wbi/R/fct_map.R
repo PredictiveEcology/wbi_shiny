@@ -320,18 +320,17 @@ base_map2x <- function() {
 add_element2x <- function(map, region, element, 
                           compare_by, left_map, right_map, constant,
                           opacity = 0.8, add_legend = TRUE,
-                          max1 = 1, max2 = 1, pal_max1 = 101L, pal_max2 = 101L) {
+                          min1 = 0, min2 = 0, max1 = 1, max2 = 1, 
+                          pal_max1 = 101L, pal_max2 = 101L) {
   
   # If side-by-side comparison is using scenario...
   if (compare_by == "scenario") {
     
+    # ... define the URLs to the map data for each side 
     url <- lapply(
       list(left_map, right_map), 
       function(x) make_api_path(
-        root  =  paste0(
-          get_golem_config("app_baseurl"),
-          "api"
-        ), 
+        root  =  paste0(get_golem_config("app_baseurl"), "api"), 
         api_ver = "1", 
         access = "public", 
         project = "wbi", 
@@ -345,6 +344,7 @@ add_element2x <- function(map, region, element,
       )
     )
     
+    # ... and create map ID values using element name
     id1 <- lookup_element_name_by_value(
       x = SCENARIOS,
       value = left_map
@@ -359,10 +359,7 @@ add_element2x <- function(map, region, element,
     url <- lapply(
       list(left_map, right_map), 
       function(x) make_api_path(
-        root  =  paste0(
-          get_golem_config("app_baseurl"),
-          "api"
-        ), 
+        root  =  paste0(get_golem_config("app_baseurl"), "api"), 
         api_ver = "1", 
         access = "public", 
         project = "wbi", 
@@ -381,6 +378,7 @@ add_element2x <- function(map, region, element,
     
   }
   
+  # Create the side-by-side map
   m <- map |>
     leafem::addGeotiff(
       url = url[[1]],
@@ -395,7 +393,7 @@ add_element2x <- function(map, region, element,
         zIndex = 400),
       colorOptions = leafem::colorOptions(
         palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
-        domain = c(0, max1),
+        domain = c(min1, max1),
         na.color = "transparent")
     ) |>
     leafem::addGeotiff(
@@ -411,7 +409,7 @@ add_element2x <- function(map, region, element,
         zIndex = 400),
       colorOptions = leafem::colorOptions(
         palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
-        domain = c(0, max2),
+        domain = c(min2, max2),
         na.color = "transparent")
     )
   
@@ -423,9 +421,9 @@ add_element2x <- function(map, region, element,
         position = "bottomleft",
         pal = leaflet::colorNumeric(
           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max1)],
-          domain = c(0, max1)
+          domain = c(min1, max1)
         ),
-        values = c(0, max1), # need to adjust max here
+        values = c(min1, max1), # need to adjust max here
         title = id1,
         group = id1,
         layerId = paste0(id1, "_id"),
@@ -435,9 +433,9 @@ add_element2x <- function(map, region, element,
         position = "bottomright",
         pal = leaflet::colorNumeric(
           palette = grDevices::hcl.colors(101, "spectral", rev = TRUE)[seq_len(pal_max2)],
-          domain = c(0, max2)
+          domain = c(min2, max2)
         ),
-        values = c(0, max2), # need to adjust max here
+        values = c(min2, max2), # need to adjust max here
         title = id2,
         group = id2,
         layerId = paste0(id2, "_id"),
