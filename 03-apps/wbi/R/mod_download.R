@@ -45,12 +45,12 @@ mod_download_ui <- function(id){
       shiny::column(
         width = 12,
         
-        # build_alert(
-        #   content = shiny::textOutput(
-        #     outputId = ns("alert_text"), 
-        #     inline = TRUE
-        #   )
-        # )
+        build_alert(
+          content = shiny::textOutput(
+            outputId = ns("alert_text"),
+            inline = TRUE
+          )
+        )
         
       )
     ),
@@ -76,20 +76,21 @@ mod_download_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    # When the selected element changes...
-    alert_text <- shiny::eventReactive(input$download_element, {
-      
-      # ... add code to grab the comment we want to include in the alert box
-      # from some dataset
-      
-    })
-    
-    output$alert_text <- shiny::renderText(alert_text())
-    
+    # # When the selected element changes...
+    # alert_text <- shiny::eventReactive(input$download_element, {
+    #   
+    #   # ... add code to grab the comment we want to include in the alert box
+    #   # from some dataset
+    #   
+    # })
+
+    output$alert_text <- shiny::renderText(
+      "NOTE: These results are still preliminary and should be treated as such..."
+    )
     
     download_data <- reactive({
       
-      shiny::reg(
+      shiny::req(
         input$download_element,
         input$download_region
       )
@@ -103,10 +104,8 @@ mod_download_server <- function(id){
         )
       )
       
-      links <- lapply()
-      
       out$link <- make_api_path(
-        root = get_golem_config("app_baseurl"),
+        root = paste0(get_golem_config("app_baseurl"), "api"),
         region = out$region, 
         element = out$element,
         scenario = out$scenario,
@@ -115,7 +114,10 @@ mod_download_server <- function(id){
         file = "mean.tif"
       )
       
-      out  
+      # TODO // Edit this to remove download links from {reactable} table
+      # out$show <- TRUE
+      
+      out
         
     })
     

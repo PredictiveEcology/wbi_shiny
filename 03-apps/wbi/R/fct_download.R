@@ -20,25 +20,24 @@ download_table <- function(data) {
     highlight = TRUE,
     showPageSizeOptions = TRUE,
     columns = list(
-      group = reactable::colDef(show = FALSE),
-      species_code = reactable::colDef(show = FALSE),
-      common_name = reactable::colDef(name = "Common Name"),
-      scientific_name = reactable::colDef(name = "Scientific Name"),
-      scenario = reactable::colDef(name = "Scenario"),
-      period = reactable::colDef(name = "Time Period"),
-      resolution = reactable::colDef(name = "Resolution"),
-      path = reactable::colDef(
+      element = reactable::colDef(show = FALSE),
+      region = reactable::colDef(show = FALSE),
+      scenario = reactable::colDef(name = "Scenario", align = "center"),
+      period = reactable::colDef(name = "Time Period", align = "center"),
+      link = reactable::colDef(
         name = "Link", 
-        align = "left", 
+        align = "center", 
         sortable = FALSE, 
         filterable = FALSE, 
         html = TRUE, 
-        cell = function(value, index) {
-          sprintf('<a href="%s" target="_blank">%s</a>',
-                  paste0(get_golem_config("app_baseurl"),
-                         LINKS$path[index]),
-                  "Link")
-        })
+        cell = function(value) {
+          sprintf(
+            '<a href="%s" target="_blank">%s</a>',
+            value,
+            "Download"
+          )
+        }
+      )
     ),
     theme = reactable::reactableTheme(
       borderColor = "#dfe2e5",
