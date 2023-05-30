@@ -212,7 +212,7 @@ build_alert <- function(type = "warning", content) {
   shiny::div(
     class = glue::glue("alert alert-{type}"),
     role = "alert",
-    content
+    shiny::HTML(content)
   )
   
 }

@@ -9,8 +9,16 @@
 #'
 #' @noRd
 #' 
-#' @examples 
-#' download_table(MAIN)
+#' @examples
+#' data.frame(
+#'   element = "bird-alfl",
+#'   region = "full-extent",
+#'   scenario = "cnrm-esm2-1-ssp370",
+#'   period = 2011,
+#'   download = TRUE,
+#'   link = "https://wbi.predictiveecology.org/"
+#' ) |> 
+#'   download_table()
 download_table <- function(data) {
   
   reactable::reactable(
@@ -22,6 +30,7 @@ download_table <- function(data) {
     columns = list(
       element = reactable::colDef(show = FALSE),
       region = reactable::colDef(show = FALSE),
+      download = reactable::colDef(show = FALSE),
       scenario = reactable::colDef(name = "Scenario", align = "center"),
       period = reactable::colDef(name = "Time Period", align = "center"),
       link = reactable::colDef(
@@ -30,12 +39,16 @@ download_table <- function(data) {
         sortable = FALSE, 
         filterable = FALSE, 
         html = TRUE, 
-        cell = function(value) {
-          sprintf(
-            '<a href="%s" target="_blank">%s</a>',
-            value,
-            "Download"
-          )
+        cell = function(value, index) {
+          if (data[index, "download"] == TRUE) {
+            sprintf(
+              '<a href="%s" target="_blank">%s</a>',
+              value,
+              "Download"
+            )
+          } else {
+            "Not available"
+          }
         }
       )
     ),

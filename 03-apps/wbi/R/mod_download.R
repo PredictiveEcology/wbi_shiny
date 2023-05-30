@@ -45,12 +45,7 @@ mod_download_ui <- function(id){
       shiny::column(
         width = 12,
         
-        build_alert(
-          content = shiny::textOutput(
-            outputId = ns("alert_text"),
-            inline = TRUE
-          )
-        )
+        shiny::uiOutput(outputId = ns("alert_text"))
         
       )
     ),
@@ -76,18 +71,23 @@ mod_download_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
-    # # When the selected element changes...
-    # alert_text <- shiny::eventReactive(input$download_element, {
-    #   
-    #   # ... add code to grab the comment we want to include in the alert box
-    #   # from some dataset
-    #   
-    # })
+    # When the selected element changes...
+    alert_text <- shiny::eventReactive(input$download_element, {
+      
+      # ... retrieve the note associated with that element to be displayed in 
+      # the alert box
+      ELEMENTS$notes[ELEMENTS$species_code == input$download_element]
 
-    output$alert_text <- shiny::renderText(
-      "NOTE: These results are still preliminary and should be treated as such..."
+    })
+
+    output$alert_text <- shiny::renderUI(
+      
+      build_alert(content = alert_text())
+      
     )
     
+    # Create the reactive data frame for the "Downloads" table, based upon the 
+    # selected element & region
     download_data <- reactive({
       
       shiny::req(
@@ -114,8 +114,9 @@ mod_download_server <- function(id){
         file = "mean.tif"
       )
       
-      # TODO // Edit this to remove download links from {reactable} table
-      # out$show <- TRUE
+      out$download <- ELEMENTS$download[
+        ELEMENTS$species_code == input$download_element
+      ]
       
       out
         
