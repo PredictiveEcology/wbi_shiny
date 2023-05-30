@@ -191,7 +191,7 @@ You'll need `sudo chown -R rstudio:rstudio /mnt/volume_tor1_01`
 ```bash
 SRC=/root/data/outputs
 DEST=/mnt/volume_tor1_01/wbi
-HOST=159.203.31.192
+HOST=143.198.34.74
 rsync -Pav root@$HOST:$SRC $DEST
 ```
 
