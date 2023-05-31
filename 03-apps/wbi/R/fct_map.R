@@ -57,7 +57,7 @@ base_map <- function() {
       baseGroups = c("ESRI", "Open Street Map", "CartoDB", "Google"), 
       position = "topleft", 
       options = leaflet::layersControlOptions(collapsed = FALSE)) |> 
-    leaflet::setView(-120, 65, 5)
+    leaflet::setView(-112, 62, 4)
   
 }
 
@@ -273,7 +273,7 @@ base_map2x <- function() {
       leftId = "leftid",
       rightId = "rightid"
     ) |>
-    leaflet::setView(-120, 65, 5)
+    leaflet::setView(-112, 62, 4)
 }
 
 

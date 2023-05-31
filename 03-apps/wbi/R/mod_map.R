@@ -127,7 +127,7 @@ mod_map_server <- function(id, elements){
       period_choices = get_period_choices(
         ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], ]
       ),
-      palette = "viridis",
+      palette = "spectral",
       opacity = 0.8,
       element_display = ELEMENT_NAMES$bird[[1]]
     )
@@ -140,65 +140,81 @@ mod_map_server <- function(id, elements){
         
         title = "Set Map Preferences",
         
-        selectInput(
-          inputId = ns("map_region"),
-          label = "Region:", 
-          choices = REGIONS,
-          selected = current_selections$region
-        ),
-        
-        shinyWidgets::pickerInput(
-          inputId = ns("map_element"),
-          label = "Species Name:", 
-          choices = ELEMENT_NAMES, 
-          selected = current_selections$element, 
-          options = list(
-            `live-search` = TRUE
-            # style = "border-color: #999999;"
-            # style = paste0(
-            #   "background-color: white; ",
-            #   "border-color: #999999; ",
-            #   "font-family: 'Helvetica Neue' Helvetica; ",
-            #   "font-weight: 200;"
-            # )
+
+        shiny::fluidRow(
+          shiny::column(
+            width = 6, 
+
+            selectInput(
+              inputId = ns("map_region"),
+              label = "Region:", 
+              choices = REGIONS,
+              selected = current_selections$region
+            ),
+            
+            shinyWidgets::pickerInput(
+              inputId = ns("map_element"),
+              label = "Species Name:", 
+              choices = ELEMENT_NAMES, 
+              selected = current_selections$element, 
+              options = list(
+                `live-search` = TRUE
+                # style = "border-color: #999999;"
+                # style = paste0(
+                #   "background-color: white; ",
+                #   "border-color: #999999; ",
+                #   "font-family: 'Helvetica Neue' Helvetica; ",
+                #   "font-weight: 200;"
+                # )
+              )
+            ),
+
+            selectInput(
+              inputId = ns("map_scenario"),
+              label = "Scenario:",
+              choices = SCENARIOS,
+              selected = current_selections$scenario
+            ),
+            
+            selectInput(
+              inputId = ns("map_period"), 
+              label = "Time Period:", 
+              choices = current_selections$period_choices,
+              selected = current_selections$period
+            )
+
+          ),
+          shiny::column(
+            width = 6, 
+
+            selectInput(
+              inputId = ns("map_palette"), 
+              label = "Color Palette:", 
+              choices = c(
+                "Spectral" = "spectral", 
+                "Viridis" = "viridis", 
+                "Red Yellow Blue" = "rdylbu", 
+                "BAM" = "bam"),
+              selected = current_selections$palette
+            ), 
+            
+            sliderInput(
+              inputId = ns("map_opacity"), 
+              label = "Opacity:", 
+              min = 0, 
+              max = 1, 
+              value = current_selections$opacity
+            )
+
           )
         ),
-        
-        selectInput(
-          inputId = ns("map_scenario"),
-          label = "Scenario:",
-          choices = SCENARIOS,
-          selected = current_selections$scenario
-        ),
-        
-        selectInput(
-          inputId = ns("map_period"), 
-          label = "Time Period:", 
-          choices = current_selections$period_choices,
-          selected = current_selections$period
-        ), 
-        
-        selectInput(
-          inputId = ns("map_palette"), 
-          label = "Color Palette:", 
-          choices = c("bam", "rdylbu", "spectral", "viridis"),
-          selected = current_selections$palette
-        ), 
-        
-        sliderInput(
-          inputId = ns("map_opacity"), 
-          label = "Opacity:", 
-          min = 0, 
-          max = 1, 
-          value = current_selections$opacity
-        ), 
         
         footer = shiny::actionButton(
           inputId = ns("close_modal"), 
           label = "Apply"
         ),
         
-        size = "s"
+        size = "l"
         
       )
       

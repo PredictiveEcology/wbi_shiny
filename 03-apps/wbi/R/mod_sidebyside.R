@@ -105,7 +105,7 @@ mod_sidebyside_ui <- function(id){
                   outputId = ns("constant_title_text_2x"),
                   inline = TRUE
                 ),
-                ": ",
+                # ": ",
                 shiny::textOutput(
                   outputId = ns("constant_text_2x"),
                   inline = TRUE
@@ -514,9 +514,9 @@ mod_sidebyside_server <- function(id){
     output$constant_title_text_2x <- shiny::renderText({
       
       if (current_selections_2x$comparison_type == "scenario") {
-        "Period"
+        "Period:"
       } else {
-        "Scenario"
+        "Scenario:"
       }
       
     })
