@@ -74,15 +74,52 @@ for (i in 1:nrow(pp)) {
 
 ## need to audit the layers and pull out statistics
 library(future)
+library(future.apply)
 plan(multisession, workers = 4)
 
 fl <- list.files(OUT1, recursive=TRUE)
 #fl <- fl[1:10]
 pp <- parse_path(fl)
-st <- pbapply::pblapply(fl, function(z) {rast_stats(paste0(OUT1, "/", z))},
-                        cl="future")
+# st <- pbapply::pblapply(fl, function(z) {rast_stats(paste0(OUT1, "/", z))},
+#                         cl="future")
+
+flm <- matrix(fl, length(fl)/32, 32, byrow=TRUE)
+OK <- logical(length(fl))
+names(OK) <- fl
+stlist <- NULL
+for (i in 1:nrow(flm)) {
+  message(i, " / ", nrow(flm))
+  st <- try(future_lapply(
+    structure(flm[i,], names=flm[i,]), 
+    function(z) { rast_stats(paste0(OUT1, "/", z)) }))
+  if (inherits(st, "try-error")) {
+    st <- lapply(structure(flm[i,], names=flm[i,]), function(z) NA_real_)
+  } else {
+    OK[flm[i,]] <- TRUE
+  }
+  stlist <- c(stlist, st)
+}
+save(pp, stlist, OK, fl, file="sizes.RData")
+
 ppp <- data.frame(pp, do.call(rbind, st), link=fl)
 arrow::write_parquet(ppp, "links-and-stats.parquet")
+
+v <- seq_along(fl)
+res <- matrix(NA_real_, length(fl), 6)
+dimnames(res) <- list(fl, c("mean", "q0", "q50", "q99", "q999", "q1"))
+for (i in v) {
+  message(which(v==i), " / ", length(v))
+  z <- fl[i]
+  st1 <- try(rast_stats(paste0(OUT1, "/", z)))
+  if (!inherits(st1, "try-error")) {
+    res[z,] <- st1
+  }
+}
+ppp <- data.frame(pp, res, link=fl)
+rownames(ppp) <- NULL
+arrow::write_parquet(ppp, paste0(OUT2, "/links-and-stats.parquet"))
+saveRDS(ppp, paste0(OUT2, "/links-and-stats.rds"))
+
 
 ppp <- arrow::read_parquet("links-and-stats.parquet")
 
