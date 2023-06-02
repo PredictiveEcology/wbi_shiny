@@ -211,6 +211,7 @@ rsync /Users/Peter/wbi/final/*.parquet ubuntu@206.12.95.40:/media/data/content/a
 # or add /root/.ssh/id_rsa.pub to /home/ubuntu/.ssh/authorized_keys and push directly
 rsync -Pav /mnt/volume_tor1_01/wbi/final/*.rds ubuntu@206.12.95.40:/media/data/content/api/v1/public/wbi
 rsync -Pav /mnt/volume_tor1_01/wbi/mid/api/v1/public/wbi ubuntu@206.12.95.40:/media/data/content/api/v1/public
+# this will work when only updating or adding new files
 ```
 
 ```
