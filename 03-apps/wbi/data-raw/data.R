@@ -12,23 +12,17 @@ ELEMENT_NAMES <- mapply(
   y = split(ELEMENTS$common_name, ELEMENTS$group)
 )
 
-# TODO // Peter adding 2 more columns, one is the max value, and the second is 
-# the max index value for the hex code to drive the color scaling... need to add
-# this data to the mapping functions `max` arguments in the legend functions
-LINKS <- jsonlite::fromJSON(
-  "https://wbi-nwt.analythium.app/api/v1/public/wbi-nwt/elements/index.json"
-)
-
 # MAPSTATS ----
 # Retrieve .rds file containing MAPSTATS data from API
-MAPSTATS <- paste0(
+ALLMAPS <- paste0(
   get_golem_config("app_baseurl"),
-  "api/v1/public/wbi/maps-lonlat-with-stats.rds"
+  "api/v1/public/wbi/links-and-stats.rds"
 ) |> 
   url() |> 
   readRDS()
 
 # Keep only the columns needed for legend gradients
+MAPSTATS <- ALLMAPS[ALLMAPS$resolution=="lonlat",]
 MAPSTATS$min <- MAPSTATS$q0
 MAPSTATS$max <- MAPSTATS$q1
 MAPSTATS <- MAPSTATS[, c("region", "element", "scenario", "period", "min", "max")]
@@ -41,17 +35,16 @@ SCENARIOS <- list(
   "CanESM5 SSP585" = "canesm5-ssp585"
 )
 
+REGIONS <- list(
+  `Full Extent` = "full-extent", 
+  Alberta = "ab", 
+  `British Columbia` = "bc", 
+  Manitoba = "mb", 
+  `Northwest Territories` = "nt", 
+  Saskatchewan = "sk", 
+  `Yukon Territory` = "yt")
 
-MAIN <- data.frame(
-  LINKS[, -1],
-  ELEMENTS[match(LINKS$element, rownames(ELEMENTS)), -1]
-)
-
-cols <- c("group", "species_code", "common_name", "scientific_name", 
-          "scenario", "period", "resolution", "path")
-
-MAIN <- MAIN[MAIN$resolution != "tiles", cols]
-
+# Regional summaries -- update!
 STATS <- readRDS("data-raw/elements-regions-stats-250m.rds")
 
 i <- which(rownames(STATS$regions) == "Caribou Meta-herds: Decho South")
@@ -69,11 +62,8 @@ rownames(STATS$regions)[i] <- "Caribou Meta-herds: Hay River Lowlands"
 STATS$regions$region[i] <- "Hay River Lowlands"
 dimnames(STATS$statistics)[[2]][i] <- "Caribou Meta-herds: Hay River Lowlands"
 
-CARIBOU <- read.csv("data-raw/caribou-lambda.csv")
-CARIBOU$region <- paste("Caribou Meta-herds:", CARIBOU$region)
-
 usethis::use_data(
-  ELEMENTS, LINKS, SCENARIOS, MAIN, STATS, MAPSTATS, ELEMENT_NAMES,
-  CARIBOU,
+  ELEMENTS, SCENARIOS, MAPSTATS, ELEMENT_NAMES, ALLMAPS, REGIONS,
+  STATS, 
   overwrite = TRUE
 )

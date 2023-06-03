@@ -95,6 +95,7 @@ mod_download_server <- function(id){
         input$download_region
       )
       
+      # consider using a filtered ALLMAPS here
       out <- expand.grid(
         element = input$download_element,
         region = input$download_region,
