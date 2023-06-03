@@ -6,6 +6,11 @@ services:
     restart: always
     expose:
       - "8080"
+  shinyappfull:
+    image: ghcr.io/predictiveecology/wbi_shiny/shiny-wbi:v1
+    restart: always
+    expose:
+      - "8080"
   caddy:
     image: caddy:2.6.4-alpine
     restart: always
@@ -20,6 +25,7 @@ services:
       - caddy_config:/config
     depends_on:
       - shinyapp
+      - shinyappfull
     environment:
       # - HOST="wbi.predictiveecology.org"
       - HOST=":80"

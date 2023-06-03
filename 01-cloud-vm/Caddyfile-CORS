@@ -12,6 +12,11 @@
             header_down -Access-Control-Allow-Origin
         }
     }
+    handle_path /apps/wbi/* {
+        reverse_proxy shinyappfull:8080 {
+            header_down -Access-Control-Allow-Origin
+        }
+    }
     basicauth /api/v1/private/* {
         shiny JDJhJDEyJGxKbVIxS24xZWdUWTlvdE5lNnY0N2VKUjBjZ1JrY0M1UGxZUDBjUFI4MFQ1Qm90UkFFamtt
     }
