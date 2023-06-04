@@ -1,6 +1,6 @@
 source("functions.R")
 
-i_scen <- 4
+i_scen <- 1
 overwrite <- TRUE
 
 # fl <- list.files(OUT1, recursive=TRUE)
@@ -22,7 +22,7 @@ pp1$region <- "full-extent"
 pp1$path <- gsub("/ab/", "/full-extent/", pp1$path)
 
 #i <- 100
-for (i in 1:nrow(pp)) {
+for (i in 1:nrow(pp1)) {
   
   ppi <- pp[pp$match == pp1$match[i],]
   message("FULL EXTENT --- ", paste0(
@@ -31,7 +31,7 @@ for (i in 1:nrow(pp)) {
   
   rr <- list()
   for (j in 1:6) {
-    rr[[ppi$region[j]]] <- st_as_stars(rast(ppi$path[j]))
+    rr[[ppi$region[j]]] <- st_as_stars(rast(paste0(OUT1, "/", ppi$path[j])))
   }
   # m <- rr[[1]]
   # for (j in 2:6) {
@@ -123,3 +123,18 @@ saveRDS(pps, "/mnt/volume_tor1_01/wbi/final/maps-lonlat-with-stats.rds")
 
 saveRDS(pp0, "/mnt/volume_tor1_01/wbi/final/maps.rds")
 
+
+Stats <- matrix(NA, nrow(pp1), 6)
+colnames(Stats) <- c("mean", "q0", "q50", "q99", "q999", "q1")
+
+for (i in 1:nrow(pp1)) {
+  message(i, " / ", nrow(pp1))
+  s <- rast_stats2(pp1$fullpath[i])
+  Stats[i,] <- s
+}
+
+for (i in 1:nrow(pp1)) {
+  ppp[ppp$link == pp1$path2[i], colnames(Stats)] <- Stats[i,]
+}
+arrow::write_parquet(ppp, paste0(OUT2, "/links-and-stats.parquet"))
+saveRDS(ppp, paste0(OUT2, "/links-and-stats.rds"))
