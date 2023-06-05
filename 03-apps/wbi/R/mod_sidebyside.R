@@ -522,7 +522,18 @@ mod_sidebyside_server <- function(id){
     })
     
     # Render "Constant" selection text
-    output$constant_text_2x <- shiny::renderText(current_selections_2x$constant)
+    output$constant_text_2x <- shiny::renderText({
+      
+      if (current_selections_2x$comparison_type == "scenario") {
+        current_selections_2x$constant
+      } else {
+        lookup_element_name_by_value(
+          x = SCENARIOS,
+          value = current_selections_2x$constant
+        )
+      }
+      
+    })
     
   })
 }
