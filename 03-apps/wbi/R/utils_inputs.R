@@ -68,6 +68,19 @@ lookup_element_type_by_value <- function(x, value) {
 
 
 
+#' Sequence period choices given a start & end year, and interval
+#'
+#' @param x A one-row data frame containing the columns `year_start`, `year_end`,
+#'   and `year_interval` (e.g., a single row in the `ELEMENTS` data frame)
+#'
+#' @return A numeric vector of years
+#' 
+#' @noRd
+#'
+#' @examples
+#' get_period_choices(
+#'   ELEMENTS[1, ]
+#' )
 get_period_choices <- function(x) {
   
   out <- seq(
