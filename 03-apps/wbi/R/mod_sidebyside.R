@@ -136,6 +136,10 @@ mod_sidebyside_server <- function(id){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
+    PERIODS_init <- get_period_choices(
+      ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], ]
+    )
+    
     ## Set Initial Filter Selections ----
     # Create a `reactiveValues` list to hold current selections for each filter;
     # This will help make user choices redundant when re-launching the modal;
@@ -145,17 +149,13 @@ mod_sidebyside_server <- function(id){
       region = "full-extent",
       element_type = "bird",
       element = ELEMENT_NAMES$bird[[1]],
-      comparison_type = "scenario",
-      map_left_choices = SCENARIOS,
-      map_left = SCENARIOS[[1]],
-      map_right_choices = SCENARIOS,
-      map_right = SCENARIOS[[2]],
-      constant_choices = get_period_choices(
-        ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], ]
-      ),
-      constant = get_period_choices(
-        ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], ]
-      )[1],
+      comparison_type = "period",
+      map_left_choices = PERIODS_init,
+      map_left = PERIODS_init[1],
+      map_right_choices = PERIODS_init,
+      map_right = max(PERIODS_init),
+      constant_choices = SCENARIOS,
+      constant = SCENARIOS[[1]],
       opacity = 0.8
     )
     
@@ -218,7 +218,7 @@ mod_sidebyside_server <- function(id){
             
             selectInput(
               inputId = ns("map_constant_2x"),
-              label = "Period:",
+              label = "Scenario:",
               choices = current_selections_2x$constant_choices,
               selected = current_selections_2x$constant
             ),
@@ -291,10 +291,10 @@ mod_sidebyside_server <- function(id){
         session = session, 
         inputId = "map_right_2x", 
         choices = map_choices,
-        selected = map_choices[[2]]
+        selected = map_choices[[length(map_choices)]]
       )
       
-      # ... update the choices in the "Right Map" dropdown filter list
+      # ... update the choices in the "Constant" dropdown filter list
       updateSelectInput(
         session = session,
         label = constant_label,
