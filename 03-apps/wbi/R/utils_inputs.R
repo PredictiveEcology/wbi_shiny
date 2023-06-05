@@ -185,8 +185,8 @@ build_accordion <- function(id, header, content) {
 #'
 #' @param type (String) One of "primary", "secondary", "success", "info", 
 #'   "danger", "warning", "light", "dark"
-#' @param content The content (HTML, text, etc.) to be displayed within the 
-#'   alert box
+#' @param content (String) The content to be displayed within the alert box, 
+#'   rendered via `shiny::HTML()`
 #'
 #' @return An HTML div that will display `content` inside a bootstrap alert box
 #' 
@@ -199,7 +199,7 @@ build_accordion <- function(id, header, content) {
 #' 
 #'   ui <- page_fluid(
 #'     build_alert(
-#'       content = tags$em("Here's some content you should be alerted to")
+#'       content = "tags$em(\"Here's some content you should be alerted to\")"
 #'     )
 #'   )
 #' 
