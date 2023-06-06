@@ -1,6 +1,7 @@
 library(sf)
 library(terra)
 library(mefa4)
+library(dplyr)
 
 ## example rasters
 JURS <- c("AB", "BC", "MB", "NT", "SK", "YT")
@@ -27,8 +28,8 @@ p <- st_transform(p, st_crs(r[[1]]))
 
 zp <- st_intersection(z[,c("BCR", "LABEL")], p[,c("juri_en", "juri_fr")])
 table(zp$juri_en, zp$BCR)
-zp$area_km <- as.numeric(st_area(zp)) / 10^6
-zp <- zp[!(zp$juri_en=="Nunavut" & zp$area_km < 5000),]
+zp$area <- as.numeric(st_area(zp)) / 10^6
+zp <- zp[!(zp$juri_en=="Nunavut" & zp$area < 5000),]
 
 zp$rast_value <- seq_len(nrow(zp))
 zp$bcr_juri <- paste0("BCR ", zp$BCR, " - ", zp$juri_en)
@@ -36,7 +37,7 @@ zp$bcr_juri <- paste0("BCR ", zp$BCR, " - ", zp$juri_en)
 
 rf <- rast("https://wbi.predictiveecology.org/api/v1/public/wbi/full-extent/elements/biomass/canesm5-ssp370/2011/1000m/mean.tif")
 plot(rf)
-plot(zps$geom, add=T)
+plot(zp$geom, add=T)
 
 rrf <- rf
 v <- values(rf)[,1]
@@ -83,7 +84,31 @@ for (i in 1:nrow(SUMS)) {
 # - Juri
 # - BCR/Juri
 # Save a simplified geometry for plotting
-zps <- st_simplify(zp, dTolerance = 1000)
+zp <- st_cast(zp, "MULTIPOLYGON")
+
+zp1 <- zp |> group_by(BCR) |> summarize() |> st_cast("MULTIPOLYGON")
+zp2 <- zp |> group_by(juri_en) |> summarize() |> st_cast("MULTIPOLYGON")
+class(zp1) <- class(zp2) <- class(zp)
+zp1$classification <- "BCR"
+zp2$classification <- "Jurisdiction"
+zp1$region <- zp1$BCR
+zp1$area <- as.numeric(st_area(zp1)) / 10^6
+zp2$classification <- "Jurisdiction"
+zp2$region <- zp2$juri_en
+zp2$area <- as.numeric(st_area(zp2)) / 10^6
+
+
+zp$region <- zp$bcr_juri
+zp$classification <- "BCR / Jurisdiction"
+
+pp <- rbind(zp[,c("classification", "region", "area")],
+    zp1[,c("classification", "region", "area")],
+    zp2[,c("classification", "region", "area")])
+rownames(pp) <- NULL
+
+pps <- st_simplify(pp, dTolerance = 1000)
+
+saveRDS(pps, "02-data-proc/wbi/boundaries/regions.rds")
 
 # Organize the output object for the app
 
