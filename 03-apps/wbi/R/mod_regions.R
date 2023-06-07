@@ -168,15 +168,17 @@ mod_regions_server <- function(id){
       regions_data() |> 
         reactable::reactable(
           # Specify overall table "default" settings
+          rownames = FALSE,
           resizable = TRUE, 
           bordered = TRUE, 
           defaultColDef = reactable::colDef(minWidth = 75), 
           # Specify individual column settings
           columns = list(
             Index = reactable::colDef(show = FALSE), 
-            Element = reactable::colDef(name = "Species Name"), 
-            Year = reactable::colDef(minWidth = 50), 
-            Region = reactable::colDef(minWidth = 200)
+            Element = reactable::colDef(name = "Species Name", show = FALSE), 
+            Year = reactable::colDef(minWidth = 35), 
+            Region = reactable::colDef(show = FALSE),
+            Mean = reactable::colDef(minWidth = 35)
           )
         )
       

@@ -35,6 +35,10 @@ get_stats <- function(element, region) {
   # Assign column names to the data frame
   names(d) <- c("Element", "Scenario", "Year")
   
+  # add human readable species and scenario names
+  d[["Element"]][] <- ELEMENTS[element, "common_name"]
+  d[["Scenario"]] <- names(SCENARIOS)[match(d[["Scenario"]], unlist(SCENARIOS))]
+
   # Add an "Index" column that serves as concatenation of element-scenario-year
   d$Index <- elv
 
