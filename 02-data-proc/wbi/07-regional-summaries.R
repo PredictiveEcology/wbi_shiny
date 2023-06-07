@@ -55,28 +55,58 @@ m <- readRDS(url(u))
 m <- m[m$resolution == "1000m" & m$region == "full-extent",]
 
 # number of pixel and sum of pixel values
-NPIX <- table(df$value)
+Npix <- table(df$value)
 SUMS <- matrix(0, nrow(m), nrow(zp))
-dimnames(SUMS) <- list(m$link, names(NPIX))
+dimnames(SUMS) <- list(m$link, names(Npix))
+NPIX <- matrix(as.numeric(Npix), nrow(m), nrow(zp), byrow = TRUE)
+dimnames(NPIX) <- list(m$link, names(Npix))
+
 
 # i <- 1
-for (i in 1:nrow(SUMS)) {
+ss <- 1:nrow(m)
+# ss <- which(rowSums(is.na(SUMS)) > 0)
+for (i in ss) {
 
-    message(i, " / ", nrow(SUMS))
+    message(which(ss == i), " / ", length(ss))
     u2 <- paste0("https://wbi.predictiveecology.org/", m$link[i])
     r2 <- rast(u2)
     v2 <- values(r2)[,1]
-    sb <- sum_by(v2, df$value)
-    sb <- sb[match(names(NPIX),rownames(sb)),]
+    sb <- sum_by(v2[!is.na(v2)], df$value[!is.na(v2)])
+    sb <- sb[match(names(Npix),rownames(sb)),]
     SUMS[i,] <- sb[,1]
-
+    if (any(is.na(v2))) {
+        NPIX[i,] <- sb[,2]
+    }
 }
+sum(is.na(SUMS))
+sum(is.na(NPIX))
+table(rowSums(is.na(SUMS)))
+saveRDS(list(SUMS=SUMS, NPIX=NPIX), "02-data-proc/wbi/sums-by-bcr-juri.rds")
+
+o00 <- readRDS("02-data-proc/wbi/sums-by-bcr-juri.rds")
+SUMS <- o00$SUMS
+NPIX <- o00$NPIX
 
 # Calculate combined statistics for BCR and Juri
 
+# All pixels in WBI
+SUMSwbi <- rowSums(SUMS)
+NPIXwbi <- rowSums(NPIX)
+MEANwbi <- SUMSwbi / NPIXwbi
+
 ## group sums into BCR and JURS units
 ## calculate means
+colnames(SUMS) <- zp$bcr_juri
+colnames(NPIX) <- zp$bcr_juri
+MEAN <- SUMS / NPIX
 
+SUMSbcr <- groupSums(SUMS, 2, paste("BCR", zp$BCR))
+NPIXbcr <- groupSums(NPIX, 2, paste("BCR", zp$BCR))
+MEANbcr <- SUMSbcr / NPIXbcr
+
+SUMSjuri <- groupSums(SUMS, 2, zp$juri_en)
+NPIXjuri <- groupSums(NPIX, 2, zp$juri_en)
+MEANjuri <- SUMSjuri / NPIXjuri
 
 
 # Combine into 1 simplified sf df:
@@ -86,13 +116,20 @@ for (i in 1:nrow(SUMS)) {
 # Save a simplified geometry for plotting
 zp <- st_cast(zp, "MULTIPOLYGON")
 
+zp$all <- "WBI: Western Boreal Initiative"
+zp0 <- zp |> group_by(all) |> summarize() |> st_cast("MULTIPOLYGON")
 zp1 <- zp |> group_by(BCR) |> summarize() |> st_cast("MULTIPOLYGON")
 zp2 <- zp |> group_by(juri_en) |> summarize() |> st_cast("MULTIPOLYGON")
-class(zp1) <- class(zp2) <- class(zp)
+class(zp0) <- class(zp1) <- class(zp2) <- class(zp)
+
+zp0$classification <- "WBI"
+zp0$region <- "WBI: Western Boreal Initiative"
+zp0$area <- as.numeric(st_area(zp0)) / 10^6
+
 zp1$classification <- "BCR"
-zp2$classification <- "Jurisdiction"
-zp1$region <- zp1$BCR
+zp1$region <- paste("BCR", zp1$BCR)
 zp1$area <- as.numeric(st_area(zp1)) / 10^6
+
 zp2$classification <- "Jurisdiction"
 zp2$region <- zp2$juri_en
 zp2$area <- as.numeric(st_area(zp2)) / 10^6
@@ -101,14 +138,28 @@ zp2$area <- as.numeric(st_area(zp2)) / 10^6
 zp$region <- zp$bcr_juri
 zp$classification <- "BCR / Jurisdiction"
 
-pp <- rbind(zp[,c("classification", "region", "area")],
+pp <- rbind(
+    zp0[,c("classification", "region", "area")],
     zp1[,c("classification", "region", "area")],
-    zp2[,c("classification", "region", "area")])
+    zp2[,c("classification", "region", "area")],
+    zp[,c("classification", "region", "area")])
 rownames(pp) <- NULL
 
 pps <- st_simplify(pp, dTolerance = 1000)
-
+rownames(pps) <- pps$region
+pps <- st_cast(pps, "MULTIPOLYGON")
 saveRDS(pps, "02-data-proc/wbi/boundaries/regions.rds")
 
 # Organize the output object for the app
 
+rownames(m) <- m$link
+Stats <- cbind("WBI: Western Boreal Initiative"=MEANwbi, MEANbcr, MEANjuri, MEAN)
+nStats <- cbind("WBI: Western Boreal Initiative"=NPIXwbi, NPIXbcr, NPIXjuri, NPIX)
+storage.mode(nStats) <- "integer"
+
+ers <- list(elements = m,
+    regions = pps,
+    statistics = list(
+        mean = Stats[rownames(m), rownames(pps)], 
+        npix = nStats[rownames(m), rownames(pps)]))
+saveRDS(ers, "03-apps/wbi/data-raw/elements-regions-stats-1000m.rds")
