@@ -44,23 +44,8 @@ REGIONS <- list(
   Saskatchewan = "sk", 
   `Yukon Territory` = "yt")
 
-# Regional summaries -- update!
-STATS <- readRDS("data-raw/elements-regions-stats-250m.rds")
-
-i <- which(rownames(STATS$regions) == "Caribou Meta-herds: Decho South")
-rownames(STATS$regions)[i] <- "Caribou Meta-herds: Dehcho South"
-STATS$regions$region[i] <- "Dehcho South"
-dimnames(STATS$statistics)[[2]][i] <- "Caribou Meta-herds: Dehcho South"
-
-i <- which(rownames(STATS$regions) == "Caribou Meta-herds: Decho North")
-rownames(STATS$regions)[i] <- "Caribou Meta-herds: Dehcho North"
-STATS$regions$region[i] <- "Dehcho North"
-dimnames(STATS$statistics)[[2]][i] <- "Caribou Meta-herds: Dehcho North"
-
-i <- which(rownames(STATS$regions) == "Caribou Meta-herds: Hay River")
-rownames(STATS$regions)[i] <- "Caribou Meta-herds: Hay River Lowlands"
-STATS$regions$region[i] <- "Hay River Lowlands"
-dimnames(STATS$statistics)[[2]][i] <- "Caribou Meta-herds: Hay River Lowlands"
+# Regional summaries
+STATS <- readRDS("data-raw/elements-regions-stats-1000m.rds")
 
 usethis::use_data(
   ELEMENTS, SCENARIOS, MAPSTATS, ELEMENT_NAMES, ALLMAPS, REGIONS,
