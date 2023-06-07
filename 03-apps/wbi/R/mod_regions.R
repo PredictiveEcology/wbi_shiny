@@ -23,9 +23,9 @@ mod_regions_ui <- function(id){
           radioButtons(
             inputId = ns("regions_element_type"), 
             label = "Species Group:", 
-            choices = c("Birds" = "bird", "Trees" = "tree"), 
+            choices = c("Birds" = "bird", "Productivity" = "prod", "Trees" = "tree"), 
             selected = "bird", 
-            inline = TRUE
+            inline = FALSE
           )
           
         ), 

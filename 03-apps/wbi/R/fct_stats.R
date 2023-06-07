@@ -16,31 +16,33 @@
 #' @examples
 #' get_stats(
 #'   element = "bird-alfl", 
-#'   region = "Ecoregions: 50"
+#'   region = "Alberta"
 #' )
 get_stats <- function(element, region) {
   
   # Filter the data cube to retrieve the four scenario/year combinations for the 
   # input element
-  elv <- dimnames(STATS$statistics)[[1]][grep(element, dimnames(STATS$statistics)[[1]])]
-  
+  # elv <- dimnames(STATS$statistics)[[1]][grep(element, dimnames(STATS$statistics)[[1]])]
+  elv <- rownames(STATS$elements)[STATS$elements$element == element]
+
   # Build a data frame that separates the scenarios into three columns (element, 
   # scenario, and year)
-  d <- data.frame(
-    do.call(rbind, strsplit(elv, "/"))
-  )
+  # d <- data.frame(
+  #   do.call(rbind, strsplit(elv, "/"))
+  # )
+  d <- STATS$elements[elv, c("element", "scenario", "period")]
   
   # Assign column names to the data frame
   names(d) <- c("Element", "Scenario", "Year")
   
   # Add an "Index" column that serves as concatenation of element-scenario-year
   d$Index <- elv
-  
+
   # Add a "Region" column using the input argument
   d$Region <- region
-  
+
   # Add  "Mean" column by querying the related mean statistic from the data cube
-  d$Mean <- STATS$statistics[elv, region, "Mean"]
+  d$Mean <- STATS$statistics$mean[elv, region]
   
   d
   
@@ -64,7 +66,7 @@ get_stats <- function(element, region) {
 #' @examples
 #' get_stats(
 #'   element = "bird-alfl", 
-#'   region = "Ecoregions: 50"
+#'   region = "Alberta"
 #' ) |> 
 #'   plot_trend()
 plot_trend <- function(data) {

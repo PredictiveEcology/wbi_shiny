@@ -462,14 +462,18 @@ add_element2x <- function(map, region, element,
 #' map_region(region = "Ecoregions: 50")
 map_region <- function(region, base=FALSE) {
   
+  # sometimes it is called geom, sometimes geometry
+  sf_col <- attr(STATS$regions, "sf_column")
+  default_poly <- "WBI: Western Boreal Initiative"
+
   if (base) {
-    
+
     # Build the base map
-    plot(STATS$regions["NWT: Northwest Territories", "geom"])
-    
+    plot(STATS$regions[default_poly, sf_col])
+
     # Color the region on the map
     plot(
-      STATS$regions[region, "geom"], 
+      STATS$regions[region, sf_col], 
       col = "gold", 
       border = "tomato", 
       add = TRUE
@@ -478,7 +482,7 @@ map_region <- function(region, base=FALSE) {
   } else {
     
     p <- ggplot2::ggplot(
-      data = STATS$regions["NWT: Northwest Territories",]
+      data = STATS$regions[default_poly,]
     ) + 
       ggplot2::geom_sf(
         col="grey", 
