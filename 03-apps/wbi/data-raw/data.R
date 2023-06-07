@@ -2,7 +2,7 @@
 
 # ELEMENTS ----
 ELEMENTS <- read.csv("data-raw/element-lookup.csv")
-rownames(ELEMENTS) <- paste0(ELEMENTS$group, "-", tolower(ELEMENTS$species_code))
+rownames(ELEMENTS) <- ELEMENTS$species_code
 
 # ELEMENT_NAMES ----
 ELEMENT_NAMES <- split(ELEMENTS$species_code, ELEMENTS$group)
