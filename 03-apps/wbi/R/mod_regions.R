@@ -178,6 +178,7 @@ mod_regions_server <- function(id){
           resizable = TRUE, 
           bordered = TRUE, 
           defaultColDef = reactable::colDef(minWidth = 75), 
+          defaultPageSize = 50,
           # Specify individual column settings
           columns = list(
             Index = reactable::colDef(show = FALSE), 
