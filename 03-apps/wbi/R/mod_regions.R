@@ -17,37 +17,43 @@ mod_regions_ui <- function(id){
       fluidRow(
         
         column(
-          width = 3, 
-          align = "center", 
+          width = 6, 
           
-          radioButtons(
-            inputId = ns("regions_element_type"), 
-            label = "Species Group:", 
-            choices = c("Birds" = "bird", "Productivity" = "prod", "Trees" = "tree"), 
-            selected = "bird", 
-            inline = FALSE
-          )
-          
-        ), 
-        
-        column(
-          width = 4, 
-          
-          selectInput(
+          shinyWidgets::pickerInput(
             inputId = ns("regions_element"),
             label = "Species Name:", 
-            choices = ELEMENT_NAMES$bird
+            choices = ELEMENT_NAMES, 
+            options = list(
+              `live-search` = TRUE
+              # style = "border-color: #999999;"
+              # style = paste0(
+              #   "background-color: white; ",
+              #   "border-color: #999999; ",
+              #   "font-family: 'Helvetica Neue' Helvetica; ",
+              #   "font-weight: 200;"
+              # )
+            )
           )
           
         ), 
         
         column(
-          width = 5, 
+          width = 6, 
           
-          selectInput(
+          shinyWidgets::pickerInput(
             inputId = ns("regions_region"),
-            label = "Region:",
-            choices = row.names(STATS$regions)
+            label = "Region:", 
+            choices = split(STATS$regions$region, STATS$regions$classification), 
+            options = list(
+              `live-search` = TRUE
+              # style = "border-color: #999999;"
+              # style = paste0(
+              #   "background-color: white; ",
+              #   "border-color: #999999; ",
+              #   "font-family: 'Helvetica Neue' Helvetica; ",
+              #   "font-weight: 200;"
+              # )
+            )
           )
           
         )
@@ -172,6 +178,7 @@ mod_regions_server <- function(id){
           resizable = TRUE, 
           bordered = TRUE, 
           defaultColDef = reactable::colDef(minWidth = 75), 
+          defaultPageSize = 50,
           # Specify individual column settings
           columns = list(
             Index = reactable::colDef(show = FALSE), 
