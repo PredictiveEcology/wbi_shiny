@@ -43,7 +43,10 @@ mod_regions_ui <- function(id){
           shinyWidgets::pickerInput(
             inputId = ns("regions_region"),
             label = "Region:", 
-            choices = split(STATS$regions$region, STATS$regions$classification), 
+            choices = split(
+              STATS$regions$region,
+              STATS$regions$classification)[
+                c("WBI", "BCR", "Jurisdiction", "BCR / Jurisdiction")], 
             options = list(
               `live-search` = TRUE
               # style = "border-color: #999999;"
