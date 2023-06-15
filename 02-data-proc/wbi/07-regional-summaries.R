@@ -163,3 +163,17 @@ ers <- list(elements = m,
         mean = Stats[rownames(m), rownames(pps)], 
         npix = nStats[rownames(m), rownames(pps)]))
 saveRDS(ers, "03-apps/wbi/data-raw/elements-regions-stats-1000m.rds")
+
+ers <- readRDS("03-apps/wbi/data-raw/elements-regions-stats-1000m.rds")
+
+x <- data.frame(ers$elements, Mean=ers$statistics$mean[,1])
+x$year <- as.integer(x$period)
+library(lme4)
+
+CF <- list()
+for (i in unique(x$element)) {
+    CF[[i]] <- coef(lm(log(Mean) ~ scenario + I(year-2011), x[x$element == i,]))
+}
+CF <- do.call(rbind, CF)
+summary(CF)
+hist(CF[,5])
