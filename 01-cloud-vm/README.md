@@ -136,7 +136,7 @@ Create a partition on the volume with `fdisk /dev/vdb`. At the prompt, use this 
 For volumes > 2TB, follow: <https://www.dell.com/support/kbdoc/en-ca/000140053/how-to-create-a-linux-partition-larger-than-2-terabytes>.
 Type `parted /dev/vdb`. At the prompt, use this sequence:
 
-- `unit GB` to set unit to TB,
+- `unit GB` to set unit to GB,
 - `mklabel gpt` to create a new partition table,
 - `mkpart primary 0 5000GB` to define the start and end,
 - then `quit`.
@@ -160,7 +160,7 @@ mount /dev/vdb1 /media/data
 df -k --block-size=G
 ```
 
-If the VM is rebooted for some reason the volume will need to be remounted. To cause the VM to mount the volume automatically at boot time, edit `/etc/fstab` and add a line like:
+If the VM is rebooted, the volume will need to be remounted. To cause the VM to mount the volume automatically at boot time, edit `/etc/fstab` and add a line like:
 
 ```
 /dev/vdb1 /media/data ext4 defaults 0 2
@@ -176,9 +176,9 @@ This command will work if no files are being accessed by the operating system or
 
 ## Scaffolding the file server folder
 
-Create a `/media/data` directory with `mkdir /media/data`.
+Create a `/media/data` directory with `mkdir /media/data` if it does not already exists (note: `/media/data` is the mount point for the volume described above).
 
-Create folder structure inside the `/media/data/content` folder: `cd` into this folder, commands are relative to this folder.
+Create folder structure inside the `/media/data` folder: `cd /media/data` into this folder, commands are relative to this location.
 
 ```bash
 mkdir content
@@ -215,7 +215,7 @@ The `content` folder, this will be the root of the file server.
 
 ## Migrating files
 
-This section is related to migration and can safely be ignored for future updates, but is kept here for reference.
+This section is related to migration and can safely be ignored for future updates, but is kept here for reference. Note: `wbi-nwt.analythium.app` was the domain for the NWT project.
 
 #### Migrating files
 
@@ -223,8 +223,8 @@ Set up ssh key between the machines:
 
 ```bash
 su - root -c 'ssh-keygen -t rsa -q -f "/root/.ssh/id_rsa" -N ""'
-cat /root/.ssh/id_rsa.pub # copy into /root/.ssh/authorized_keys on the other machine
-
+cat /root/.ssh/id_rsa.pub 
+# copy this key into /root/.ssh/authorized_keys on the other machine
 ssh root@wbi-nwt.analythium.app
 ```
 
@@ -284,7 +284,7 @@ rsync --ignore-existing -hvrPt root@wbi-nwt.analythium.app:/root/content/api/${D
 ```
 
 It is also a good idea to give the ubuntu user permission to the `/media/data/content` folder: `sudo chown -R ubuntu:ubuntu /media/data/content`.
-Otherwise `rsync` might now work very well, i.e. you'll have to move file in 2 steps and the VM hard drive outside of the mounted volume might not be large enough to do that efficiently.
+Otherwise `rsync` might now work, i.e. you'll have to move file in 2 steps and the VM hard drive outside of the mounted volume might not be large enough to do that efficiently.
 
 #### Setting up R and GDAL to process TIFs
 
@@ -409,8 +409,6 @@ for (i in 1:length(f1k)) {
   s2 <- st_as_stars(r)
   write_stars(s2, f1k[i], options = c("COMPRESS=LZW"))
 }
-
-
 ```
 
 ## The Shiny app

@@ -32,14 +32,18 @@ Describe how to set up jobs and what scripts to run, also RAM/CPU requests etc.
 
 ```
 .
-├── 01-data.md          # move/unzip files
-├── README.md           # this file
-├── birds.R             # process birds maps
-├── burn-biomass.R      # calculate burn/biomass maps
-├── element-lookup.csv  # species lookup
-├── full-extent.R       # fill extent summaries
-├── functions.R         # common functions for scripts
-├── scales.R            # 1 km scale maps
-├── setup.sh            # setup server for geo processing
-└── trees.R             # process leading tree species maps
+├── 01-data.md              # move/unzip files
+├── 02-burn-biomass.R       # calculate burn/biomass maps
+├── 03-birds.R              # process birds maps
+├── 04-trees.R              # process leading tree species maps
+├── 05-full-extent.R        # full extent summaries
+├── 06-scales.R             # 1 km scale maps
+├── 07-regional-summaries.R # regional summaries
+├── README.md               # this file
+├── boundaries              # folder with region boundaries
+├── element-lookup.csv      # species lookup
+├── explorer.R              # simple Shiny app to test the API
+├── functions.R             # settings common to other R scripts
+├── setup.sh                # setup server for geo processing
+└── sums-by-bcr-juri.rds    # output file from step 07
 ```
