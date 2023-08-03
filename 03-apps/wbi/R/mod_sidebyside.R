@@ -34,85 +34,23 @@ mod_sidebyside_ui <- function(id){
         width = 330, 
         height = "auto", 
         
-        build_accordion(
-          id = "map_2x",
-          header = "You are now viewing:",
-          content = shiny::tags$ul(
-            
-            shiny::tags$li(
-              shiny::span(
-                "Region: ",
-                shiny::textOutput(
-                  outputId = ns("region_text_2x"),
-                  inline = TRUE
-                ) |> shiny::tags$em()
-              )
-            ),
-            
-            shiny::tags$li(
-              shiny::span(
-                "Species Group: ", 
-                shiny::textOutput(
-                  outputId = ns("species_group_text_2x"),
-                  inline = TRUE
-                ) |> shiny::tags$em()
-              )
-            ),
-            
-            shiny::tags$li(
-              shiny::span(
-                "Species Name: ", 
-                shiny::textOutput(
-                  outputId = ns("species_name_text_2x"),
-                  inline = TRUE
-                ) |> shiny::tags$em()
-              )
-            ),
-            
-            shiny::tags$li(
-              shiny::span(
-                "Comparing by: ", 
-                shiny::textOutput(
-                  outputId = ns("comparison_text_2x"),
-                  inline = TRUE
-                ) |> shiny::tags$em()
-              )
-            ),
-            
-            shiny::tags$li(
-              shiny::span(
-                "Left Map: ", 
-                shiny::textOutput(
-                  outputId = ns("left_map_text_2x"),
-                  inline = TRUE
-                ) |> shiny::tags$em()
-              )
-            ),
-            
-            shiny::tags$li(
-              shiny::span(
-                "Right Map: ", 
-                shiny::textOutput(
-                  outputId = ns("right_map_text_2x"),
-                  inline = TRUE
-                ) |> shiny::tags$em()
-              )
-            ),
-            
-            shiny::tags$li(
-              shiny::span(
-                shiny::textOutput(
-                  outputId = ns("constant_title_text_2x"),
-                  inline = TRUE
-                ),
-                # ": ",
-                shiny::textOutput(
-                  outputId = ns("constant_text_2x"),
-                  inline = TRUE
-                ) |> shiny::tags$em()
-              )
-            )
-            
+        shiny::br(),
+        
+        ## Species drop-down filter ----
+        shinyWidgets::pickerInput(
+          inputId = ns("map_element_2x"),
+          label = "Species Name:", 
+          choices = ELEMENT_NAMES, 
+          selected = ELEMENT_NAMES$bird[[1]], 
+          options = list(
+            `live-search` = TRUE
+            # style = "border-color: #999999;"
+            # style = paste0(
+            #   "background-color: white; ",
+            #   "border-color: #999999; ",
+            #   "font-family: 'Helvetica Neue' Helvetica; ",
+            #   "font-weight: 200;"
+            # )
           )
         ),
         
@@ -148,7 +86,7 @@ mod_sidebyside_server <- function(id){
     current_selections_2x <- shiny::reactiveValues(
       region = "full-extent",
       element_type = "bird",
-      element = ELEMENT_NAMES$bird[[1]],
+      # element = ELEMENT_NAMES$bird[[1]],
       comparison_type = "period",
       map_left_choices = PERIODS_init,
       map_left = PERIODS_init[1],
@@ -168,6 +106,7 @@ mod_sidebyside_server <- function(id){
         title = "Set Map Preferences",
         
         shiny::fluidRow(
+          
           shiny::column(
             width = 6, 
             
@@ -176,24 +115,29 @@ mod_sidebyside_server <- function(id){
               label = "Region",
               choices = REGIONS,
               selected = current_selections_2x$region
-            ),
+            )
             
-            shinyWidgets::pickerInput(
-              inputId = ns("map_element_2x"),
-              label = "Species Name:", 
-              choices = ELEMENT_NAMES, 
-              selected = current_selections_2x$element, 
-              options = list(
-                `live-search` = TRUE
-                # style = "border-color: #999999;"
-                # style = paste0(
-                #   "background-color: white; ",
-                #   "border-color: #999999; ",
-                #   "font-family: 'Helvetica Neue' Helvetica; ",
-                #   "font-weight: 200;"
-                # )
-              )
-            ),
+          ),
+          
+          shiny::column(
+            width = 6,
+            
+            radioButtons(
+              inputId = ns("map_comparison_type_2x"), 
+              label = "Comparison Type:", 
+              choices = list("Period" = "period", "Scenario" = "scenario"), 
+              selected = current_selections_2x$comparison_type,
+              inline = TRUE
+            )
+            
+          )
+          
+        ), 
+        
+        shiny::fluidRow(
+          
+          shiny::column(
+            width = 6,
             
             sliderInput(
               inputId = ns("map_opacity_2x"), 
@@ -208,27 +152,33 @@ mod_sidebyside_server <- function(id){
           shiny::column(
             width = 6,
             
-            radioButtons(
-              inputId = ns("map_comparison_type_2x"), 
-              label = "Comparison Type:", 
-              choices = list("Period" = "period", "Scenario" = "scenario"), 
-              selected = current_selections_2x$comparison_type,
-              inline = TRUE
-            ), 
-            
             selectInput(
               inputId = ns("map_constant_2x"),
               label = "Scenario:",
               choices = current_selections_2x$constant_choices,
               selected = current_selections_2x$constant
-            ),
+            )
+            
+          )
+          
+        ),
+        
+        shiny::fluidRow(
+          
+          shiny::column(
+            width = 6,
             
             selectInput(
               inputId = ns("map_left_2x"),
               label = "Left Map:",
               choices = current_selections_2x$map_left_choices,
               selected = current_selections_2x$map_left
-            ),
+            )
+            
+          ),
+          
+          shiny::column(
+            width = 6,
             
             selectInput(
               inputId = ns("map_right_2x"),
@@ -238,6 +188,7 @@ mod_sidebyside_server <- function(id){
             )
             
           )
+          
           
         ),
         
@@ -323,7 +274,6 @@ mod_sidebyside_server <- function(id){
       }
       
       current_selections_2x$region <- input$map_region_2x
-      current_selections_2x$element <- input$map_element_2x
       current_selections_2x$comparison_type <- input$map_comparison_type_2x
       current_selections_2x$map_left_choices <- map_choices
       current_selections_2x$map_left <- input$map_left_2x
@@ -339,9 +289,6 @@ mod_sidebyside_server <- function(id){
         value = input$map_element_2x
       )
       
-      # current_selections_2x$element_type_display <- current_selections_2x$element_type
-      # current_selections_2x$element_display <- current_selections_2x$element
-      
       shiny::removeModal(session = session)
       
     })
@@ -354,14 +301,14 @@ mod_sidebyside_server <- function(id){
         
         MS1 <- MAPSTATS[
           MAPSTATS$region == current_selections_2x$region & 
-            MAPSTATS$element == current_selections_2x$element & 
+            MAPSTATS$element == input$map_element_2x & 
             MAPSTATS$scenario == current_selections_2x$map_left & 
             MAPSTATS$period == current_selections_2x$constant,
         ]
         
         MS2 <- MAPSTATS[
           MAPSTATS$region == current_selections_2x$region & 
-            MAPSTATS$element == current_selections_2x$element & 
+            MAPSTATS$element == input$map_element_2x & 
             MAPSTATS$scenario == current_selections_2x$map_right & 
             MAPSTATS$period == current_selections_2x$constant,  
         ]
@@ -370,14 +317,14 @@ mod_sidebyside_server <- function(id){
         
         MS1 <- MAPSTATS[
           MAPSTATS$region == current_selections_2x$region & 
-            MAPSTATS$element == current_selections_2x$element & 
+            MAPSTATS$element == input$map_element_2x & 
             MAPSTATS$period == current_selections_2x$map_left & 
             MAPSTATS$scenario == current_selections_2x$constant,
         ]
         
         MS2 <- MAPSTATS[
           MAPSTATS$region == current_selections_2x$region & 
-            MAPSTATS$element == current_selections_2x$element & 
+            MAPSTATS$element == input$map_element_2x & 
             MAPSTATS$period == current_selections_2x$map_right & 
             MAPSTATS$scenario == current_selections_2x$constant,  
         ]
@@ -417,7 +364,7 @@ mod_sidebyside_server <- function(id){
       base_map2x() |> 
         add_element2x(
           region = current_selections_2x$region,
-          element = current_selections_2x$element, 
+          element = input$map_element_2x, 
           compare_by = current_selections_2x$comparison_type,
           left_map = current_selections_2x$map_left,
           right_map = current_selections_2x$map_right,
@@ -469,7 +416,7 @@ mod_sidebyside_server <- function(id){
       
       lookup_element_name_by_value(
         x = ELEMENT_NAMES[[current_selections_2x$element_type]],
-        value = current_selections_2x$element
+        value = input$map
       )
       
     })
