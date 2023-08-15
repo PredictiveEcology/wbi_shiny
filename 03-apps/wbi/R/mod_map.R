@@ -209,6 +209,7 @@ mod_map_server <- function(id, elements){
           url = url(),
           palette_length = 50L,
           palette_type = current_selections$palette,
+          opacity = current_selections$opacity,
           max = legend_max
         ) |> 
         leaflet::addMeasure(
