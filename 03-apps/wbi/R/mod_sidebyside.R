@@ -79,14 +79,14 @@ mod_sidebyside_server <- function(id){
     )
     
     ## Set Initial Filter Selections ----
-    # Create a `reactiveValues` list to hold current selections for each filter;
-    # This will help make user choices redundant when re-launching the modal;
+    # Create a `reactiveValues` list to hold current selections for each filter
+    # in the modal; this will help make user choices redundant when re-launching
+    # the modal.
     # Start by setting some defaults that will appear the first time the modal
     # is launched
     current_selections_2x <- shiny::reactiveValues(
       region = "full-extent",
       element_type = "bird",
-      # element = ELEMENT_NAMES$bird[[1]],
       comparison_type = "period",
       map_left_choices = PERIODS_init,
       map_left = PERIODS_init[1],
@@ -284,11 +284,6 @@ mod_sidebyside_server <- function(id){
       
       current_selections_2x$opacity <- input$map_opacity_2x
       
-      current_selections_2x$element_type <- lookup_element_type_by_value(
-        x = ELEMENT_NAMES, 
-        value = input$map_element_2x
-      )
-      
       shiny::removeModal(session = session)
       
     })
@@ -387,99 +382,6 @@ mod_sidebyside_server <- function(id){
             })
           }
         ")
-    })
-    
-    # Summary Text ----
-    
-    # Render "Region" selection text
-    output$region_text_2x <- shiny::renderText(
-      
-      lookup_element_name_by_value(
-        x = REGIONS,
-        value = current_selections_2x$region
-      )
-      
-    )
-    
-    # Render "Species Group" selection text
-    output$species_group_text_2x <- shiny::renderText(
-      
-      current_selections_2x$element_type |> 
-        tools::toTitleCase()
-      
-    )
-    
-    # Render "Species Name" selection text
-    output$species_name_text_2x <- shiny::renderText({
-      
-      shiny::req(current_selections_2x$element_type)
-      
-      lookup_element_name_by_value(
-        x = ELEMENT_NAMES[[current_selections_2x$element_type]],
-        value = input$map
-      )
-      
-    })
-    
-    # Render "Comparing By" selection text
-    output$comparison_text_2x <- shiny::renderText(
-      
-      current_selections_2x$comparison_type |> 
-        tools::toTitleCase()
-      
-    )
-    
-    # Render "Left Map" selection text
-    output$left_map_text_2x <- shiny::renderText({
-      
-      if (current_selections_2x$comparison_type == "scenario") {
-        lookup_element_name_by_value(
-          x = SCENARIOS, 
-          value = current_selections_2x$map_left
-        )
-      } else {
-        current_selections_2x$map_left
-      }
-      
-    })
-    
-    # Render "Right Map" selection text
-    output$right_map_text_2x <- shiny::renderText({
-      
-      if (current_selections_2x$comparison_type == "scenario") {
-        lookup_element_name_by_value(
-          x = SCENARIOS, 
-          value = current_selections_2x$map_right
-        )
-      } else {
-        current_selections_2x$map_right
-      }
-      
-    })
-    
-    # Render "Constant" title text
-    output$constant_title_text_2x <- shiny::renderText({
-      
-      if (current_selections_2x$comparison_type == "scenario") {
-        "Period:"
-      } else {
-        "Scenario:"
-      }
-      
-    })
-    
-    # Render "Constant" selection text
-    output$constant_text_2x <- shiny::renderText({
-      
-      if (current_selections_2x$comparison_type == "scenario") {
-        current_selections_2x$constant
-      } else {
-        lookup_element_name_by_value(
-          x = SCENARIOS,
-          value = current_selections_2x$constant
-        )
-      }
-      
     })
     
   })
