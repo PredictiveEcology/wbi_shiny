@@ -23,6 +23,7 @@ Previous setup scripts in the [`old`](./old/) directory refer to the DigitalOcea
   - [Deployment](#deployment)
   - [Custom domain and TLS](#custom-domain-and-tls)
   - [Updating the server configs](#updating-the-server-configs)
+  - [Updating the docker images](#updating-the-docker-images)
   - [Restricted access](#restricted-access)
 
 We are using the Arbutus Cloud from Digital Research Alliance (former Compute Canada):
@@ -460,6 +461,15 @@ Then use `docker-compose up -d` and Docker Compose will pick up the changes and 
 If you change the Caddyfile, it will not be picked up by Docker Compose.
 
 Use `docker-compose restart caddy` command.
+
+## Updating the docker images
+
+When the app changes, do the following:
+
+- log in with `ssh`
+- switch to sudo: `sudo -i`
+- pull the new image: `docker pull ghcr.io/predictiveecology/wbi_shiny/shiny-wbi:v1`
+- apply the changes: `docker-compose up -d`
 
 ## Restricted access
 
