@@ -76,11 +76,13 @@ get_stats <- function(element, region) {
 #' @importFrom rlang .data
 plot_trend <- function(data) {
   
+  Scenario <- Year <- Mean <- NULL # handle nse
+
   data |> 
-    dplyr::group_by(.data$Scenario) |> 
-    echarts4r::e_charts(.data$Year) |> 
+    dplyr::group_by(Scenario) |> 
+    echarts4r::e_charts(Year) |> 
     echarts4r::e_line(
-      serie = .data$Mean, 
+      serie = Mean, 
       symbol = "circle", 
       symbolSize = 15
     ) |> 
