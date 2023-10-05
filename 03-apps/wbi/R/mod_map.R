@@ -140,8 +140,8 @@ mod_map_server <- function(id, elements){
           label = "Apply"
         ),
         
-        size = "s"
-        
+        size = "s",
+        easyClose = TRUE
       )
       
       shiny::showModal(modal)

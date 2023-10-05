@@ -197,7 +197,8 @@ mod_sidebyside_server <- function(id){
           label = "Apply"
         ),
         
-        size = "l"
+        size = "l",
+        easyClose = TRUE
         
       )
       
