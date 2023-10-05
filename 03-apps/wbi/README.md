@@ -64,7 +64,13 @@ docker login ghcr.io
 docker push $TAG
 ```
 
-## Updating lookup tables
+## Updating data in the app
+
+### Lookup tables
 
 1. Edit the `03-apps/wbi/data-raw/element-lookup.csv` file and save the changes.
 2. Run the `03-apps/wbi/data-raw/data.R` script, this will update the `03-apps/wbi/data/*.rda` files.
+
+### Regional summaries
+
+Follow the comments in the `02-data-proc/wbi/07-regional-summaries.R` script.
