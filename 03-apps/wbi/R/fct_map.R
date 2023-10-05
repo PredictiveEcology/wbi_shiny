@@ -18,7 +18,7 @@
 #' @noRd
 base_map <- function() {
   
-  map_attr <- "© <a href='https://www.esri.com/en-us/home'>ESRI</a> © <a href='https://www.google.com/maps/'>Google</a>"
+  map_attr <- "(c) <a href='https://www.esri.com/en-us/home'>ESRI</a> (c) <a href='https://www.google.com/maps/'>Google</a>"
   
   leaflet::leaflet() |> 
     leaflet::addTiles(

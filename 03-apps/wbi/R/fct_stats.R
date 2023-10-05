@@ -73,13 +73,14 @@ get_stats <- function(element, region) {
 #'   region = "Alberta"
 #' ) |> 
 #'   plot_trend()
+#' @importFrom rlang .data
 plot_trend <- function(data) {
   
   data |> 
-    dplyr::group_by(Scenario) |> 
-    echarts4r::e_charts(Year) |> 
+    dplyr::group_by(.data$Scenario) |> 
+    echarts4r::e_charts(.data$Year) |> 
     echarts4r::e_line(
-      serie = Mean, 
+      serie = .data$Mean, 
       symbol = "circle", 
       symbolSize = 15
     ) |> 
