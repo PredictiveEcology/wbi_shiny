@@ -26,7 +26,10 @@ jobs:
         context: ./03-apps/wbi_nwt
         push: true
         tags: ghcr.io/predictiveecology/wbi_shiny/shiny-wbi_nwt:v2
-
+    - name: 'Trigger update webhook'
+      run: |
+        curl -i -X GET "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}"
+  
   build-and-push-wbi:
     name: Build WBI Shiny App
     if: "contains(github.event.head_commit.message, 'build wbi')"
@@ -46,3 +49,6 @@ jobs:
         context: ./03-apps/wbi
         push: true
         tags: ghcr.io/predictiveecology/wbi_shiny/shiny-wbi:v1
+    - name: 'Trigger update webhook'
+      run: |
+        curl -i -X GET "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}"
