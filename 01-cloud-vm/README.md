@@ -25,6 +25,7 @@ Previous setup scripts in the [`old`](./old/) directory refer to the DigitalOcea
   - [Updating the server configs](#updating-the-server-configs)
   - [Updating the docker images](#updating-the-docker-images)
   - [Restricted access](#restricted-access)
+  - [CICD with webhook](#cicd-with-webhook)
 
 We are using the Arbutus Cloud from Digital Research Alliance (former Compute Canada):
 <https://arbutus.cloud.computecanada.ca/>.
@@ -486,3 +487,115 @@ The current username:password is set to `shiny:shiny`.
 This form of authentication is only secure over HTTPS because password is transmitted as encoded plain text.
 
 Example: <https://wbi.predictiveecology.org/api/v1/private/wbi-nwt/index.html>
+
+## CICD with webhook
+
+Log into the server with `ssh` and switch to sudo: `sudo -i`.
+
+Add Ingress TCP rule to the Security Group in the Arbutus UI and open the 9000 port on the server:
+
+```bash
+sudo ufw allow 9000
+```
+
+Install [webhook](We are going to use webhook.):
+
+```bash
+sudo apt-get install webhook
+# test
+/usr/bin/webhook --version
+# webhook version 2.8.0
+```
+
+Create the following script named `update.sh` in the home directory (`touch update.sh`):
+
+```bash
+#! /bin/sh
+
+## Pull existing images
+docker images |grep -v REPOSITORY|awk '{print $1":"$2}'|xargs -L1 docker pull
+
+## pick up changes
+docker-compose up -d
+
+## Prune dangling images
+docker system prune -f
+```
+
+Make the file executable: `sudo chmod +x update.sh`
+
+Create another file named `hooks.json` in the home directory (`touch hooks.json`).
+We will add a [hook with a secret key in a GET query](https://github.com/adnanh/webhook/blob/master/docs/Hook-Examples.md#a-simple-webhook-with-a-secret-key-in-get-query).
+
+Go to the Settings tab of the GitHub project, find 'Secrets and variables' and select 'Actions'.
+Click the green 'New repository secret' button and enter the name `WEBHOOK_SECRET` and the secret value, e.g. `sdf6074rhfskdc8`
+
+```json
+[
+  {
+    "id": "update",
+    "execute-command": "/root/update.sh",
+    "response-message": "Updating images",
+    "trigger-rule":
+    {
+      "match":
+      {
+        "type": "value",
+        "value": "sdf6074rhfskdc8",
+        "parameter":
+        {
+          "source": "url",
+          "name": "token"
+        }
+      }
+    }
+  }
+]
+```
+
+Now create the `webhook.service` file with the daemon settings via `systemctl`: `sudo touch /etc/systemd/system/webhook.service`. Use the following content:
+
+```bash
+[Unit]
+Description=Webhooks
+
+[Service]
+ExecStart=/usr/bin/webhook -hooks /root/hooks.json -hotreload
+
+[Install]
+WantedBy=multi-user.target
+```
+
+The option `-hotreload` watches for changes in the `hook.json` file and reloads them upon change.
+
+Run a few commands with systemctl to start the service and see if it is up and running:
+
+```bash
+systemctl enable webhook.service
+systemctl start webhook.service
+service webhook status
+```
+
+Now you should be able to send a GET request. If the token values is matched, the webhook will trigger:
+`curl -X GET "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}"` (this curl goes into the GitGub actions YAML file).
+
+You can try `curl -i -X GET "http://wbi.predictiveecology.org:9000/hooks/update"` without the token and see what you get:
+```
+HTTP/1.1 200 OK
+Date: Thu, 05 Oct 2023 07:05:01 GMT
+Content-Length: 30
+Content-Type: text/plain; charset=utf-8
+
+Hook rules were not satisfied.
+```
+
+If you use the token value, you get:
+
+```
+HTTP/1.1 200 OK
+Date: Thu, 05 Oct 2023 07:06:12 GMT
+Content-Length: 15
+Content-Type: text/plain; charset=utf-8
+
+Updating images
+```
