@@ -9,13 +9,14 @@ ELEMENT_NAMES <- split(ELEMENTS$species_code, ELEMENTS$group)
 ELEMENT_NAMES <- mapply(
   FUN = function(x, y) setNames(x, y), 
   x = ELEMENT_NAMES, 
-  y = split(ELEMENTS$common_name, ELEMENTS$group)
+  y = split(paste0(ELEMENTS$common_name, " [", ELEMENTS$group, "]"), ELEMENTS$group)
 )
 
 # MAPSTATS ----
 # Retrieve .rds file containing MAPSTATS data from API
 ALLMAPS <- paste0(
-  get_golem_config("app_baseurl"),
+  # get_golem_config("app_baseurl"),
+  "https://wbi.predictiveecology.org/",
   "api/v1/public/wbi/links-and-stats.rds"
 ) |> 
   url() |> 

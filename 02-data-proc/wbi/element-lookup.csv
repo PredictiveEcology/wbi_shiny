@@ -124,5 +124,5 @@ tree,tree-picea-mar,Black Spruce,Picea mariana,,TRUE,2011,2100,10
 tree,tree-pinu-ban,Jack Pine,Pinus banksiana,,TRUE,2011,2100,10
 tree,tree-pinu-con,Lodgepole Pine,Pinus contorta,,TRUE,2011,2100,10
 tree,tree-popu-tre,Trembling Aspen,Populus tremuloides,,TRUE,2011,2100,10
-prod,burn,Cumulative burn,,,FALSE,2021,2100,10
-prod,biomass,Biomass,,Biomasse,TRUE,2011,2100,10
+landscape,burn,Cumulative burn,,,FALSE,2021,2100,10
+landscape,biomass,Biomass,,Biomasse,TRUE,2011,2100,10

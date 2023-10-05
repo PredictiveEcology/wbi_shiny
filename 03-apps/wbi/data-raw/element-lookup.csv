@@ -124,5 +124,5 @@
 "tree","tree-pinu-ban","Jack Pine","Pinus banksiana","",TRUE,2011,2100,10,TRUE,"<p><strong>Note:</strong> these results are preliminary, proceed with <em>caution</em>.</p>"
 "tree","tree-pinu-con","Lodgepole Pine","Pinus contorta","",TRUE,2011,2100,10,TRUE,"<p><strong>Note:</strong> these results are preliminary, proceed with <em>caution</em>.</p>"
 "tree","tree-popu-tre","Trembling Aspen","Populus tremuloides","",TRUE,2011,2100,10,TRUE,"<p><strong>Note:</strong> these results are preliminary, proceed with <em>caution</em>.</p>"
-"prod","burn","Cumulative burn","","",FALSE,2021,2100,10,TRUE,"<p><strong>Note:</strong> these results are preliminary, proceed with <em>caution</em>.</p>"
-"prod","biomass","Biomass","","Biomasse",TRUE,2011,2100,10,TRUE,"<p><strong>Note:</strong> these results are preliminary, proceed with <em>caution</em>.</p>"
+"landscape","burn","Cumulative burn","","",FALSE,2021,2100,10,TRUE,"<p><strong>Note:</strong> these results are preliminary, proceed with <em>caution</em>.</p>"
+"landscape","biomass","Biomass","","Biomasse",TRUE,2011,2100,10,TRUE,"<p><strong>Note:</strong> these results are preliminary, proceed with <em>caution</em>.</p>"
