@@ -73,4 +73,4 @@ docker push $TAG
 
 ### Regional summaries
 
-Follow the comments in the `02-data-proc/wbi/07-regional-summaries.R` script.
+Follow the comments in the `02-data-proc/wbi/07-regional-summaries.R` R script.
