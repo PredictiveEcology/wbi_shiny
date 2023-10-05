@@ -40,7 +40,6 @@ Imports:
     grDevices,
     viridis,
     shinyWidgets,
-    rlang,
     dplyr,
     glue,
     htmlwidgets,

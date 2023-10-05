@@ -73,7 +73,6 @@ get_stats <- function(element, region) {
 #'   region = "Alberta"
 #' ) |> 
 #'   plot_trend()
-#' @importFrom rlang .data
 plot_trend <- function(data) {
   
   Scenario <- Year <- Mean <- NULL # handle nse
