@@ -607,3 +607,5 @@ The following step in GitHub actions will do the trick: we need to add this afte
       run: |
         curl -i -X GET "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}"
 ```
+
+Note: the docker compose update will make the services temporarily unavailable.
