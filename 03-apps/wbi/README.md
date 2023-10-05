@@ -59,7 +59,12 @@ Now open `http://localhost:8080` in your browser.
 Push to the GitHub Container Registry (`ghcr.io`): 
 
 ```bash
-docker loging ghcr.io
+docker login ghcr.io
 
 docker push $TAG
 ```
+
+## Updating lookup tables
+
+1. Edit the `03-apps/wbi/data-raw/element-lookup.csv` file and save the changes.
+2. Run the `03-apps/wbi/data-raw/data.R` script, this will update the `03-apps/wbi/data/*.rda` files.
