@@ -56,7 +56,7 @@ export HOST="206.12.95.40"
 ssh $USER@$HOST
 ```
 
-Change to root user with `sudo -i` to continue with the installation.
+Change to the root user with `sudo -i` to continue with the installation.
 
 ## Adding SSH keys
 
