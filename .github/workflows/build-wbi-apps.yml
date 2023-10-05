@@ -20,6 +20,16 @@ jobs:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
+    # test before push: https://docs.docker.com/build/ci/github-actions/test-before-push/
+    - name: Build and export to Docker
+      uses: docker/build-push-action@v4
+      with:
+        context: ./03-apps/wbi_nwt
+        load: true
+        tags: ghcr.io/predictiveecology/wbi_shiny/shiny-wbi_nwt:v2
+    - name: Test
+      run: |
+        docker run --rm ghcr.io/predictiveecology/wbi_shiny/shiny-wbi_nwt:v2
     - name: 'Build and push'
       uses: docker/build-push-action@v4
       with:
@@ -40,6 +50,16 @@ jobs:
         registry: ghcr.io
         username: ${{github.actor}}
         password: ${{secrets.GITHUB_TOKEN}}
+    # test before push: https://docs.docker.com/build/ci/github-actions/test-before-push/
+    - name: Build and export to Docker
+      uses: docker/build-push-action@v4
+      with:
+        context: ./03-apps/wbi
+        load: true
+        tags: ghcr.io/predictiveecology/wbi_shiny/shiny-wbi:v1
+    - name: Test
+      run: |
+        docker run --rm ghcr.io/predictiveecology/wbi_shiny/shiny-wbi:v1
     - name: 'Build and push'
       uses: docker/build-push-action@v4
       with:
