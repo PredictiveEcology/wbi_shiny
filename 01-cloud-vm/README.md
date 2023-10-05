@@ -599,3 +599,11 @@ Content-Type: text/plain; charset=utf-8
 
 Updating images
 ```
+
+The following step in GitHub actions will do the trick: we need to add this after the docker image is pushed to the registry, so that the server can pull it.
+
+```yaml
+    - name: 'Trigger update webhook'
+      run: |
+        curl -i -X GET "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}"
+```
