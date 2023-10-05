@@ -57,23 +57,7 @@ app_ui <- function(request) {
         mod_regions_ui("regions_ui_1")
         
       ), 
-      
-      # # "Birds" Page ----
-      # bslib::nav_panel(
-      #   title = "Birds", 
-      #   
-      #   mod_birds_ui("birds_ui_1")
-      #   
-      # ), 
 
-      # # "Caribou" Page ----
-      # bslib::nav_panel(
-      #   title = "Caribou", 
-      #   
-      #   mod_caribou_ui("caribou_ui_1")
-      #   
-      # ), 
-      
       # "Methods" Page ----
       bslib::nav_panel(
         title = "Methods", 
