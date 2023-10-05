@@ -35,7 +35,7 @@ app_ui <- function(request) {
       ), 
       
       # "Map" Page ----
-      bslib::nav(
+      bslib::nav_panel(
         title = "Map", 
         
         mod_map_ui("map_ui_1")
@@ -43,7 +43,7 @@ app_ui <- function(request) {
       ), 
       
       # "Side-by-Side" Page ----
-      bslib::nav(
+      bslib::nav_panel(
         title = "Side-by-Side", 
         
         mod_sidebyside_ui("sidebyside_ui_1")
@@ -51,7 +51,7 @@ app_ui <- function(request) {
       ), 
       
       # "Regions" Page ----
-      bslib::nav(
+      bslib::nav_panel(
         title = "Regions", 
         
         mod_regions_ui("regions_ui_1")
@@ -59,7 +59,7 @@ app_ui <- function(request) {
       ), 
       
       # # "Birds" Page ----
-      # bslib::nav(
+      # bslib::nav_panel(
       #   title = "Birds", 
       #   
       #   mod_birds_ui("birds_ui_1")
@@ -67,7 +67,7 @@ app_ui <- function(request) {
       # ), 
 
       # # "Caribou" Page ----
-      # bslib::nav(
+      # bslib::nav_panel(
       #   title = "Caribou", 
       #   
       #   mod_caribou_ui("caribou_ui_1")
@@ -75,7 +75,7 @@ app_ui <- function(request) {
       # ), 
       
       # "Methods" Page ----
-      bslib::nav(
+      bslib::nav_panel(
         title = "Methods", 
         
         mod_methods_ui("methods_ui_1")
@@ -83,7 +83,7 @@ app_ui <- function(request) {
       ), 
       
       # "Download" Page ----
-      bslib::nav(
+      bslib::nav_panel(
         title = "Download", 
         
         mod_download_ui("download_ui_1")
