@@ -522,7 +522,34 @@ docker-compose up -d
 docker system prune -f
 ```
 
-Make the file executable: `sudo chmod +x update.sh`
+Create the following script named `deploy.sh` in the home directory (`touch deploy.sh`):
+
+```bash
+#! /bin/sh
+
+# get latest from master
+wget -P /root/ https://github.com/PredictiveEcology/WesternBorealInitiative/archive/refs/heads/master.zip
+
+# unzip into newcontent folder
+unzip master.zip -d /root/newcontent
+
+# clean up at source
+rm -f /root/newcontent/WesternBorealInitiative-master/docs/CNAME
+
+# clean up assets folders at destination
+rm -rf /media/data/content/images/*
+rm -rf /media/data/content/site_libs/*
+rm -rf /media/data/content/*.html
+
+# copy files over to their destination
+cp -a /root/newcontent/WesternBorealInitiative-master/docs/. /media/data/content/
+
+# clean up
+rm -rf /root/newcontent
+rm -f master.zip
+```
+
+Make the files executable: `sudo chmod +x update.sh` and `sudo chmod +x deploy.sh`
 
 Create another file named `hooks.json` in the home directory (`touch hooks.json`).
 We will add a [hook with a secret key in a GET query](https://github.com/adnanh/webhook/blob/master/docs/Hook-Examples.md#a-simple-webhook-with-a-secret-key-in-get-query).
@@ -536,6 +563,24 @@ Click the green 'New repository secret' button and enter the name `WEBHOOK_SECRE
     "id": "update",
     "execute-command": "/root/update.sh",
     "response-message": "Updating images",
+    "trigger-rule":
+    {
+      "match":
+      {
+        "type": "value",
+        "value": "sdf6074rhfskdc8",
+        "parameter":
+        {
+          "source": "url",
+          "name": "token"
+        }
+      }
+    }
+  },
+  {
+    "id": "deploy",
+    "execute-command": "/root/deploy.sh",
+    "response-message": "Deploying content",
     "trigger-rule":
     {
       "match":
@@ -580,6 +625,7 @@ Now you should be able to send a GET request. If the token values is matched, th
 `curl -X GET "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}"` (this curl goes into the GitGub actions YAML file).
 
 You can try `curl -i -X GET "http://wbi.predictiveecology.org:9000/hooks/update"` without the token and see what you get:
+
 ```
 HTTP/1.1 200 OK
 Date: Thu, 05 Oct 2023 07:05:01 GMT
@@ -605,7 +651,9 @@ The following step in GitHub actions will do the trick: we need to add this afte
 ```yaml
     - name: 'Trigger update webhook'
       run: |
-        curl -i -X GET "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}"
+        response=$(curl "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}")
+        echo $response
+        (( $response == "Updating images" )) || { exit 1; }
 ```
 
 Note: the docker compose update will make the services temporarily unavailable.
