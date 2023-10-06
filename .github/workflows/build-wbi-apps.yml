@@ -55,5 +55,5 @@ jobs:
       run: |
         response=$(curl "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}")
         echo $response
-        (( $response == "Updating images" )) || { exit 1; }
+        [[ $response == "Updating images" ]] || { exit 1; }
 
