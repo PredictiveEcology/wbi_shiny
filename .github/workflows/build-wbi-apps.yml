@@ -28,9 +28,9 @@ jobs:
         tags: ghcr.io/predictiveecology/wbi_shiny/shiny-wbi_nwt:v2
     - name: 'Trigger update webhook'
       run: |
-      response=$(curl "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}")
-      echo $response
-      (( $response == "Updating images" )) || { exit 1; }
+        response=$(curl "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}")
+        echo $response
+        (( $response == "Updating images" )) || { exit 1; }
 
   build-and-push-wbi:
     name: Build WBI Shiny App
