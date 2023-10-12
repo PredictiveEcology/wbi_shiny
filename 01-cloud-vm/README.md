@@ -649,11 +649,11 @@ Updating images
 The following step in GitHub actions will do the trick: we need to add this after the docker image is pushed to the registry, so that the server can pull it.
 
 ```yaml
-    - name: 'Trigger update webhook'
+    - name: 'Trigger deploy webhook'
       run: |
-        response=$(curl "http://wbi.predictiveecology.org:9000/hooks/update?token=${{secrets.WEBHOOK_SECRET}}")
+        response=$(curl "http://wbi.predictiveecology.org:9000/hooks/deploy?token=${{secrets.WEBHOOK_SECRET}}")
         echo $response
-        (( $response == "Updating images" )) || { exit 1; }
+        [[ $response == "Deploying content" ]] || { exit 1; }
 ```
 
 Note: the docker compose update will make the services temporarily unavailable.
