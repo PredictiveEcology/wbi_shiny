@@ -512,13 +512,13 @@ Create the following script named `update.sh` in the home directory (`touch upda
 ```bash
 #! /bin/sh
 
-## Pull existing images
+## pull existing images
 docker images |grep -v REPOSITORY|awk '{print $1":"$2}'|xargs -L1 docker pull
 
 ## pick up changes
 docker-compose up -d
 
-## Prune dangling images
+## prune dangling images
 docker system prune -f
 ```
 
