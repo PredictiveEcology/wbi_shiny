@@ -498,7 +498,8 @@ Add Ingress TCP rule to the Security Group in the Arbutus UI and open the 9000 p
 sudo ufw allow 9000
 ```
 
-Install [webhook](We are going to use webhook.):
+We are going to use webhook.
+Install [webhook](https://github.com/adnanh/webhook):
 
 ```bash
 sudo apt-get install webhook
@@ -528,10 +529,10 @@ Create the following script named `deploy.sh` in the home directory (`touch depl
 #! /bin/sh
 
 # get latest from master
-wget -P /root/ https://github.com/PredictiveEcology/WesternBorealInitiative/archive/refs/heads/master.zip
+wget -O /root/master.zip https://github.com/PredictiveEcology/WesternBorealInitiative/archive/refs/heads/master.zip
 
 # unzip into newcontent folder
-unzip master.zip -d /root/newcontent
+unzip /root/master.zip -d /root/newcontent
 
 # clean up at source
 rm -f /root/newcontent/WesternBorealInitiative-master/docs/CNAME
@@ -546,12 +547,12 @@ cp -a /root/newcontent/WesternBorealInitiative-master/docs/. /media/data/content
 
 # clean up
 rm -rf /root/newcontent
-rm -f master.zip
+rm -f /root/master.zip
 ```
 
 Make the files executable: `sudo chmod +x update.sh` and `sudo chmod +x deploy.sh`
 
-Create another file named `hooks.json` in the home directory (`touch hooks.json`).
+Create another file named `hooks.json` (`touch hooks.json`).
 We will add a [hook with a secret key in a GET query](https://github.com/adnanh/webhook/blob/master/docs/Hook-Examples.md#a-simple-webhook-with-a-secret-key-in-get-query).
 
 Go to the Settings tab of the GitHub project, find 'Secrets and variables' and select 'Actions'.
@@ -605,7 +606,9 @@ Now create the `webhook.service` file with the daemon settings via `systemctl`: 
 Description=Webhooks
 
 [Service]
+Type=simple
 ExecStart=/usr/bin/webhook -hooks /root/hooks.json -hotreload
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
