@@ -3,11 +3,14 @@
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
+#' @param choices Named character vector of element codes offered in the
+#'   drop-down (see `element_choices()`); the first is shown initially.
+#' @param label Label of the drop-down.
 #'
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_map_ui <- function(id){
+mod_map_ui <- function(id, choices, label = "Species:"){
   ns <- NS(id)
   tagList(
     
@@ -38,9 +41,9 @@ mod_map_ui <- function(id){
         
         shinyWidgets::pickerInput(
           inputId = ns("map_element"),
-          label = "Species Name:", 
-          choices = ELEMENT_NAMES, 
-          selected = ELEMENT_NAMES$bird[[1]], 
+          label = label, 
+          choices = choices, 
+          selected = choices[[1]], 
           options = list(
             `live-search` = TRUE
             # style = "border-color: #999999;"
@@ -64,9 +67,9 @@ mod_map_ui <- function(id){
           inputId = ns("map_period"), 
           label = "Time Period:", 
           choices = get_period_choices(
-            ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], ]
+            ELEMENTS[ELEMENTS$species_code == choices[[1]], ]
           ),
-          selected = ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], "year_start"]
+          selected = ELEMENTS[ELEMENTS$species_code == choices[[1]], "year_start"]
         ),
         
         shiny::actionButton(

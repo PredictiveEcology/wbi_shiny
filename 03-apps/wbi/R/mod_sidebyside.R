@@ -3,11 +3,13 @@
 #' @description A shiny Module.
 #'
 #' @param id,input,output,session Internal parameters for {shiny}.
+#' @param choices Named character vector of element codes offered in the
+#'   drop-down (see `element_choices()`); the first is shown initially.
 #'
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList 
-mod_sidebyside_ui <- function(id){
+mod_sidebyside_ui <- function(id, choices){
   ns <- NS(id)
   tagList(
     
@@ -39,9 +41,9 @@ mod_sidebyside_ui <- function(id){
         ## Species drop-down filter ----
         shinyWidgets::pickerInput(
           inputId = ns("map_element_2x"),
-          label = "Species Name:", 
-          choices = ELEMENT_NAMES, 
-          selected = ELEMENT_NAMES$bird[[1]], 
+          label = "Species:", 
+          choices = choices, 
+          selected = choices[[1]], 
           options = list(
             `live-search` = TRUE
             # style = "border-color: #999999;"
@@ -70,12 +72,12 @@ mod_sidebyside_ui <- function(id){
 #' sidebyside Server Functions
 #'
 #' @noRd 
-mod_sidebyside_server <- function(id){
+mod_sidebyside_server <- function(id, choices){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
     
     PERIODS_init <- get_period_choices(
-      ELEMENTS[ELEMENTS$species_code == ELEMENT_NAMES$bird[[1]], ]
+      ELEMENTS[ELEMENTS$species_code == choices[[1]], ]
     )
     
     ## Set Initial Filter Selections ----

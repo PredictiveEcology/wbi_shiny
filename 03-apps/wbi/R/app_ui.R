@@ -34,19 +34,43 @@ app_ui <- function(request) {
         base_font = bslib::font_google("Arvo")
       ), 
       
-      # "Map" Page ----
+      # Map Pages: one per group ----
       bslib::nav_panel(
-        title = "Map", 
+        title = "Birds", 
         
-        mod_map_ui("map_ui_1")
+        mod_map_ui("map_birds", choices = element_choices(ELEMENT_NAMES$bird))
         
       ), 
       
-      # "Side-by-Side" Page ----
       bslib::nav_panel(
+        title = "Trees", 
+        
+        mod_map_ui("map_trees", choices = element_choices(c(ELEMENT_NAMES$tree, "biomass")))
+        
+      ), 
+      
+      bslib::nav_panel(
+        title = "Fire", 
+        
+        mod_map_ui("map_fire", choices = element_choices("burn"), label = "Map:")
+        
+      ), 
+      
+      # "Side-by-Side" Pages ----
+      # Cumulative Burn is left out on purpose: a side-by-side of it is not a
+      # meaningful comparison.
+      bslib::nav_menu(
         title = "Side-by-Side", 
         
-        mod_sidebyside_ui("sidebyside_ui_1")
+        bslib::nav_panel(
+          title = "Birds", 
+          mod_sidebyside_ui("sidebyside_birds", choices = element_choices(ELEMENT_NAMES$bird))
+        ),
+        
+        bslib::nav_panel(
+          title = "Trees", 
+          mod_sidebyside_ui("sidebyside_trees", choices = element_choices(c(ELEMENT_NAMES$tree, "biomass")))
+        )
         
       ), 
       
