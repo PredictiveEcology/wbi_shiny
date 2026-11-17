@@ -15,9 +15,12 @@ app_server <- function( input, output, session ) {
   message("INFO App base URL set to ", get_golem_config("app_baseurl"))
 
   
-  mod_map_server("map_ui_1")
+  mod_map_server("map_birds")
+  mod_map_server("map_trees")
+  mod_map_server("map_fire")
   
-  mod_sidebyside_server("sidebyside_ui_1")
+  mod_sidebyside_server("sidebyside_birds", choices = element_choices(ELEMENT_NAMES$bird))
+  mod_sidebyside_server("sidebyside_trees", choices = element_choices(c(ELEMENT_NAMES$tree, "biomass")))
   
   mod_regions_server("regions_ui_1")
   

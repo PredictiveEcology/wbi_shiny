@@ -229,3 +229,31 @@ build_alert <- function(type = "warning", content) {
   )
   
 }
+
+
+
+#' Drop-down choices for a set of elements
+#'
+#' @param codes Character vector of element codes (e.g. `ELEMENT_NAMES$bird`,
+#'   or `"burn"`), in the order to show them.
+#'
+#' @return A named character vector of the codes, named by the display name
+#'   without its " [group]" suffix (the tab already says which group it is).
+#' 
+#' @noRd
+#'
+#' @examples
+#' element_choices(c(ELEMENT_NAMES$tree, "biomass"))
+element_choices <- function(codes) {
+  
+  all <- unlist(unname(ELEMENT_NAMES))
+  out <- all[match(codes, all)]
+  
+  if (anyNA(out)) {
+    stop("Unknown element code(s): ", paste(codes[is.na(out)], collapse = ", "))
+  }
+  
+  names(out) <- sub(" \\[[^]]*\\]$", "", names(out))
+  out
+  
+}
