@@ -36,7 +36,7 @@ download_table <- function(data) {
         cell = function(value, index) {
           sprintf('<a href="%s" target="_blank">%s</a>',
                   paste0(get_golem_config("app_baseurl"),
-                         LINKS$path[index]),
+                         value),
                   "Link")
         })
     ),
